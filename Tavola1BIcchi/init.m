@@ -15,5 +15,4 @@ m = sym('m',[6 1],'real');
 
 sym g0
 
-parameter = [a;
-             m];
+parameter = [a,m];
