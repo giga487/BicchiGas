@@ -5,7 +5,6 @@ close all
 
 %file init
 addpath('utils');
-addpath('dinFolder');
 
 syms g0
 q = sym('q',[6 1],'real');

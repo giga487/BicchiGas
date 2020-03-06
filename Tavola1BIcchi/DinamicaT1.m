@@ -270,14 +270,16 @@ B = Bp1+Bp2+Bp3+Bp4+Bp5+Bp6;
 
 C = CoriolisMatrix(B,q,dq)
 
+keyboard
 %%
-matlabFunction(C,'File','C_fun');
+C_f = matlabFunction(C,'File','C_fun','Optimize',false);
+
 %%
 
 g = [0,-g0,0]';
 
 G = -(m(1)*(JpG1')*g+m(2)*(JpG2')*g +m(3)*(JpG3')*g + +m(4)*(JpG4')*g +m(5)*(JpG5')*g + m(6)*(JpG6')*g);
 
-
+G_f = matlabFunction(G,'File','G_fun','Optimize',false);
 
 
