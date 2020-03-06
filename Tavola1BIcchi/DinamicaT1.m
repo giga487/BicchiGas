@@ -1,8 +1,15 @@
 % Cinematica Stanford
 
 
-A01 = matrixDH(0,-sym(pi)/2,0,q(1));
-A12 = matrixDH(0,sym(pi)/2,a(2),q(2));
+% A01 = matrixDH(0,-sym(pi)/2,0,q(1));
+% A12 = matrixDH(0,sym(pi)/2,a(2),q(2));
+% A23 = matrixDH(0,0,a(3),0);
+% A34 = matrixDH(0,-sym(pi)/2,0,q(4));
+% A45 = matrixDH(0,sym(pi)/2,0,q(5));
+% A56 = matrixDH(0,0,a(6),q(6));
+% AT = A01*A12*A23*A34*A45*A56;
+A01 = matrixDH(0,-sym(pi/2),0,q(1));
+A12 = matrixDH(0,sym(pi/2),a(2),q(2));
 A23 = matrixDH(0,0,a(3),0);
 A34 = matrixDH(0,-sym(pi)/2,0,q(4));
 A45 = matrixDH(0,sym(pi)/2,0,q(5));
@@ -261,13 +268,16 @@ B = Bp1+Bp2+Bp3+Bp4+Bp5+Bp6;
 
 %%
 
-C = CoriolisMatrix(B,q,dq);
+C = CoriolisMatrix(B,q,dq)
 
+%%
+matlabFunction(C,'File','C_fun');
 %%
 
 g = [0,-g0,0]';
 
 G = -(m(1)*(JpG1')*g+m(2)*(JpG2')*g +m(3)*(JpG3')*g + +m(4)*(JpG4')*g +m(5)*(JpG5')*g + m(6)*(JpG6')*g);
+
 
 
 

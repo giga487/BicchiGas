@@ -1,0 +1,1 @@
+robot = loadrobot('kinovaGen3', 'DataFormat', 'column');
