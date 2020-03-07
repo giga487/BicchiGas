@@ -252,25 +252,17 @@ JG6 = [JpG6;JoG6];
 
 %%
 
-Bp1 = simplify(m(1)*(JpG1')*JpG1);
-Bo1 = simplify((JoG1')*I_f(m(1),a(1))*(JoG1));
-Bp2 = simplify(m(2)*(JpG2')*JpG2);
-Bo2 = simplify((JoG2')*I_f(m(2),a(2))*(JoG2));
-
-Bp1 = B_f(JpG1,JoG1,m(1),a(1));
-Bp2 = B_f(JpG2,JoG2,m(2),a(2));
-Bp3 = B_f(JpG3,JoG3,m(3),a(3));
-Bp4 = B_f(JpG4,JoG4,m(4),a(4));
-Bp5 = B_f(JpG5,JoG5,m(5),a(5));
-Bp6 = B_f(JpG6,JoG6,m(6),a(6));
-
-B = Bp1+Bp2+Bp3+Bp4+Bp5+Bp6;
+B = (m(1)*(JpG1')*JpG1 + (JoG1')*rG1*I_f(m(1),a(1))*(rG1')*JoG1+...
+          m(2)*(JpG2')*JpG2 + (JoG2')*rG2*I_f(m(2),a(2))*(rG2')*JoG2+...
+          m(3)*(JpG3')*JpG3 + (JoG3')*rG3*I_f(m(3),a(3))*(rG3')*JoG3+...
+          m(4)*(JpG4')*JpG4 + (JoG4')*rG4*I_f(m(4),a(4))*(rG4')*JoG4+...
+          m(5)*(JpG5')*JpG5 + (JoG5')*rG5*I_f(m(5),a(5))*(rG5')*JoG5+...
+          m(6)*(JpG6')*JpG6 + (JpG6')*rG6*I_f(m(6),a(6))*(rG6')*JoG6);
 
 %%
 
 C = CoriolisMatrix(B,q,dq)
 
-keyboard
 %%
 C_f = matlabFunction(C,'File','C_fun','Optimize',false);
 
