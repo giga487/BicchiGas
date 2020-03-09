@@ -7,10 +7,10 @@ parameter = [1,1;
               1 , 1;
               1 , 1;];
       
-q = [0,0,1,0,0,0]';
+q = [0,0,1,pi/3,0,0]';
 dq = [1,1,1,1,1,1]';
 
-plot_3D(parameter,q)
+p = plot_3D(parameter,q);
 
 %%
 
