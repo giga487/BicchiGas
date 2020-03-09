@@ -28,7 +28,7 @@ function C = C_f(parameter,q,dq)
     dq6 = dq(6);
     
 
-    C = C_fun(a2,a3,a4,a5,a6,dq1,dq2,dq4,dq5,dq6,m2,m3,m4,m5,m6,q1,q2,q4,q5,q6);
+    C = C_fun(a2,a3,a4,a5,a6,dq1,dq2,dq3,dq4,dq5,dq6,m2,m3,m4,m5,m6,q1,q2,q3,q4,q5,q6);
 
 end
 

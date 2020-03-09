@@ -8,13 +8,20 @@
 % A45 = matrixDH(0,sym(pi)/2,0,q(5));
 % A56 = matrixDH(0,0,a(6),q(6));
 % AT = A01*A12*A23*A34*A45*A56;
+A00 = matrixDH(0,sym(pi/2),0,0);
 A01 = matrixDH(0,-sym(pi/2),0,q(1));
 A12 = matrixDH(0,sym(pi/2),a(2),q(2));
-A23 = matrixDH(0,0,a(3),0);
+A23 = matrixDH(0,0,q(3),0);
 A34 = matrixDH(0,-sym(pi)/2,0,q(4));
 A45 = matrixDH(0,sym(pi)/2,0,q(5));
 A56 = matrixDH(0,0,a(6),q(6));
 AT = A01*A12*A23*A34*A45*A56;
+
+
+A03 = A01*A12*A23;
+A46 = A34*A45*A56;
+
+AT2 = A03*A46;
 
 %% Dinamica Giunti
 
@@ -259,9 +266,10 @@ B = (m(1)*(JpG1')*JpG1 + (JoG1')*rG1*I_f(m(1),a(1))*(rG1')*JoG1+...
           m(5)*(JpG5')*JpG5 + (JoG5')*rG5*I_f(m(5),a(5))*(rG5')*JoG5+...
           m(6)*(JpG6')*JpG6 + (JpG6')*rG6*I_f(m(6),a(6))*(rG6')*JoG6);
 
-%%
+B_f1 = matlabFunction(B,'File','B_fun','Optimize',false);%%
 
-C = CoriolisMatrix(B,q,dq)
+%%
+C = CoriolisMatrix(B,q,dq);
 
 %%
 C_f1 = matlabFunction(C,'File','C_fun','Optimize',false);

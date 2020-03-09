@@ -28,7 +28,7 @@ function G = G_f(parameter,q,dq)
     dq6 = dq(6);
     g0 = 9.81;
     
-    G = G_fun(a2,a3,a6,g0,m2,m3,m4,m5,m6,q1,q2,q4,q5);
+    G = G_fun(a2,a3,a6,g0,m2,m3,m4,m5,m6,q1,q2,q3,q4,q5);
     
 end
 

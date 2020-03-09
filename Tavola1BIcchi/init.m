@@ -5,8 +5,9 @@ close all
 
 %file init
 addpath('utils');
+addpath('PD');
 
-syms g0
+syms g0 real
 q = sym('q',[6 1],'real');
 dq = sym('dq',[6 1],'real');
 a = sym('a',[6 1],'real');
@@ -16,3 +17,7 @@ m = sym('m',[6 1],'real');
 
 
 parameter = [a,m];
+
+%% Lancio lo script per plottare la configurazione iniziale
+
+main
