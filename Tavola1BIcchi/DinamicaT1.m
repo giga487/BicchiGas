@@ -1,31 +1,18 @@
 % Cinematica Stanford
 
 
-% A01 = matrixDH(0,-sym(pi)/2,0,q(1));
-% A12 = matrixDH(0,sym(pi)/2,a(2),q(2));
-% A23 = matrixDH(0,0,a(3),0);
-% A34 = matrixDH(0,-sym(pi)/2,0,q(4));
-% A45 = matrixDH(0,sym(pi)/2,0,q(5));
-% A56 = matrixDH(0,0,a(6),q(6));
-% AT = A01*A12*A23*A34*A45*A56;
-A00 = matrixDH(0,sym(pi/2),0,0);
-A01 = matrixDH(0,-sym(pi/2),0,q(1));
-A12 = matrixDH(0,sym(pi/2),a(2),q(2));
-A23 = matrixDH(0,0,q(3),0);
-A34 = matrixDH(0,-sym(pi)/2,0,q(4));
-A45 = matrixDH(0,sym(pi)/2,0,q(5));
-A56 = matrixDH(0,0,a(6),q(6));
-AT = A01*A12*A23*A34*A45*A56;
+[Etip,T00,T01,T12,T23,T34,T45,T56] =  forwardKinematics(parameter, q);
 
-
-A03 = A01*A12*A23;
-A46 = A34*A45*A56;
-
-AT2 = A03*A46;
+A1 = T00*T01;
+A2 = A1*T12;
+A3 = A2*T23;
+A4 = A3*T34;
+A5 = A4*T45;
+AT = A5*T56;
 
 %% Dinamica Giunti
 
-TG1 = matrixDH(0,-sym(pi)/2,0,q(1));
+TG1 = getTransformMatrix(q(1),parameter(1,1)/2,0,parameter(1,3));
 pG1 = TG1(1:3,4);
 rG1 = TG1(1:3,1:3);
 
@@ -64,7 +51,8 @@ JG1 = [JpG1;JoG1];
 
 %%
 
-TG = matrixDH(0,-sym(pi)/2,0,q(1))*matrixDH(0,sym(pi)/2,a(2)/2,q(2));
+TG = A1*getTransformMatrix(q(2),parameter(2,1)/2,0,parameter(2,3));
+
 pG2 = TG(1:3,4);
 rG2 = TG(1:3,1:3);
 
@@ -103,7 +91,7 @@ JG2 = [JpG2;JoG2];
 
 %%
 
-TG = matrixDH(0,-sym(pi)/2,0,q(1))*matrixDH(0,sym(pi)/2,a(2),q(2))*matrixDH(0,0,a(3)/2,0);
+TG = A2*getTransformMatrix(0,q(3)/2,0,parameter(3,3));
 pG3 = TG(1:3,4);
 rG3 = TG(1:3,1:3);
 
@@ -114,7 +102,6 @@ JpG3 = [jacobian(p(1),q);
         jacobian(p(2),q);
         jacobian(p(3),q)];
 
-%JoG1    
 dR_q1 = diff(r,q(1));
 dR_q2 = diff(r,q(2));
 dR_q3 = diff(r,q(3));
@@ -142,7 +129,7 @@ JG3 = [JpG3;JoG3];
 
 %% 
 
-TG = A01*A12*A23*matrixDH(0,-sym(pi)/2,0,q(4));
+TG = A3*getTransformMatrix(q(4),parameter(4,1)/2,0,parameter(4,3));
 pG4 = TG(1:3,4);
 rG4 = TG(1:3,1:3);
 
@@ -181,7 +168,7 @@ JG4 = [JpG4;JoG4];
 
 %% 
 
-TG = A01*A12*A23*A34*matrixDH(0,sym(pi)/2,0,q(5));
+TG = A4*getTransformMatrix(q(5),parameter(5,1)/2,0,parameter(5,3));
 pG5 = TG(1:3,4);
 rG5 = TG(1:3,1:3);
 
@@ -220,7 +207,7 @@ JG5 = [JpG5;JoG5];
 
 %% 
 
-TG = A01*A12*A23*A34*A45*matrixDH(0,0,a(6),q(6));
+TG = A5*getTransformMatrix(q(6),parameter(6,1)/2,0,parameter(6,3));
 pG6 = TG(1:3,4);
 rG6 = TG(1:3,1:3);
 

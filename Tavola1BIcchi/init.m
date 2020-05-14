@@ -1,4 +1,4 @@
-
+ 
 clc
 clear
 close all
@@ -15,8 +15,11 @@ m = sym('m',[6 1],'real');
 % a = [1,1,1,1,1,1,1];
 % m = [1,1,1,1,1,1,1];
 
+theta0 = [sym(-pi/2);sym(pi/2);sym(-pi/2);sym(pi/2);sym(-pi/2);0];
 
-parameter = [a,m];
+parameter = [a,m,theta0];
+
+
 
 %% Lancio lo script per plottare la configurazione iniziale
 
