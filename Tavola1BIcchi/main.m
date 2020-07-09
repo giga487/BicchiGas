@@ -16,6 +16,8 @@ p = plot_3D(parameter,q);
 
 %%
 
+%%
+
 B = B_f(parameter,q,dq);
 C = C_f(parameter,q,dq); 
 G = G_f(parameter,q,dq);
