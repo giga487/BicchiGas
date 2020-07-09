@@ -1,7 +1,7 @@
 G = [0;
-- g0*m2*(q3*sin(q2) + d6*cos(q5)*sin(q2) + d6*cos(q2)*cos(q4)*sin(q5)) - g0*m3*(q3*sin(q2) + d6*cos(q5)*sin(q2) + d6*cos(q2)*cos(q4)*sin(q5)) - g0*m4*(q3*sin(q2) + d6*cos(q5)*sin(q2) + d6*cos(q2)*cos(q4)*sin(q5)) - g0*m5*(q3*sin(q2) + d6*cos(q5)*sin(q2) + d6*cos(q2)*cos(q4)*sin(q5)) - g0*m6*(q3*sin(q2) + d6*cos(q5)*sin(q2) + d6*cos(q2)*cos(q4)*sin(q5));
+(g0*m6*sin(q2)*(2*d2 + 2*d5*cos(q4) + d6*sin(q4)*sin(q5)))/2 + (d2*g0*m2*sin(q2))/2 + d2*g0*m3*sin(q2) + d2*g0*m4*sin(q2) + (g0*m5*sin(q2)*(2*d2 + d5*cos(q4)))/2;
 g0*m3*cos(q2) + g0*m4*cos(q2) + g0*m5*cos(q2) + g0*m6*cos(q2);
-d6*g0*m4*sin(q2)*sin(q4)*sin(q5) + d6*g0*m5*sin(q2)*sin(q4)*sin(q5) + d6*g0*m6*sin(q2)*sin(q4)*sin(q5);
-- d6*g0*m5*(cos(q2)*sin(q5) + cos(q4)*cos(q5)*sin(q2)) - d6*g0*m6*(cos(q2)*sin(q5) + cos(q4)*cos(q5)*sin(q2));
+- g0*m6*(d4*cos(q4)*sin(q2) + (d6*cos(q2)*sin(q5))/2 + (d6*cos(q4)*cos(q5)*sin(q2))/2) - (d4*g0*m4*cos(q4)*sin(q2))/2 - d4*g0*m5*cos(q4)*sin(q2);
+(d5*g0*m5*(cos(q2)*sin(q5) + cos(q4)*cos(q5)*sin(q2)))/2 + d5*g0*m6*(cos(q2)*sin(q5) + cos(q4)*cos(q5)*sin(q2));
 0;
 ];
