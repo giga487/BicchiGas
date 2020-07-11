@@ -5,7 +5,7 @@ close all
 
 %file init
 addpath('utils');
-addpath('PD');
+addpath('Sim');
 
 
 syms g0 real

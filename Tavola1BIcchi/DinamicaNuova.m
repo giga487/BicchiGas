@@ -3,7 +3,60 @@
 
 p0 = [0;0;0];
 z0 = [0;0;1];
-  
+
+%% 
+
+[Pcom,Etip,T00,T01,T12,T23,T34,T45,T56] =  forwardKinematics(parameter, q);
+
+A1 = T00*T01;
+A2 = A1*T12;
+A3 = A2*T23;
+A4 = A3*T34;
+A5 = A4*T45;
+AT = A5*T56;
+
+A_sperhicalArm = T00*T01*T12*T23;
+A_SphericalWrist = T34*T45*T56;
+
+%% Jacobian com function
+
+J_com = jacobian(Pcom,q);
+
+fid = fopen('J_com.txt', 'wt');
+[r,c] = size(J_com);
+
+fprintf(fid,'J_Com = [');
+for i = 1:r
+    for j = 1:c
+        if(j == c)           
+            fprintf(fid,'%s;\n',J_com(i,j));
+            continue
+        end
+        fprintf(fid,'%s,',J_com(i,j));
+    end
+end
+fprintf(fid,'];');
+fclose(fid);
+
+J_com = jacobian(Pcom,q);
+%% End effector
+J_endeffector = jacobian(T56(1:3,4),q);
+
+fid = fopen('J_endef.txt', 'wt');
+[r,c] = size(J_endeffector);
+
+fprintf(fid,'J_end = [');
+for i = 1:r
+    for j = 1:c
+        if(j == c)           
+            fprintf(fid,'%s;\n',J_endeffector(i,j));
+            continue
+        end
+        fprintf(fid,'%s,',J_endeffector(i,j));
+    end
+end
+fprintf(fid,'];');
+fclose(fid);
 
 %% J1
 
@@ -87,7 +140,7 @@ JgG6 = J6(4:6,:);
 
 B = simplify((m(1)*(JpG1')*JpG1 + (JgG1')*rG1*I_f(m(1),d(1))*(rG1')*JgG1+...
      m(2)*(JpG2')*JpG2 + (JgG2')*rG2*I_f(m(2),d(2))*(rG2')*JgG2+...
-     m(3)*(JpG3')*JpG3 + (JgG3')*rG3*I_f(m(3),d(3))*(rG3')*JgG3+...
+     m(3)*(JpG3')*JpG3 + (JgG3')*rG3*I_f(m(3),q(3))*(rG3')*JgG3+...
      m(4)*(JpG4')*JpG4 + (JgG4')*rG4*I_f(m(4),d(4))*(rG4')*JgG4+...
      m(5)*(JpG5')*JpG5 + (JgG5')*rG5*I_f(m(5),d(5))*(rG5')*JgG5+...
      m(6)*(JpG6')*JpG6 + (JgG6')*rG6*I_f(m(6),d(6))*(rG6')*JgG6));

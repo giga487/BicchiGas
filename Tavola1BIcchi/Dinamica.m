@@ -2,7 +2,7 @@
 
 
 
-[Etip,T00,T01,T12,T23,T34,T45,T56] =  forwardKinematics(parameter, q);
+[Pcom,Etip,T00,T01,T12,T23,T34,T45,T56] =  forwardKinematics(parameter, q);
 
 A1 = T00*T01;
 A2 = A1*T12;
@@ -13,10 +13,50 @@ AT = A5*T56;
 
 A_sperhicalArm = T00*T01*T12*T23;
 A_SphericalWrist = T34*T45*T56;
+
+%% Jacobian com function
+
+J_com = jacobian(Pcom,q);
+
+fid = fopen('J_com.txt', 'wt');
+[r,c] = size(J_com);
+
+fprintf(fid,'J_Com = [');
+for i = 1:r
+    for j = 1:c
+        if(j == c)           
+            fprintf(fid,'%s;\n',J_com(i,j));
+            continue
+        end
+        fprintf(fid,'%s,',J_com(i,j));
+    end
+end
+fprintf(fid,'];');
+fclose(fid);
+
+J_com = jacobian(Pcom,q);
+%% End effector
+J_endeffector = jacobian(T56(1:3,4),q);
+
+fid = fopen('J_endef.txt', 'wt');
+[r,c] = size(J_endeffector);
+
+fprintf(fid,'J_end = [');
+for i = 1:r
+    for j = 1:c
+        if(j == c)           
+            fprintf(fid,'%s;\n',J_endeffector(i,j));
+            continue
+        end
+        fprintf(fid,'%s,',J_endeffector(i,j));
+    end
+end
+fprintf(fid,'];');
+fclose(fid);
 %%
-clc
-clear
-load('din1.mat');
+% clc
+% clear
+% load('din1.mat');
 %% DINA
 
 % getTransformMatrix(theta, d, a, alpha)
@@ -100,8 +140,7 @@ JoG2 =  simplify([TOR1,TOR2,TOR3,TOR4,TOR5,TOR6]);
 JG2 = [JpG2;JoG2];
 
 %%
-
-TG = A2*getTransformMatrix(parameter(3,3),q(3)/2,0,0);
+TG = A2*getTransformMatrix(0,q(3)/2,0,0);
 pG3 = TG(1:3,4);
 rG3 = TG(1:3,1:3);
 
@@ -252,6 +291,7 @@ JoG6 =  simplify([TOR1,TOR2,TOR3,TOR4,TOR5,TOR6]);
 
 JG6 = [JpG6;JoG6];
 
+
 %% 
 B = (m(1)*(JpG1')*JpG1 + (JoG1')*rG1*I_f(m(1),d(1))*(rG1')*JoG1+...
      m(2)*(JpG2')*JpG2 + (JoG2')*rG2*I_f(m(2),d(2))*(rG2')*JoG2+...
@@ -274,7 +314,7 @@ B = (m(1)*(JpG1')*JpG1 + (JoG1')*rG1*I_f(m(1),d(1))*(rG1')*JoG1+...
 % load('wk_S.mat');
 
 %%
-fid = fopen('B_new.txt', 'wt');
+fid = fopen('B.txt', 'wt');
 
 [r,c] = size(B);
 
@@ -298,12 +338,14 @@ C = CoriolisMatrix(B,q,dq);
 fid = fopen('C.txt', 'wt');
 [r,c] = size(C);
 
+fprintf(fid,'C = [');
 for i = 1:r
     for j = 1:c
         fprintf(fid,'%s,',C(i,j));
     end
     fprintf(fid,';\n');
 end
+fprintf(fid,'];');
 fclose(fid);
 
 
@@ -315,12 +357,14 @@ G = -(m(1)*(JpG1')*g+m(2)*(JpG2')*g +m(3)*(JpG3')*g + +m(4)*(JpG4')*g +m(5)*(JpG
 fid = fopen('G.txt', 'wt');
 [r,c] = size(G);
 
+fprintf(fid,'G = [');
 for i = 1:r
     for j = 1:c
         fprintf(fid,'%s,',G(i,j));
     end
     fprintf(fid,';\n');
 end
+fprintf(fid,'];');
 fclose(fid);
 
 
