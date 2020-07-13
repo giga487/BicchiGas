@@ -40,7 +40,7 @@ fclose(fid);
 
 J_com = jacobian(Pcom,q);
 %% End effector
-J_endeffector = jacobian(T56(1:3,4),q);
+J_endeffector = jacobian(Etip(1:3,4),q);
 
 fid = fopen('J_endef.txt', 'wt');
 [r,c] = size(J_endeffector);
