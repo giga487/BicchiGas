@@ -26,9 +26,9 @@ x_com0 = Pcom;
 x_endEff0 = Etip(1:3,4);
 
 Kp = 100;
-Kd = 1;
+Kd = 10;
 
-[Pcom, Etip] = forwardKinematics(parameter, [pi/3,0,0.5,0,pi/3,0]');
+[Pcom, Etip] = forwardKinematics(parameter, [pi/3,0,2,0,pi/3,0]');
 
 x_com_D = Pcom;
 x_endEff_D = Etip(1:3,4);
