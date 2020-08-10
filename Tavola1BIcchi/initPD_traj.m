@@ -72,5 +72,5 @@ sim('PD_traj',Simulation_Time);
 
 %% PLOT
 
-plot_error(out, 'PD_traj');
+plot_error(ans, 'PD_traj');
 

@@ -19,6 +19,7 @@ parameter = [parameter,theta0];
 % parameter = [d,m,theta0];
 
 q0 = [0,0,0,0,0,0]';
+
 dq0 = q0;
 [Pcom, Etip] = forwardKinematics(parameter, q0 );
 

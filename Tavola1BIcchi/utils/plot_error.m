@@ -1,17 +1,17 @@
 
 function plot_error(data_sim, sim_string)
 
-    t_sim = data_sim.t_sim_CompTorque.signals.values;
+    t_sim = data_sim.t_sim.signals.values;
 %     q_sim = data_sim.q_CompTorque.signals.values;
     
-    [r,c] = size(data_sim.tau_CompTorque.signals.values);
+    [r,c] = size(data_sim.tau.signals.values);
     
     %% Tau
     title_string = sprintf("%s: Tau", sim_string );
     figure
     for i = 1:c        
 
-        plot(t_sim,data_sim.tau_CompTorque.signals.values(:,i));
+        plot(t_sim,data_sim.tau.signals.values(:,i));
         leg{i} = sprintf('Tau_%d', i);
         hold on;
 
@@ -28,7 +28,7 @@ function plot_error(data_sim, sim_string)
     figure
     for i = 1:c        
 
-        plot(t_sim,data_sim.e_joint_CompTorque.signals.values(:,i));
+        plot(t_sim,data_sim.e_joint.signals.values(:,i));
         leg{i} = sprintf('e_%d', i);
         hold on;
 
@@ -45,7 +45,7 @@ function plot_error(data_sim, sim_string)
     figure
     for i = 1:3 %x y z        
 
-        plot(t_sim,data_sim.e_x_CompTorque.signals.values(:,i));
+        plot(t_sim,data_sim.e_x.signals.values(:,i));
         leg{i} = sprintf('e_x_%d', i);
         hold on;
 
