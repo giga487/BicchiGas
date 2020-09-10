@@ -1,6 +1,7 @@
 
 clc
 clear
+close all
 
 addpath('Sim');
 addpath('utils');
@@ -17,17 +18,14 @@ parameter = [0.50,10;
 theta0 = [(-pi/2);(pi/2);0;(-pi/2);(pi/2);0];
 parameter = [parameter,theta0];
 
-% parameter = [d,m,theta0];
-
 q0 = [0,0,0,0,0,0]';
 dq0 = q0;
-[Pcom, Etip] = forwardKinematics(parameter, q0 );
+[Pcom, Etip] = forwardKinematics(parameter, q0);
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3,4);
 
-Kd_endEff = 1000000;
-K_endEff = [100, Kd_endEff];
+K_endEff = [100000, 1000];
 
 qf =  [-pi/3,pi/6,1.5,pi/2,pi/3,-pi/4]';
 [Pcom, Etip] = forwardKinematics(parameter,qf);
