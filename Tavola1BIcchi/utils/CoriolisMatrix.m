@@ -4,7 +4,7 @@ function C = CoriolisMatrix(B,q,dq)
 
     [r,n] = size(B);
     [rq, cq] = size(q);
-    sym C real
+    sym C_ real
     syms e gamma_ real 
     mezzo = 0.5;
    
@@ -15,10 +15,11 @@ function C = CoriolisMatrix(B,q,dq)
                gamma_(k,1) = mezzo*(diff(B(i,j),q(k)) + diff(B(i,k),q(j)) - diff(B(j,k),q(i)))*dq(k);
                
             end
-            C(i,j) = sum(gamma_);
+            C_(i,j) = sum(gamma_);
             
         end
         
     end
     
+     C = simplify(C_);
 end

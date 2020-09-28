@@ -137,7 +137,8 @@ JgG5 = J5(4:6,:);
 JgG6 = J6(4:6,:);
 
 %% B
-
+display("Calcolo B");
+tic
 B = simplify((m(1)*(JpG1')*JpG1 + (JgG1')*rG1*I_f(m(1),d(1))*(rG1')*JgG1+...
      m(2)*(JpG2')*JpG2 + (JgG2')*rG2*I_f(m(2),d(2))*(rG2')*JgG2+...
      m(3)*(JpG3')*JpG3 + (JgG3')*rG3*I_f(m(3),q(3))*(rG3')*JgG3+...
@@ -159,11 +160,16 @@ for i = 1:r
 end
 fprintf(fid,'];');
 fclose(fid);
+toc
+display("fine calcolo B\n");
+
 
 %% C
-
+display("Inizio calcolo C");
+tic
 C = CoriolisMatrix(B,q,dq);
-
+toc
+display("Generazione file C");
 fid = fopen('C.txt', 'wt');
 [r,c] = size(C);
 
@@ -180,9 +186,10 @@ end
 fprintf(fid,'];');
 fclose(fid);
 
+display("Fine calcolo C");
 
 %% G
-
+display("Inizio calcolo G");
 g = [0,0,-g0]';
 tic
 G = -(m(1)*(JpG1')*g+m(2)*(JpG2')*g +m(3)*(JpG3')*g + m(4)*(JpG4')*g + m(5)*(JpG5')*g + m(6)*(JpG6')*g);
@@ -202,4 +209,4 @@ for i = 1:r
 end
 fprintf(fid,'];');
 fclose(fid);
-
+display("Fine calcolo G");

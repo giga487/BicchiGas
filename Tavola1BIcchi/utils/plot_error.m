@@ -19,7 +19,7 @@ function plot_error(data_sim, sim_string)
     legend(leg);    
     ylabel('tau [Nm]');
     xlabel('time [s]');
-    title(title_string);
+    title(title_string,'Interpreter','none');
     hold off;
     grid on;
 
@@ -36,7 +36,7 @@ function plot_error(data_sim, sim_string)
     legend(leg);
     ylabel('e [rad]');
     xlabel('time [s]');
-    title(title_string);
+    title(title_string,'Interpreter','none');
     hold off;
     grid on;
     
@@ -53,7 +53,7 @@ function plot_error(data_sim, sim_string)
     ylabel('e operative space [m]');
     xlabel('time [s]');
     legend(leg);
-    title(title_string);
+    title(title_string,'Interpreter','none');
     hold off;
     grid on;
    

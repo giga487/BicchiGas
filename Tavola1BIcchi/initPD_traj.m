@@ -3,17 +3,17 @@ clc
 clear
 close all
 
-addpath('Sim');
-addpath('utils');
-addpath('utils/traj');
+currentFile = genpath( './' );
+addpath(currentFile);
 
+%%
 
 parameter = [0.50,10;
              1,5;
              0,10;
              1,2;
              0,4;
-             1,5;];
+             1, 2;];
          
 theta0 = [(-pi/2);(pi/2);0;(-pi/2);(pi/2);0];
 parameter = [parameter,theta0];
@@ -27,7 +27,8 @@ x_endEff0 = Etip(1:3,4);
 
 K_endEff = [100000, 1000];
 
-qf =  [-pi/3,pi/6,1.5,pi/2,pi/3,-pi/4]';
+% qf =  [-pi/3,pi/6,1.5,pi/2,pi/3,0]';
+qf =  [q0(1:end-1);pi/2];
 [Pcom, Etip] = forwardKinematics(parameter,qf);
 
 x_endEff_D = Etip(1:3,4);
@@ -61,13 +62,18 @@ end
 
 figure;
 plot(t_vec,q_vec(:,:));
+for x = 1:1:6
+    leg{x} = sprintf('Tau_%d\n', x);
+end
+legend(leg);
 grid on;
-%%
-Switch_PD_OBJ = -1; % -1 è posizione fissa, 1 è insegumento traiettoria, switch dentro al blocco
 
 %% 
+tic
+display("Calcolo simulazione ");
 sim('PD_traj',Simulation_Time);
-
+display("Fine simulazione ");
+toc
 %% PLOT
 
 plot_error(ans, 'PD_traj');

@@ -2,8 +2,9 @@
 clc
 clear
 
-addpath('Sim');
-addpath('utils');
+path_here = genpath();
+addpath(path_here);
+
 
 
 
