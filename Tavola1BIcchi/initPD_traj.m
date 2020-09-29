@@ -18,17 +18,17 @@ parameter = [0.50,10;
 theta0 = [(-pi/2);(pi/2);0;(-pi/2);(pi/2);0];
 parameter = [parameter,theta0];
 
-q0 = [0,0,0,0,0,0]';
+q0 = [0,0,1,0,0,0]';
 dq0 = q0;
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3,4);
 
-K_endEff = [100000, 1000];
+K_endEff = [1000, 10];
 
-% qf =  [-pi/3,pi/6,1.5,pi/2,pi/3,0]';
-qf =  [q0(1:end-1);pi/2];
+qf =  [-pi/3,pi/6,1.5,pi/2,pi/3,0]';
+%qf =  [q0(1:end-1);0];
 [Pcom, Etip] = forwardKinematics(parameter,qf);
 
 x_endEff_D = Etip(1:3,4);
@@ -59,7 +59,9 @@ for i = 1:1:c
 
     end
 end
-
+q_vec(:,3)   = qf(3);
+dq_vec(:,3)   = 0;
+ddq_vec(:,3)   = 0;
 figure;
 plot(t_vec,q_vec(:,:));
 for x = 1:1:6

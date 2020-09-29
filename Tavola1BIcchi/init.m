@@ -1,11 +1,10 @@
- 
 clc
 clear
 close all
 
-%file init
-addpath('utils');
-addpath('Sim');
+currentFile = genpath( './' );
+addpath(currentFile);
+
 
 
 syms g0 real

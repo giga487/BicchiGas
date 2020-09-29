@@ -1,10 +1,10 @@
 
 clc
 clear
+close all
 
-addpath('Sim');
-addpath('utils');
-addpath('utils/traj');
+currentFile = genpath( './' );
+addpath(currentFile);
 
 parameter = [0.50,10;
              1,5;

@@ -1,3 +1,10 @@
+clc
+clear
+close all
+
+currentFile = genpath( './' );
+addpath(currentFile);
+
 % Dinamica Nuova Jacobiano Geometrico
 
 
