@@ -18,17 +18,18 @@ parameter = [0.50,10;
 theta0 = [(-pi/2);(pi/2);0;(-pi/2);(pi/2);0];
 parameter = [parameter,theta0];
 
-q0 = [0,0,1,0,0,0]';
+q0 = [0,0,0,0,0,0]';
 dq0 = q0;
 [Pcom, Etip] = forwardKinematics(parameter, q0);
+L_d = 5;
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3,4);
 
-K_endEff = [1000, 10];
+K_endEff = [10, 100];
 
-qf =  [-pi/3,pi/6,1.5,pi/2,pi/3,0]';
-%qf =  [q0(1:end-1);0];
+qf =  [-pi/3,q0(2),L_d,q0(4),q0(5),pi/4]';
+%qf =  q0;
 [Pcom, Etip] = forwardKinematics(parameter,qf);
 
 x_endEff_D = Etip(1:3,4);
@@ -46,7 +47,7 @@ ddq_vec = size(Simulation_Time/t_S,size(q0,1));
 
 [r,c] = size(a0);
 
-for i = 1:1:c
+for i = [1,2,4,5,6]
     j = 1;
     for t = 0:t_S:Simulation_Time    
 
@@ -59,13 +60,13 @@ for i = 1:1:c
 
     end
 end
-q_vec(:,3)   = qf(3);
+q_vec(:,3)   = L_d;
 dq_vec(:,3)   = 0;
 ddq_vec(:,3)   = 0;
 figure;
 plot(t_vec,q_vec(:,:));
 for x = 1:1:6
-    leg{x} = sprintf('Tau_%d\n', x);
+    leg{x} = sprintf('q_%d\n', x);
 end
 legend(leg);
 grid on;
