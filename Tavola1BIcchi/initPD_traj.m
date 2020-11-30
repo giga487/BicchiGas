@@ -1,53 +1,52 @@
-
-clc
-clear
-close all
+% clc
+% clear
+% close all
 
 currentFile = genpath( './' );
 addpath(currentFile);
 
 %%
 
-parameter = [0.50,10;
-             1,5;
-             0,10;
-             1,2;
-             0,4;
-             1, 2;];
+parameter = [0.50,  10;
+             1,     5;
+             0,     10;
+             1,     2;
+             0,     4;
+             1,     2;];
          
-theta0 = [(-pi/2);(pi/2);0;(-pi/2);(pi/2);0];
-parameter = [parameter,theta0];
+theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
+parameter = [parameter, theta0];
 
-q0 = [0,0,0,0,0,0]';
+q0 = [0, 0, 0, 0, 0, 0]';
 dq0 = q0;
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 L_d = 5;
 
 x_COM0 = Pcom;
-x_endEff0 = Etip(1:3,4);
+x_endEff0 = Etip(1:3, 4);
 
 K_endEff = [10, 100];
 
-qf =  [-pi/3,q0(2),L_d,q0(4),q0(5),pi/4]';
+qf =  [-pi/3, q0(2), L_d, q0(4), q0(5), pi/4]';
 %qf =  q0;
-[Pcom, Etip] = forwardKinematics(parameter,qf);
+[Pcom, Etip] = forwardKinematics(parameter, qf);
 
-x_endEff_D = Etip(1:3,4);
+x_endEff_D = Etip(1:3, 4);
 
 %% generazione traiettorie
 
 Simulation_Time = 20;
 t_S = 0.1;
 
-q_vec = size(Simulation_Time/t_S,size(q0,1));
-dq_vec = size(Simulation_Time/t_S,size(q0,1));
-ddq_vec = size(Simulation_Time/t_S,size(q0,1));
+q_vec = size(Simulation_Time/t_S,size(q0, 1));
+dq_vec = size(Simulation_Time/t_S,size(q0, 1));
+ddq_vec = size(Simulation_Time/t_S,size(q0, 1));
 
 [a0, a1, a2, a3] = pol_coeffs(q0, dq0, qf, dq0, Simulation_Time);
 
 [r,c] = size(a0);
 
-for i = [1,2,4,5,6]
+for i = [1, 2, 4, 5, 6]
     j = 1;
     for t = 0:t_S:Simulation_Time    
 
@@ -60,11 +59,11 @@ for i = [1,2,4,5,6]
 
     end
 end
-q_vec(:,3)   = L_d;
-dq_vec(:,3)   = 0;
-ddq_vec(:,3)   = 0;
+q_vec(:,3) = L_d;
+dq_vec(:,3) = 0;
+ddq_vec(:,3) = 0;
 figure;
-plot(t_vec,q_vec(:,:));
+plot(t_vec,q_vec(:, :));
 for x = 1:1:6
     leg{x} = sprintf('q_%d\n', x);
 end
@@ -73,11 +72,11 @@ grid on;
 
 %% 
 tic
-display("Calcolo simulazione ");
-sim('PD_traj',Simulation_Time);
-display("Fine simulazione ");
+% display("Calcolo simulazione");
+% sim('PD_traj', Simulation_Time);
+% display("Fine simulazione");
 toc
 %% PLOT
 
-plot_error(ans, 'PD_traj');
+% plot_error(ans, 'PD_traj');
 
