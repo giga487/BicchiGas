@@ -1,4 +1,3 @@
-
 function B = B_f(q,param)
 
 q1 = q(1);

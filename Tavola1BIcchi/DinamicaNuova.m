@@ -1,18 +1,16 @@
-clc
-clear
-close all
+% clc
+% clear
+% close all
 
 currentFile = genpath( './' );
 addpath(currentFile);
 
 % Dinamica Nuova Jacobiano Geometrico
 
-
 p0 = [0;0;0];
 z0 = [0;0;1];
 
 %% 
-
 [Pcom,Etip,T00,T01,T12,T23,T34,T45,T56] =  forwardKinematics(parameter, q);
 
 A1 = T00*T01;
@@ -26,7 +24,6 @@ A_sperhicalArm = T00*T01*T12*T23;
 A_SphericalWrist = T34*T45*T56;
 
 %% Jacobian com function
-
 J_com = jacobian(Pcom,q);
 
 fid = fopen('J_com.txt', 'wt');
@@ -46,6 +43,7 @@ fprintf(fid,'];');
 fclose(fid);
 
 J_com = jacobian(Pcom,q);
+
 %% End effector
 J_endeffector = jacobian(Etip(1:3,4),q);
 
@@ -66,11 +64,11 @@ fprintf(fid,'];');
 fclose(fid);
 
 %% J1
-
 T = getTransformMatrix(q(1),d(1)/2,0,parameter(1,3));
 p1 = T(1:3,4);
 J1 = simplify( [[cross(z0,p1-p0);z0],zeros(6,5)]);
 rG1 = T(1:3,1:3);       
+
 %% J2
 A1 = getTransformMatrix(q(1),d(1),0,parameter(1,3));
 T = A1*getTransformMatrix(q(2),d(2)/2,0,parameter(2,3));
@@ -81,6 +79,7 @@ p = T(1:3,4);
 
 J2 = simplify( [[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],zeros(6,4)]);
 rG2 = T(1:3,1:3);    
+
 %% J3
 A2 = A1*getTransformMatrix(q(2),d(2),0,parameter(2,3));
 T = A2*getTransformMatrix(0,q(3)/2,0,parameter(3,3));
@@ -91,6 +90,7 @@ p = T(1:3,4);
 
 J3 = simplify( [[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],[z2;zeros(3,1)],zeros(6,3)]);
 rG3 = T(1:3,1:3);    
+
 %%
 A3 = A2*getTransformMatrix(0,q(3),0,parameter(3,3));
 T = A3*getTransformMatrix(q(4),d(4)/2,0,parameter(4,3));
@@ -101,8 +101,8 @@ p = T(1:3,4);
 
 J4 = simplify( [[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],[z2;zeros(3,1)],[cross(z3,p-p3);z3],zeros(6,2)]);
 rG4 = T(1:3,1:3);    
-%%
 
+%%
 A4 = A3*getTransformMatrix(q(4),d(4),0,parameter(4,3));
 T = A4*getTransformMatrix(q(5),d(5)/2,0,parameter(5,3));
 
@@ -113,8 +113,8 @@ p = T(1:3,4);
 J5 = simplify( [[cross(z0,p-p0);z1],[cross(z1,p-p1);z1],[z2;zeros(3,1)],[cross(z3,p-p3);z1],[cross(z4,p-p4);z4],zeros(6,1)]);
 
 rG5 = T(1:3,1:3);    
-%%
 
+%%
 A5 = A4*getTransformMatrix(q(5),d(5),0,parameter(5,3));
 T = A5*getTransformMatrix(q(6),d(6)/2,0,parameter(6,3));
 
@@ -169,7 +169,6 @@ fprintf(fid,'];');
 fclose(fid);
 toc
 display("fine calcolo B\n");
-
 
 %% C
 display("Inizio calcolo C");

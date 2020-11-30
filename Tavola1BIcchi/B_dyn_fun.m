@@ -1,5 +1,3 @@
-
-
 function B = B_dyn_fun(parameter,q)
 
     a1 = parameter(1,1);
@@ -26,7 +24,5 @@ function B = B_dyn_fun(parameter,q)
     dq4 = dq(4);
     dq5 = dq(5);
     dq6 = dq(6);
-    
-    
     
     

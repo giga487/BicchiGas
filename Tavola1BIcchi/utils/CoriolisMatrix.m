@@ -1,11 +1,9 @@
-
-
 function C = CoriolisMatrix(B,q,dq)
 
     [r,n] = size(B);
     [rq, cq] = size(q);
-    sym C_ real
-    syms e gamma_ real 
+    sym C_ real;
+    syms e gamma_ real; 
     mezzo = 0.5;
    
     for i = 1:1:r
