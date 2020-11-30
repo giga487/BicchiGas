@@ -12,7 +12,7 @@ h2 = y(2,1);
 
 % Gamma0 = span(g0,...,g1) = g0
 
-Gamma = liebracket(f_sym,g_sym,q,3);
+Gamma = liebracket(f_sym,g_sym,q,2);
 Delta = [g_sym,Gamma];
 
 %%
@@ -30,7 +30,6 @@ rank(Delta_q3)
 rank(Delta_q4)
 
 %%
-
 rank(Delta_q1)
 
 
