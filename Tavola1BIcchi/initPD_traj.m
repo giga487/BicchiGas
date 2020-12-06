@@ -1,11 +1,9 @@
-% clc
+clc
 % clear
-% close all
+close all
 
 currentFile = genpath( './' );
 addpath(currentFile);
-
-%%
 
 parameter = [0.50,  10;
              1,     5;
@@ -20,12 +18,12 @@ parameter = [parameter, theta0];
 q0 = [0, 0, 0, 0, 0, 0]';
 dq0 = q0;
 [Pcom, Etip] = forwardKinematics(parameter, q0);
-L_d = 5;
+L_d = 3;
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-K_endEff = [10, 100];
+K_endEff = [1, 10000];
 
 qf =  [-pi/3, q0(2), L_d, q0(4), q0(5), pi/4]';
 %qf =  q0;
@@ -35,7 +33,7 @@ x_endEff_D = Etip(1:3, 4);
 
 %% generazione traiettorie
 
-Simulation_Time = 20;
+Simulation_Time = 25;
 t_S = 0.1;
 
 q_vec = size(Simulation_Time/t_S,size(q0, 1));
@@ -72,11 +70,11 @@ grid on;
 
 %% 
 tic
-% display("Calcolo simulazione");
-% sim('PD_traj', Simulation_Time);
-% display("Fine simulazione");
+disp("Calcolo simulazione");
+sim('PD_traj', Simulation_Time);
+disp("Fine simulazione");
 toc
 %% PLOT
 
-% plot_error(ans, 'PD_traj');
+plot_error(ans, 'PD_traj');
 
