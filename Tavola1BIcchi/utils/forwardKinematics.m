@@ -22,13 +22,22 @@ function [Pcom, Etip, T00, T01, T12, T23, T34, T45, T56] = forwardKinematics(par
 %     T45 = getTransformMatrix(theta5,d5,0,param(5,3));
 %     T56 = getTransformMatrix(theta6,d6,0,param(6,3));
 
+    % The Stanford manipulator is composed of a spherical arm and a spherical wrist
+    % link  a_i     aplha_i     d_i     theta_i
+    % 1     0       -pi/2       0       theta1
+    % 2     0       pi/2        d2      theta2
+    % 3     0       0           d3      0
+    % 4     0       -pi/2       0       theta4
+    % 5     0       pi/2        0       theta5
+    % 6     0       0           d6      theta6
+    
     T00 = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1];
-    T01 = getTransformMatrix(theta1, param(1,1), 0, param(1,3));
-    T12 = getTransformMatrix(theta2, param(2,1), 0, param(2,3));
+    T01 = getTransformMatrix(theta1, d1, 0, param(1,3));
+    T12 = getTransformMatrix(theta2, d2, 0, param(2,3));
     T23 = getTransformMatrix(0, q(3), 0, param(3,3)); %è una lunghezza la variabile
-    T34 = getTransformMatrix(theta4, param(4,1), 0, param(4,3));
-    T45 = getTransformMatrix(theta5, param(5,1), 0, param(5,3));
-    T56 = getTransformMatrix(theta6, param(6,1), 0, param(6,3));
+    T34 = getTransformMatrix(theta4, d4, 0, param(4,3));
+    T45 = getTransformMatrix(theta5, d5, 0, param(5,3));
+    T56 = getTransformMatrix(theta6, d6, 0, param(6,3));
 
     Etip = T00 * T01 * T12 * T23 * T34 * T45 * T56;
     
