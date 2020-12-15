@@ -73,9 +73,9 @@ grid on;
 %% 
 tic
 disp("Calcolo simulazione");
-sim('PD_traj', Simulation_Time);
+% sim('PD_traj', Simulation_Time);
 disp("Fine simulazione");
 toc
 
 %% PLOT
-plot_error(ans, 'PD_traj');
+% plot_error(ans, 'PD_traj');

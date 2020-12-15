@@ -1,0 +1,1602 @@
+diff --git a/Tavola1BIcchi/CompTorque.slxc b/Tavola1BIcchi/CompTorque.slxc
+deleted file mode 100644
+index 811721b..0000000
+Binary files a/Tavola1BIcchi/CompTorque.slxc and /dev/null differ
+diff --git a/Tavola1BIcchi/PD.slxc b/Tavola1BIcchi/PD.slxc
+deleted file mode 100644
+index 8976d98..0000000
+Binary files a/Tavola1BIcchi/PD.slxc and /dev/null differ
+diff --git a/Tavola1BIcchi/PD_traj.slxc b/Tavola1BIcchi/PD_traj.slxc
+deleted file mode 100644
+index 2492a57..0000000
+Binary files a/Tavola1BIcchi/PD_traj.slxc and /dev/null differ
+diff --git a/Tavola1BIcchi/Sim/PD_traj.slx b/Tavola1BIcchi/Sim/PD_traj.slx
+index 5308bb0..580c6bf 100644
+Binary files a/Tavola1BIcchi/Sim/PD_traj.slx and b/Tavola1BIcchi/Sim/PD_traj.slx differ
+diff --git a/Tavola1BIcchi/init.m b/Tavola1BIcchi/init.m
+index af2de1c..db7de8a 100644
+--- a/Tavola1BIcchi/init.m
++++ b/Tavola1BIcchi/init.m
+@@ -6,10 +6,10 @@ currentFile = genpath( './' );
+ addpath(currentFile);
+ 
+ syms g0 real
+-q = sym('q',[6 1],'real');
+-dq = sym('dq',[6 1],'real');
+-d = sym('d',[6 1],'real');
+-m = sym('m',[6 1],'real');
++q = sym('q', [6 1], 'real');
++dq = sym('dq', [6 1], 'real');
++d = sym('d', [6 1], 'real');
++m = sym('m', [6 1], 'real');
+ % a = [1,1,1,1,1,1,1];
+ % m = [1,1,1,1,1,1,1];
+ 
+@@ -17,8 +17,8 @@ m = sym('m',[6 1],'real');
+ % d(4) = (0);
+ % d(5) = (0);
+ 
+-theta0 = [sym(-pi/2);sym(pi/2);0;sym(-pi/2);sym(pi/2);0];
+-parameter = [d,m,theta0];
++theta0 = [sym(-pi/2); sym(pi/2); 0; sym(-pi/2); sym(pi/2); 0];
++parameter = [d, m, theta0];
+ 
+ %% Lancio lo script per plottare la configurazione iniziale
+ % main
+diff --git a/Tavola1BIcchi/initPD_traj.m b/Tavola1BIcchi/initPD_traj.m
+index 1a119e1..2fec7cd 100644
+--- a/Tavola1BIcchi/initPD_traj.m
++++ b/Tavola1BIcchi/initPD_traj.m
+@@ -5,7 +5,7 @@ close all
+ currentFile = genpath( './' );
+ addpath(currentFile);
+ 
+-parameter = [0.50,  10;
++parameter = [0,     10;
+              1,     5;
+              0,     10;
+              1,     2;
+@@ -15,7 +15,7 @@ parameter = [0.50,  10;
+ theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
+ parameter = [parameter, theta0];
+ 
+-q0 = [0, 0, 0, 0, 0, 0]';
++q0 = [0 0 0 0 0 0]';
+ dq0 = q0;
+ [Pcom, Etip] = forwardKinematics(parameter, q0);
+ L_d = 3;
+@@ -23,7 +23,7 @@ L_d = 3;
+ x_COM0 = Pcom;
+ x_endEff0 = Etip(1:3, 4);
+ 
+-K_endEff = [1, 10000];
++K_endEff = [1, 1];
+ 
+ qf =  [-pi/3, q0(2), L_d, q0(4), q0(5), pi/4]';
+ %qf =  q0;
+@@ -32,7 +32,6 @@ qf =  [-pi/3, q0(2), L_d, q0(4), q0(5), pi/4]';
+ x_endEff_D = Etip(1:3, 4);
+ 
+ %% generazione traiettorie
+-
+ Simulation_Time = 25;
+ t_S = 0.1;
+ 
+@@ -57,14 +56,17 @@ for i = [1, 2, 4, 5, 6]
+ 
+     end
+ end
++
+ q_vec(:,3) = L_d;
+ dq_vec(:,3) = 0;
+ ddq_vec(:,3) = 0;
+ figure;
+ plot(t_vec,q_vec(:, :));
++
+ for x = 1:1:6
+     leg{x} = sprintf('q_%d\n', x);
+ end
++
+ legend(leg);
+ grid on;
+ 
+@@ -74,7 +76,6 @@ disp("Calcolo simulazione");
+ sim('PD_traj', Simulation_Time);
+ disp("Fine simulazione");
+ toc
+-%% PLOT
+ 
++%% PLOT
+ plot_error(ans, 'PD_traj');
+-
+diff --git a/Tavola1BIcchi/main.m b/Tavola1BIcchi/main.m
+index 354525b..968a014 100644
+--- a/Tavola1BIcchi/main.m
++++ b/Tavola1BIcchi/main.m
+@@ -1,28 +1,28 @@
+-% main
+-
+-parameter = [1,1;
+-             1,1;
+-             0,1;
+-             1,1;
+-             1,1;
+-             1,1;];
++%% main
++parameter = [1  1;
++             1  1;
++             0  1;
++             1  1;
++             1  1;
++             1  1;];
+          
+ parameter = [parameter,theta0];
+ 
+-q = [0,0,3,0,0,0]';
+-dq = [1,1,1,1,1,1]';
++q = [0 0 3 0 0 0]';
++dq = [1 1 1 1 1 1]';
+ 
+ p = plot_3D(parameter,q);
+ 
+ %%
++% B = B_f(parameter, q, dq);
++% C = C_f(parameter, q, dq); 
++% G = G_f(parameter, q, dq);
+ 
+-%%
++B = B_f(q, parameter);
++G = G_f(q, parameter);
++C = C_f(q, dq, parameter);
+ 
+-B = B_f(parameter,q,dq);
+-C = C_f(parameter,q,dq); 
+-G = G_f(parameter,q,dq);
++tau = [0 0 0 0 0 0]';
+ 
+-tau = [0,0,0,0,0,0]';
+ %%
+-
+-ddq = B\(tau-C*dq-G);
+\ No newline at end of file
++ddq = B\(tau-C*dq-G);
+diff --git a/Tavola1BIcchi/plot_3D.m b/Tavola1BIcchi/plot_3D.m
+index 546f262..5ebf922 100644
+--- a/Tavola1BIcchi/plot_3D.m
++++ b/Tavola1BIcchi/plot_3D.m
+@@ -5,7 +5,7 @@ function x = plot_3D(parameter,q)
+     m = parameter(1:6,2);
+ 
+     x = [];
+-    [Etip,T00,T01,T12,T23,T34,T45,T56] = forwardKinematics(parameter, q);
++    [Pcom, Etip, T00, T01, T12, T23, T34, T45, T56] = forwardKinematics(parameter, q);
+     
+     A1 = T00*T01;
+     A2 = A1*T12;
+@@ -24,10 +24,12 @@ function x = plot_3D(parameter,q)
+     figure
+     hold on;
+     plot3(x(1,1),x(2,1),x(3,1),'bo');
++    
+     for i = 1:size(x,2)-1
+         line(x(1,i:i+1),x(2,i:i+1),x(3,i:i+1));
+         plot3(x(1,i+1),x(2,i+1),x(3,i+1),'ro');
+     end
++    
+     plot3(x(1,end),x(2,end),x(3,end),'go');
+ %     plot3(x(1,3),x(2,3),x(3,3),'yo');
+ %     plot3(x(1,1:end-1),x(2,1:end-1),x(3,1:end-1));
+@@ -38,6 +40,4 @@ function x = plot_3D(parameter,q)
+     grid on;
+     hold off;
+     
+-    
+-    
+ end
+diff --git a/Tavola1BIcchi/slprj/_jitprj/jitEngineAccessInfo.mat b/Tavola1BIcchi/slprj/_jitprj/jitEngineAccessInfo.mat
+deleted file mode 100644
+index 54ecc4a..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/jitEngineAccessInfo.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s2tru2NuXRQyeDGJ4uvdsaG.l b/Tavola1BIcchi/slprj/_jitprj/s2tru2NuXRQyeDGJ4uvdsaG.l
+deleted file mode 100644
+index 777dda2..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s2tru2NuXRQyeDGJ4uvdsaG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s2tru2NuXRQyeDGJ4uvdsaG.mat b/Tavola1BIcchi/slprj/_jitprj/s2tru2NuXRQyeDGJ4uvdsaG.mat
+deleted file mode 100644
+index 089519c..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s2tru2NuXRQyeDGJ4uvdsaG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s3S97qzoMDdArUXFDVBPp9D.l b/Tavola1BIcchi/slprj/_jitprj/s3S97qzoMDdArUXFDVBPp9D.l
+deleted file mode 100644
+index 47855cc..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s3S97qzoMDdArUXFDVBPp9D.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s3S97qzoMDdArUXFDVBPp9D.mat b/Tavola1BIcchi/slprj/_jitprj/s3S97qzoMDdArUXFDVBPp9D.mat
+deleted file mode 100644
+index a76affd..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s3S97qzoMDdArUXFDVBPp9D.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s3id1GiWEWHMdZCplzUSwXB.l b/Tavola1BIcchi/slprj/_jitprj/s3id1GiWEWHMdZCplzUSwXB.l
+deleted file mode 100644
+index a9094d5..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s3id1GiWEWHMdZCplzUSwXB.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s3id1GiWEWHMdZCplzUSwXB.mat b/Tavola1BIcchi/slprj/_jitprj/s3id1GiWEWHMdZCplzUSwXB.mat
+deleted file mode 100644
+index 0616e0b..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s3id1GiWEWHMdZCplzUSwXB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s3s7KZSNetfY9tAdjsN3XoD.l b/Tavola1BIcchi/slprj/_jitprj/s3s7KZSNetfY9tAdjsN3XoD.l
+deleted file mode 100644
+index e721e43..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s3s7KZSNetfY9tAdjsN3XoD.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s3s7KZSNetfY9tAdjsN3XoD.mat b/Tavola1BIcchi/slprj/_jitprj/s3s7KZSNetfY9tAdjsN3XoD.mat
+deleted file mode 100644
+index fd5405f..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s3s7KZSNetfY9tAdjsN3XoD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s5EVnmxRcpzaVmYGkyqzTtC.l b/Tavola1BIcchi/slprj/_jitprj/s5EVnmxRcpzaVmYGkyqzTtC.l
+deleted file mode 100644
+index 70084ab..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s5EVnmxRcpzaVmYGkyqzTtC.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s5EVnmxRcpzaVmYGkyqzTtC.mat b/Tavola1BIcchi/slprj/_jitprj/s5EVnmxRcpzaVmYGkyqzTtC.mat
+deleted file mode 100644
+index 0b606c1..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s5EVnmxRcpzaVmYGkyqzTtC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s6LJvtlg36jwHIiVJaVuzOD.l b/Tavola1BIcchi/slprj/_jitprj/s6LJvtlg36jwHIiVJaVuzOD.l
+deleted file mode 100644
+index b9f6763..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s6LJvtlg36jwHIiVJaVuzOD.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s6LJvtlg36jwHIiVJaVuzOD.mat b/Tavola1BIcchi/slprj/_jitprj/s6LJvtlg36jwHIiVJaVuzOD.mat
+deleted file mode 100644
+index e149185..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s6LJvtlg36jwHIiVJaVuzOD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s7lPO0TSvTY9ceonspz9WDG.l b/Tavola1BIcchi/slprj/_jitprj/s7lPO0TSvTY9ceonspz9WDG.l
+deleted file mode 100644
+index bac9e84..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s7lPO0TSvTY9ceonspz9WDG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s7lPO0TSvTY9ceonspz9WDG.mat b/Tavola1BIcchi/slprj/_jitprj/s7lPO0TSvTY9ceonspz9WDG.mat
+deleted file mode 100644
+index 2d936a8..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s7lPO0TSvTY9ceonspz9WDG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s7lVUCUmkBUJivMDpQRKExE.l b/Tavola1BIcchi/slprj/_jitprj/s7lVUCUmkBUJivMDpQRKExE.l
+deleted file mode 100644
+index d4c874b..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s7lVUCUmkBUJivMDpQRKExE.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s7lVUCUmkBUJivMDpQRKExE.mat b/Tavola1BIcchi/slprj/_jitprj/s7lVUCUmkBUJivMDpQRKExE.mat
+deleted file mode 100644
+index 6fe0770..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s7lVUCUmkBUJivMDpQRKExE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s8vqbif39mWHUaEL8qaRmuF.l b/Tavola1BIcchi/slprj/_jitprj/s8vqbif39mWHUaEL8qaRmuF.l
+deleted file mode 100644
+index 709153b..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s8vqbif39mWHUaEL8qaRmuF.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/s8vqbif39mWHUaEL8qaRmuF.mat b/Tavola1BIcchi/slprj/_jitprj/s8vqbif39mWHUaEL8qaRmuF.mat
+deleted file mode 100644
+index e1d76d9..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/s8vqbif39mWHUaEL8qaRmuF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sEr8qGWVqkmhhmxDotFZZRC.l b/Tavola1BIcchi/slprj/_jitprj/sEr8qGWVqkmhhmxDotFZZRC.l
+deleted file mode 100644
+index b7119f0..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sEr8qGWVqkmhhmxDotFZZRC.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sEr8qGWVqkmhhmxDotFZZRC.mat b/Tavola1BIcchi/slprj/_jitprj/sEr8qGWVqkmhhmxDotFZZRC.mat
+deleted file mode 100644
+index 88dff6f..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sEr8qGWVqkmhhmxDotFZZRC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sFjjIiJwHp05ww1N4EaXV6.l b/Tavola1BIcchi/slprj/_jitprj/sFjjIiJwHp05ww1N4EaXV6.l
+deleted file mode 100644
+index 709153b..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sFjjIiJwHp05ww1N4EaXV6.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sFjjIiJwHp05ww1N4EaXV6.mat b/Tavola1BIcchi/slprj/_jitprj/sFjjIiJwHp05ww1N4EaXV6.mat
+deleted file mode 100644
+index 6f20891..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sFjjIiJwHp05ww1N4EaXV6.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sFllv7aHEvVrqOnsao7qqT.l b/Tavola1BIcchi/slprj/_jitprj/sFllv7aHEvVrqOnsao7qqT.l
+deleted file mode 100644
+index 8b33ba6..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sFllv7aHEvVrqOnsao7qqT.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sFllv7aHEvVrqOnsao7qqT.mat b/Tavola1BIcchi/slprj/_jitprj/sFllv7aHEvVrqOnsao7qqT.mat
+deleted file mode 100644
+index c4d42c3..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sFllv7aHEvVrqOnsao7qqT.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sGZ7LrkzSqzVynUCz5aEPnF.l b/Tavola1BIcchi/slprj/_jitprj/sGZ7LrkzSqzVynUCz5aEPnF.l
+deleted file mode 100644
+index 8fb6992..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sGZ7LrkzSqzVynUCz5aEPnF.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sGZ7LrkzSqzVynUCz5aEPnF.mat b/Tavola1BIcchi/slprj/_jitprj/sGZ7LrkzSqzVynUCz5aEPnF.mat
+deleted file mode 100644
+index bc86341..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sGZ7LrkzSqzVynUCz5aEPnF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sIdflQYXTmROtKLdU7gQIPC.l b/Tavola1BIcchi/slprj/_jitprj/sIdflQYXTmROtKLdU7gQIPC.l
+deleted file mode 100644
+index 46b8f43..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sIdflQYXTmROtKLdU7gQIPC.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sIdflQYXTmROtKLdU7gQIPC.mat b/Tavola1BIcchi/slprj/_jitprj/sIdflQYXTmROtKLdU7gQIPC.mat
+deleted file mode 100644
+index 033bf35..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sIdflQYXTmROtKLdU7gQIPC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sJGBxeN1KbFIkXaCFAyldZE.l b/Tavola1BIcchi/slprj/_jitprj/sJGBxeN1KbFIkXaCFAyldZE.l
+deleted file mode 100644
+index 2806955..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sJGBxeN1KbFIkXaCFAyldZE.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sJGBxeN1KbFIkXaCFAyldZE.mat b/Tavola1BIcchi/slprj/_jitprj/sJGBxeN1KbFIkXaCFAyldZE.mat
+deleted file mode 100644
+index 8f1f0f8..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sJGBxeN1KbFIkXaCFAyldZE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sJatFv9lom9oEkdXYNHhN8C.l b/Tavola1BIcchi/slprj/_jitprj/sJatFv9lom9oEkdXYNHhN8C.l
+deleted file mode 100644
+index d735a9d..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sJatFv9lom9oEkdXYNHhN8C.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sJatFv9lom9oEkdXYNHhN8C.mat b/Tavola1BIcchi/slprj/_jitprj/sJatFv9lom9oEkdXYNHhN8C.mat
+deleted file mode 100644
+index 9f00967..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sJatFv9lom9oEkdXYNHhN8C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sLTpiCH0inZzrBQKLmknVeD.l b/Tavola1BIcchi/slprj/_jitprj/sLTpiCH0inZzrBQKLmknVeD.l
+deleted file mode 100644
+index fc517ea..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sLTpiCH0inZzrBQKLmknVeD.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sLTpiCH0inZzrBQKLmknVeD.mat b/Tavola1BIcchi/slprj/_jitprj/sLTpiCH0inZzrBQKLmknVeD.mat
+deleted file mode 100644
+index 6d06b4c..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sLTpiCH0inZzrBQKLmknVeD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sLcaGFalSe7shXvuWoXMiaE.l b/Tavola1BIcchi/slprj/_jitprj/sLcaGFalSe7shXvuWoXMiaE.l
+deleted file mode 100644
+index e821009..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sLcaGFalSe7shXvuWoXMiaE.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sLcaGFalSe7shXvuWoXMiaE.mat b/Tavola1BIcchi/slprj/_jitprj/sLcaGFalSe7shXvuWoXMiaE.mat
+deleted file mode 100644
+index 71464d8..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sLcaGFalSe7shXvuWoXMiaE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sLtfmx2BVcXEN75jlAEv1cG.l b/Tavola1BIcchi/slprj/_jitprj/sLtfmx2BVcXEN75jlAEv1cG.l
+deleted file mode 100644
+index 033d266..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sLtfmx2BVcXEN75jlAEv1cG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sLtfmx2BVcXEN75jlAEv1cG.mat b/Tavola1BIcchi/slprj/_jitprj/sLtfmx2BVcXEN75jlAEv1cG.mat
+deleted file mode 100644
+index ef64870..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sLtfmx2BVcXEN75jlAEv1cG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sLuWzCEGxOHwymHv6A7RsGC.l b/Tavola1BIcchi/slprj/_jitprj/sLuWzCEGxOHwymHv6A7RsGC.l
+deleted file mode 100644
+index 709153b..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sLuWzCEGxOHwymHv6A7RsGC.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sLuWzCEGxOHwymHv6A7RsGC.mat b/Tavola1BIcchi/slprj/_jitprj/sLuWzCEGxOHwymHv6A7RsGC.mat
+deleted file mode 100644
+index 657e739..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sLuWzCEGxOHwymHv6A7RsGC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sOALO2WbzWblpRiIQTXP9aB.l b/Tavola1BIcchi/slprj/_jitprj/sOALO2WbzWblpRiIQTXP9aB.l
+deleted file mode 100644
+index a1956c7..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sOALO2WbzWblpRiIQTXP9aB.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sOALO2WbzWblpRiIQTXP9aB.mat b/Tavola1BIcchi/slprj/_jitprj/sOALO2WbzWblpRiIQTXP9aB.mat
+deleted file mode 100644
+index 3db3c51..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sOALO2WbzWblpRiIQTXP9aB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sOTHCboRPuyIW2pifFnWt2C.l b/Tavola1BIcchi/slprj/_jitprj/sOTHCboRPuyIW2pifFnWt2C.l
+deleted file mode 100644
+index 98fa59a..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sOTHCboRPuyIW2pifFnWt2C.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sOTHCboRPuyIW2pifFnWt2C.mat b/Tavola1BIcchi/slprj/_jitprj/sOTHCboRPuyIW2pifFnWt2C.mat
+deleted file mode 100644
+index ca0e00e..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sOTHCboRPuyIW2pifFnWt2C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sOZVUzJ2mJAXGrNX4jTulpG.l b/Tavola1BIcchi/slprj/_jitprj/sOZVUzJ2mJAXGrNX4jTulpG.l
+deleted file mode 100644
+index 3888e13..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sOZVUzJ2mJAXGrNX4jTulpG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sOZVUzJ2mJAXGrNX4jTulpG.mat b/Tavola1BIcchi/slprj/_jitprj/sOZVUzJ2mJAXGrNX4jTulpG.mat
+deleted file mode 100644
+index 7f65bd1..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sOZVUzJ2mJAXGrNX4jTulpG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sPZtVQ5OknQ52mDeRLj2SdG.l b/Tavola1BIcchi/slprj/_jitprj/sPZtVQ5OknQ52mDeRLj2SdG.l
+deleted file mode 100644
+index 25ec2ea..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sPZtVQ5OknQ52mDeRLj2SdG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sPZtVQ5OknQ52mDeRLj2SdG.mat b/Tavola1BIcchi/slprj/_jitprj/sPZtVQ5OknQ52mDeRLj2SdG.mat
+deleted file mode 100644
+index de8b214..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sPZtVQ5OknQ52mDeRLj2SdG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sPkfvza0DInpF7pgyBit3mG.l b/Tavola1BIcchi/slprj/_jitprj/sPkfvza0DInpF7pgyBit3mG.l
+deleted file mode 100644
+index 2a15854..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sPkfvza0DInpF7pgyBit3mG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sPkfvza0DInpF7pgyBit3mG.mat b/Tavola1BIcchi/slprj/_jitprj/sPkfvza0DInpF7pgyBit3mG.mat
+deleted file mode 100644
+index b8f3f15..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sPkfvza0DInpF7pgyBit3mG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sSXMTdoWEEzgF28w73gBTLD.l b/Tavola1BIcchi/slprj/_jitprj/sSXMTdoWEEzgF28w73gBTLD.l
+deleted file mode 100644
+index 0ea3fb7..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sSXMTdoWEEzgF28w73gBTLD.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sSXMTdoWEEzgF28w73gBTLD.mat b/Tavola1BIcchi/slprj/_jitprj/sSXMTdoWEEzgF28w73gBTLD.mat
+deleted file mode 100644
+index 90ebe75..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sSXMTdoWEEzgF28w73gBTLD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sTdBmzZLughR78DCzuACDRD.l b/Tavola1BIcchi/slprj/_jitprj/sTdBmzZLughR78DCzuACDRD.l
+deleted file mode 100644
+index ef3e83f..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sTdBmzZLughR78DCzuACDRD.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sTdBmzZLughR78DCzuACDRD.mat b/Tavola1BIcchi/slprj/_jitprj/sTdBmzZLughR78DCzuACDRD.mat
+deleted file mode 100644
+index 2d49fd9..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sTdBmzZLughR78DCzuACDRD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sUnEUzvH3ZYjPa9XmXf6c.l b/Tavola1BIcchi/slprj/_jitprj/sUnEUzvH3ZYjPa9XmXf6c.l
+deleted file mode 100644
+index 2869384..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sUnEUzvH3ZYjPa9XmXf6c.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sUnEUzvH3ZYjPa9XmXf6c.mat b/Tavola1BIcchi/slprj/_jitprj/sUnEUzvH3ZYjPa9XmXf6c.mat
+deleted file mode 100644
+index 1898e26..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sUnEUzvH3ZYjPa9XmXf6c.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sUqgaBDmxhWWUhh63npwheG.l b/Tavola1BIcchi/slprj/_jitprj/sUqgaBDmxhWWUhh63npwheG.l
+deleted file mode 100644
+index c46c679..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sUqgaBDmxhWWUhh63npwheG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sUqgaBDmxhWWUhh63npwheG.mat b/Tavola1BIcchi/slprj/_jitprj/sUqgaBDmxhWWUhh63npwheG.mat
+deleted file mode 100644
+index ced3def..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sUqgaBDmxhWWUhh63npwheG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sWqPny37xNAZlXlwZoROmgB.l b/Tavola1BIcchi/slprj/_jitprj/sWqPny37xNAZlXlwZoROmgB.l
+deleted file mode 100644
+index 70084ab..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sWqPny37xNAZlXlwZoROmgB.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sWqPny37xNAZlXlwZoROmgB.mat b/Tavola1BIcchi/slprj/_jitprj/sWqPny37xNAZlXlwZoROmgB.mat
+deleted file mode 100644
+index 4cd6b8e..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sWqPny37xNAZlXlwZoROmgB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sYbynwEbL3QNTQEOMmcx39D.l b/Tavola1BIcchi/slprj/_jitprj/sYbynwEbL3QNTQEOMmcx39D.l
+deleted file mode 100644
+index a7f229b..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sYbynwEbL3QNTQEOMmcx39D.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sYbynwEbL3QNTQEOMmcx39D.mat b/Tavola1BIcchi/slprj/_jitprj/sYbynwEbL3QNTQEOMmcx39D.mat
+deleted file mode 100644
+index ad08339..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sYbynwEbL3QNTQEOMmcx39D.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sZUUdWvUffJYUFYYqH0SvV.l b/Tavola1BIcchi/slprj/_jitprj/sZUUdWvUffJYUFYYqH0SvV.l
+deleted file mode 100644
+index a9ce356..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sZUUdWvUffJYUFYYqH0SvV.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sZUUdWvUffJYUFYYqH0SvV.mat b/Tavola1BIcchi/slprj/_jitprj/sZUUdWvUffJYUFYYqH0SvV.mat
+deleted file mode 100644
+index 0ccaa4f..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sZUUdWvUffJYUFYYqH0SvV.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sajCHFzhWIwOXt6WNl4Mw7C.l b/Tavola1BIcchi/slprj/_jitprj/sajCHFzhWIwOXt6WNl4Mw7C.l
+deleted file mode 100644
+index 4a4587d..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sajCHFzhWIwOXt6WNl4Mw7C.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sajCHFzhWIwOXt6WNl4Mw7C.mat b/Tavola1BIcchi/slprj/_jitprj/sajCHFzhWIwOXt6WNl4Mw7C.mat
+deleted file mode 100644
+index 6aacc1a..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sajCHFzhWIwOXt6WNl4Mw7C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sevYUudepEmx8GuCnYwhw0E.l b/Tavola1BIcchi/slprj/_jitprj/sevYUudepEmx8GuCnYwhw0E.l
+deleted file mode 100644
+index 7a3fe0a..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sevYUudepEmx8GuCnYwhw0E.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sevYUudepEmx8GuCnYwhw0E.mat b/Tavola1BIcchi/slprj/_jitprj/sevYUudepEmx8GuCnYwhw0E.mat
+deleted file mode 100644
+index 7af6185..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sevYUudepEmx8GuCnYwhw0E.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/shM8dcEKqYW76aD7egsTVg.l b/Tavola1BIcchi/slprj/_jitprj/shM8dcEKqYW76aD7egsTVg.l
+deleted file mode 100644
+index a8e7819..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/shM8dcEKqYW76aD7egsTVg.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/shM8dcEKqYW76aD7egsTVg.mat b/Tavola1BIcchi/slprj/_jitprj/shM8dcEKqYW76aD7egsTVg.mat
+deleted file mode 100644
+index a9f51f7..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/shM8dcEKqYW76aD7egsTVg.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/shSIDLqNx4l88C530njEESE.l b/Tavola1BIcchi/slprj/_jitprj/shSIDLqNx4l88C530njEESE.l
+deleted file mode 100644
+index 7621a28..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/shSIDLqNx4l88C530njEESE.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/shSIDLqNx4l88C530njEESE.mat b/Tavola1BIcchi/slprj/_jitprj/shSIDLqNx4l88C530njEESE.mat
+deleted file mode 100644
+index 558a8e3..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/shSIDLqNx4l88C530njEESE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/siRQW5kuDmeWr4mDMeMwjm.l b/Tavola1BIcchi/slprj/_jitprj/siRQW5kuDmeWr4mDMeMwjm.l
+deleted file mode 100644
+index f028570..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/siRQW5kuDmeWr4mDMeMwjm.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/siRQW5kuDmeWr4mDMeMwjm.mat b/Tavola1BIcchi/slprj/_jitprj/siRQW5kuDmeWr4mDMeMwjm.mat
+deleted file mode 100644
+index d15efbc..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/siRQW5kuDmeWr4mDMeMwjm.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sjpBTC9pa6P1BugpgMbo5zF.l b/Tavola1BIcchi/slprj/_jitprj/sjpBTC9pa6P1BugpgMbo5zF.l
+deleted file mode 100644
+index d2336fd..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sjpBTC9pa6P1BugpgMbo5zF.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sjpBTC9pa6P1BugpgMbo5zF.mat b/Tavola1BIcchi/slprj/_jitprj/sjpBTC9pa6P1BugpgMbo5zF.mat
+deleted file mode 100644
+index 236efb5..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sjpBTC9pa6P1BugpgMbo5zF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/skpPIKhfelDDYggeR4Z2YoG.l b/Tavola1BIcchi/slprj/_jitprj/skpPIKhfelDDYggeR4Z2YoG.l
+deleted file mode 100644
+index 0724d52..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/skpPIKhfelDDYggeR4Z2YoG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/skpPIKhfelDDYggeR4Z2YoG.mat b/Tavola1BIcchi/slprj/_jitprj/skpPIKhfelDDYggeR4Z2YoG.mat
+deleted file mode 100644
+index b29f0fd..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/skpPIKhfelDDYggeR4Z2YoG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sl1KSS1sMFBd2P3g5sfZOsF.l b/Tavola1BIcchi/slprj/_jitprj/sl1KSS1sMFBd2P3g5sfZOsF.l
+deleted file mode 100644
+index 0ccca76..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sl1KSS1sMFBd2P3g5sfZOsF.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sl1KSS1sMFBd2P3g5sfZOsF.mat b/Tavola1BIcchi/slprj/_jitprj/sl1KSS1sMFBd2P3g5sfZOsF.mat
+deleted file mode 100644
+index 43e3f9c..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sl1KSS1sMFBd2P3g5sfZOsF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/smYsj7kWUZIMfkmMIAr31oF.l b/Tavola1BIcchi/slprj/_jitprj/smYsj7kWUZIMfkmMIAr31oF.l
+deleted file mode 100644
+index b352d10..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/smYsj7kWUZIMfkmMIAr31oF.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/smYsj7kWUZIMfkmMIAr31oF.mat b/Tavola1BIcchi/slprj/_jitprj/smYsj7kWUZIMfkmMIAr31oF.mat
+deleted file mode 100644
+index bb60401..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/smYsj7kWUZIMfkmMIAr31oF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/soMqU16RGLdAbc4f4jIjC8C.l b/Tavola1BIcchi/slprj/_jitprj/soMqU16RGLdAbc4f4jIjC8C.l
+deleted file mode 100644
+index ca78bb6..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/soMqU16RGLdAbc4f4jIjC8C.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/soMqU16RGLdAbc4f4jIjC8C.mat b/Tavola1BIcchi/slprj/_jitprj/soMqU16RGLdAbc4f4jIjC8C.mat
+deleted file mode 100644
+index 9454663..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/soMqU16RGLdAbc4f4jIjC8C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/spg358zdSRqjXybsVkXIbUG.l b/Tavola1BIcchi/slprj/_jitprj/spg358zdSRqjXybsVkXIbUG.l
+deleted file mode 100644
+index f1fc327..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/spg358zdSRqjXybsVkXIbUG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/spg358zdSRqjXybsVkXIbUG.mat b/Tavola1BIcchi/slprj/_jitprj/spg358zdSRqjXybsVkXIbUG.mat
+deleted file mode 100644
+index f461263..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/spg358zdSRqjXybsVkXIbUG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sqPMMZ4PPwiw2RHzW99l1OD.l b/Tavola1BIcchi/slprj/_jitprj/sqPMMZ4PPwiw2RHzW99l1OD.l
+deleted file mode 100644
+index 3341c3b..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sqPMMZ4PPwiw2RHzW99l1OD.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sqPMMZ4PPwiw2RHzW99l1OD.mat b/Tavola1BIcchi/slprj/_jitprj/sqPMMZ4PPwiw2RHzW99l1OD.mat
+deleted file mode 100644
+index 5de9183..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sqPMMZ4PPwiw2RHzW99l1OD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.l b/Tavola1BIcchi/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.l
+deleted file mode 100644
+index ebccf79..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.mat b/Tavola1BIcchi/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.mat
+deleted file mode 100644
+index 2a80541..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/srvFP8sYDlO0EQ8MWUzPOhG.l b/Tavola1BIcchi/slprj/_jitprj/srvFP8sYDlO0EQ8MWUzPOhG.l
+deleted file mode 100644
+index 98fa59a..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/srvFP8sYDlO0EQ8MWUzPOhG.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/srvFP8sYDlO0EQ8MWUzPOhG.mat b/Tavola1BIcchi/slprj/_jitprj/srvFP8sYDlO0EQ8MWUzPOhG.mat
+deleted file mode 100644
+index 50478b1..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/srvFP8sYDlO0EQ8MWUzPOhG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/svBRDPqhl7AwuIGW3x8T5VC.l b/Tavola1BIcchi/slprj/_jitprj/svBRDPqhl7AwuIGW3x8T5VC.l
+deleted file mode 100644
+index f12da41..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/svBRDPqhl7AwuIGW3x8T5VC.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/svBRDPqhl7AwuIGW3x8T5VC.mat b/Tavola1BIcchi/slprj/_jitprj/svBRDPqhl7AwuIGW3x8T5VC.mat
+deleted file mode 100644
+index b71fd8f..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/svBRDPqhl7AwuIGW3x8T5VC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/svcocYOFKvUtusvzm7aMpX.l b/Tavola1BIcchi/slprj/_jitprj/svcocYOFKvUtusvzm7aMpX.l
+deleted file mode 100644
+index d585ead..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/svcocYOFKvUtusvzm7aMpX.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/svcocYOFKvUtusvzm7aMpX.mat b/Tavola1BIcchi/slprj/_jitprj/svcocYOFKvUtusvzm7aMpX.mat
+deleted file mode 100644
+index 48695b8..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/svcocYOFKvUtusvzm7aMpX.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/swnkmxMwPd4eepXBnjoIQeE.l b/Tavola1BIcchi/slprj/_jitprj/swnkmxMwPd4eepXBnjoIQeE.l
+deleted file mode 100644
+index 876445b..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/swnkmxMwPd4eepXBnjoIQeE.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/swnkmxMwPd4eepXBnjoIQeE.mat b/Tavola1BIcchi/slprj/_jitprj/swnkmxMwPd4eepXBnjoIQeE.mat
+deleted file mode 100644
+index 91ca346..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/swnkmxMwPd4eepXBnjoIQeE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sxGO8ELl7OsGZG4ZsU9t1YB.l b/Tavola1BIcchi/slprj/_jitprj/sxGO8ELl7OsGZG4ZsU9t1YB.l
+deleted file mode 100644
+index d6d9df2..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sxGO8ELl7OsGZG4ZsU9t1YB.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sxGO8ELl7OsGZG4ZsU9t1YB.mat b/Tavola1BIcchi/slprj/_jitprj/sxGO8ELl7OsGZG4ZsU9t1YB.mat
+deleted file mode 100644
+index 4e4b3ea..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sxGO8ELl7OsGZG4ZsU9t1YB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sxoeZr4HpQFTEarnyWrsreE.l b/Tavola1BIcchi/slprj/_jitprj/sxoeZr4HpQFTEarnyWrsreE.l
+deleted file mode 100644
+index 54283b7..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sxoeZr4HpQFTEarnyWrsreE.l and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_jitprj/sxoeZr4HpQFTEarnyWrsreE.mat b/Tavola1BIcchi/slprj/_jitprj/sxoeZr4HpQFTEarnyWrsreE.mat
+deleted file mode 100644
+index 0a7df9a..0000000
+Binary files a/Tavola1BIcchi/slprj/_jitprj/sxoeZr4HpQFTEarnyWrsreE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/CompTorque/_self/sfun/info/binfo.mat b/Tavola1BIcchi/slprj/_sfprj/CompTorque/_self/sfun/info/binfo.mat
+deleted file mode 100644
+index 6366fc0..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/CompTorque/_self/sfun/info/binfo.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/CompTorque/amsi_serial.mat b/Tavola1BIcchi/slprj/_sfprj/CompTorque/amsi_serial.mat
+deleted file mode 100644
+index eec2288..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/CompTorque/amsi_serial.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/6GWgzgTcIgfsFKdj5va5lC.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/6GWgzgTcIgfsFKdj5va5lC.mat
+deleted file mode 100644
+index 2eee9ae..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/6GWgzgTcIgfsFKdj5va5lC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/I7auz7EKlNenWaLnYjCdYG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/I7auz7EKlNenWaLnYjCdYG.mat
+deleted file mode 100644
+index f1e9731..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/I7auz7EKlNenWaLnYjCdYG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/LKMDlhOnyiIZbQ4384VVPH.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/LKMDlhOnyiIZbQ4384VVPH.mat
+deleted file mode 100644
+index c41e660..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/LKMDlhOnyiIZbQ4384VVPH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/LKMDlhOnyiIZbQ4384VVPH/report.mldatx b/Tavola1BIcchi/slprj/_sfprj/EMLReport/LKMDlhOnyiIZbQ4384VVPH/report.mldatx
+deleted file mode 100644
+index 3dade50..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/LKMDlhOnyiIZbQ4384VVPH/report.mldatx and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/XTtWtWegB0ziXIOVQh6AYH.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/XTtWtWegB0ziXIOVQh6AYH.mat
+deleted file mode 100644
+index 42b103a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/XTtWtWegB0ziXIOVQh6AYH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/Zpw9gNww49FJv6Ju9sFbfD.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/Zpw9gNww49FJv6Ju9sFbfD.mat
+deleted file mode 100644
+index 37d46e9..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/Zpw9gNww49FJv6Ju9sFbfD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/Zpw9gNww49FJv6Ju9sFbfD/report.mldatx b/Tavola1BIcchi/slprj/_sfprj/EMLReport/Zpw9gNww49FJv6Ju9sFbfD/report.mldatx
+deleted file mode 100644
+index 99b10c8..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/Zpw9gNww49FJv6Ju9sFbfD/report.mldatx and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/cyGrtGEUSMUg1mf8VM9aQG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/cyGrtGEUSMUg1mf8VM9aQG.mat
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/emlReportAccessInfo.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/emlReportAccessInfo.mat
+deleted file mode 100644
+index 641fd8a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/emlReportAccessInfo.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/osLuFQFMTA6dY3x9ULm6OE.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/osLuFQFMTA6dY3x9ULm6OE.mat
+deleted file mode 100644
+index 822bcdf..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/osLuFQFMTA6dY3x9ULm6OE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/osLuFQFMTA6dY3x9ULm6OE/report.mldatx b/Tavola1BIcchi/slprj/_sfprj/EMLReport/osLuFQFMTA6dY3x9ULm6OE/report.mldatx
+deleted file mode 100644
+index 03edc80..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/osLuFQFMTA6dY3x9ULm6OE/report.mldatx and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/p8bNV4hzcKtns0AzbwMruG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/p8bNV4hzcKtns0AzbwMruG.mat
+deleted file mode 100644
+index 68c7079..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/p8bNV4hzcKtns0AzbwMruG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/p90m3BqIBKik9SeKC5e1YE.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/p90m3BqIBKik9SeKC5e1YE.mat
+deleted file mode 100644
+index e2009c8..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/p90m3BqIBKik9SeKC5e1YE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/qDdwwTz25UohKB0lGVRP9F.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/qDdwwTz25UohKB0lGVRP9F.mat
+deleted file mode 100644
+index 0203f82..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/qDdwwTz25UohKB0lGVRP9F.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s1fKcMbaas86FjYSCosfVv.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s1fKcMbaas86FjYSCosfVv.mat
+deleted file mode 100644
+index 109439f..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s1fKcMbaas86FjYSCosfVv.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s1oDHM6VR2Mlc3czBCqgTVC.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s1oDHM6VR2Mlc3czBCqgTVC.mat
+deleted file mode 100644
+index 0da6947..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s1oDHM6VR2Mlc3czBCqgTVC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s2tru2NuXRQyeDGJ4uvdsaG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s2tru2NuXRQyeDGJ4uvdsaG.mat
+deleted file mode 100644
+index 150dd9b..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s2tru2NuXRQyeDGJ4uvdsaG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s3S97qzoMDdArUXFDVBPp9D.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s3S97qzoMDdArUXFDVBPp9D.mat
+deleted file mode 100644
+index 89bfef4..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s3S97qzoMDdArUXFDVBPp9D.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s3id1GiWEWHMdZCplzUSwXB.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s3id1GiWEWHMdZCplzUSwXB.mat
+deleted file mode 100644
+index 8f6f5d8..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s3id1GiWEWHMdZCplzUSwXB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s3s7KZSNetfY9tAdjsN3XoD.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s3s7KZSNetfY9tAdjsN3XoD.mat
+deleted file mode 100644
+index 921e986..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s3s7KZSNetfY9tAdjsN3XoD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s5EVnmxRcpzaVmYGkyqzTtC.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s5EVnmxRcpzaVmYGkyqzTtC.mat
+deleted file mode 100644
+index 22448d5..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s5EVnmxRcpzaVmYGkyqzTtC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s6LJvtlg36jwHIiVJaVuzOD.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s6LJvtlg36jwHIiVJaVuzOD.mat
+deleted file mode 100644
+index 8683895..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s6LJvtlg36jwHIiVJaVuzOD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s7JEOKzb4zwaioUxGtI4msD.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s7JEOKzb4zwaioUxGtI4msD.mat
+deleted file mode 100644
+index 469cbe8..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s7JEOKzb4zwaioUxGtI4msD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s7lPO0TSvTY9ceonspz9WDG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s7lPO0TSvTY9ceonspz9WDG.mat
+deleted file mode 100644
+index 1adecb4..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s7lPO0TSvTY9ceonspz9WDG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s7lVUCUmkBUJivMDpQRKExE.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s7lVUCUmkBUJivMDpQRKExE.mat
+deleted file mode 100644
+index b1d8319..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s7lVUCUmkBUJivMDpQRKExE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s8vqbif39mWHUaEL8qaRmuF.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/s8vqbif39mWHUaEL8qaRmuF.mat
+deleted file mode 100644
+index d5a1418..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/s8vqbif39mWHUaEL8qaRmuF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sEr8qGWVqkmhhmxDotFZZRC.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sEr8qGWVqkmhhmxDotFZZRC.mat
+deleted file mode 100644
+index 18fcd90..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sEr8qGWVqkmhhmxDotFZZRC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sFjjIiJwHp05ww1N4EaXV6.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sFjjIiJwHp05ww1N4EaXV6.mat
+deleted file mode 100644
+index bad2d34..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sFjjIiJwHp05ww1N4EaXV6.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sFllv7aHEvVrqOnsao7qqT.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sFllv7aHEvVrqOnsao7qqT.mat
+deleted file mode 100644
+index 8671777..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sFllv7aHEvVrqOnsao7qqT.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sGZ7LrkzSqzVynUCz5aEPnF.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sGZ7LrkzSqzVynUCz5aEPnF.mat
+deleted file mode 100644
+index 4fcc4f0..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sGZ7LrkzSqzVynUCz5aEPnF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sIdflQYXTmROtKLdU7gQIPC.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sIdflQYXTmROtKLdU7gQIPC.mat
+deleted file mode 100644
+index 48b3eba..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sIdflQYXTmROtKLdU7gQIPC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sJGBxeN1KbFIkXaCFAyldZE.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sJGBxeN1KbFIkXaCFAyldZE.mat
+deleted file mode 100644
+index ddfe5ea..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sJGBxeN1KbFIkXaCFAyldZE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sJatFv9lom9oEkdXYNHhN8C.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sJatFv9lom9oEkdXYNHhN8C.mat
+deleted file mode 100644
+index 663d3bf..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sJatFv9lom9oEkdXYNHhN8C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLTpiCH0inZzrBQKLmknVeD.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLTpiCH0inZzrBQKLmknVeD.mat
+deleted file mode 100644
+index 2cc2dad..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLTpiCH0inZzrBQKLmknVeD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLcaGFalSe7shXvuWoXMiaE.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLcaGFalSe7shXvuWoXMiaE.mat
+deleted file mode 100644
+index 1d73fc2..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLcaGFalSe7shXvuWoXMiaE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLtfmx2BVcXEN75jlAEv1cG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLtfmx2BVcXEN75jlAEv1cG.mat
+deleted file mode 100644
+index c2aa300..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLtfmx2BVcXEN75jlAEv1cG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLuWzCEGxOHwymHv6A7RsGC.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLuWzCEGxOHwymHv6A7RsGC.mat
+deleted file mode 100644
+index b913a88..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sLuWzCEGxOHwymHv6A7RsGC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sOALO2WbzWblpRiIQTXP9aB.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sOALO2WbzWblpRiIQTXP9aB.mat
+deleted file mode 100644
+index 4cf3b9f..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sOALO2WbzWblpRiIQTXP9aB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sOTHCboRPuyIW2pifFnWt2C.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sOTHCboRPuyIW2pifFnWt2C.mat
+deleted file mode 100644
+index 04d7a0d..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sOTHCboRPuyIW2pifFnWt2C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sOZVUzJ2mJAXGrNX4jTulpG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sOZVUzJ2mJAXGrNX4jTulpG.mat
+deleted file mode 100644
+index 46267f8..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sOZVUzJ2mJAXGrNX4jTulpG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sPZtVQ5OknQ52mDeRLj2SdG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sPZtVQ5OknQ52mDeRLj2SdG.mat
+deleted file mode 100644
+index 2743743..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sPZtVQ5OknQ52mDeRLj2SdG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sPkfvza0DInpF7pgyBit3mG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sPkfvza0DInpF7pgyBit3mG.mat
+deleted file mode 100644
+index 4e06a84..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sPkfvza0DInpF7pgyBit3mG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sSXMTdoWEEzgF28w73gBTLD.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sSXMTdoWEEzgF28w73gBTLD.mat
+deleted file mode 100644
+index fd98f35..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sSXMTdoWEEzgF28w73gBTLD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sTYpN3FTGUbJMttGKoTEn9G.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sTYpN3FTGUbJMttGKoTEn9G.mat
+deleted file mode 100644
+index b6b2d3c..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sTYpN3FTGUbJMttGKoTEn9G.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sTdBmzZLughR78DCzuACDRD.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sTdBmzZLughR78DCzuACDRD.mat
+deleted file mode 100644
+index ab3af9a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sTdBmzZLughR78DCzuACDRD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sUnEUzvH3ZYjPa9XmXf6c.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sUnEUzvH3ZYjPa9XmXf6c.mat
+deleted file mode 100644
+index ba813ef..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sUnEUzvH3ZYjPa9XmXf6c.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sUqgaBDmxhWWUhh63npwheG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sUqgaBDmxhWWUhh63npwheG.mat
+deleted file mode 100644
+index 6eeaeb9..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sUqgaBDmxhWWUhh63npwheG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sUu1x3N1yvzLo0FMMvrkxOB.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sUu1x3N1yvzLo0FMMvrkxOB.mat
+deleted file mode 100644
+index 3eb9ab5..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sUu1x3N1yvzLo0FMMvrkxOB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sWqPny37xNAZlXlwZoROmgB.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sWqPny37xNAZlXlwZoROmgB.mat
+deleted file mode 100644
+index 2bf4bc3..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sWqPny37xNAZlXlwZoROmgB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sYbynwEbL3QNTQEOMmcx39D.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sYbynwEbL3QNTQEOMmcx39D.mat
+deleted file mode 100644
+index 37fa002..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sYbynwEbL3QNTQEOMmcx39D.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sZUUdWvUffJYUFYYqH0SvV.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sZUUdWvUffJYUFYYqH0SvV.mat
+deleted file mode 100644
+index cac3c6f..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sZUUdWvUffJYUFYYqH0SvV.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sajCHFzhWIwOXt6WNl4Mw7C.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sajCHFzhWIwOXt6WNl4Mw7C.mat
+deleted file mode 100644
+index a91e753..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sajCHFzhWIwOXt6WNl4Mw7C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sevYUudepEmx8GuCnYwhw0E.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sevYUudepEmx8GuCnYwhw0E.mat
+deleted file mode 100644
+index 98d569d..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sevYUudepEmx8GuCnYwhw0E.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/shM8dcEKqYW76aD7egsTVg.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/shM8dcEKqYW76aD7egsTVg.mat
+deleted file mode 100644
+index d2e21c6..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/shM8dcEKqYW76aD7egsTVg.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/shSIDLqNx4l88C530njEESE.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/shSIDLqNx4l88C530njEESE.mat
+deleted file mode 100644
+index 5d48f64..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/shSIDLqNx4l88C530njEESE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/siRQW5kuDmeWr4mDMeMwjm.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/siRQW5kuDmeWr4mDMeMwjm.mat
+deleted file mode 100644
+index 08f5094..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/siRQW5kuDmeWr4mDMeMwjm.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sjpBTC9pa6P1BugpgMbo5zF.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sjpBTC9pa6P1BugpgMbo5zF.mat
+deleted file mode 100644
+index 098e147..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sjpBTC9pa6P1BugpgMbo5zF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/skpPIKhfelDDYggeR4Z2YoG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/skpPIKhfelDDYggeR4Z2YoG.mat
+deleted file mode 100644
+index 89bca12..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/skpPIKhfelDDYggeR4Z2YoG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sl1KSS1sMFBd2P3g5sfZOsF.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sl1KSS1sMFBd2P3g5sfZOsF.mat
+deleted file mode 100644
+index 35cfd66..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sl1KSS1sMFBd2P3g5sfZOsF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/smYsj7kWUZIMfkmMIAr31oF.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/smYsj7kWUZIMfkmMIAr31oF.mat
+deleted file mode 100644
+index a5b8a35..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/smYsj7kWUZIMfkmMIAr31oF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/soMqU16RGLdAbc4f4jIjC8C.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/soMqU16RGLdAbc4f4jIjC8C.mat
+deleted file mode 100644
+index 8268fd3..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/soMqU16RGLdAbc4f4jIjC8C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/spg358zdSRqjXybsVkXIbUG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/spg358zdSRqjXybsVkXIbUG.mat
+deleted file mode 100644
+index 2419946..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/spg358zdSRqjXybsVkXIbUG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sqPMMZ4PPwiw2RHzW99l1OD.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sqPMMZ4PPwiw2RHzW99l1OD.mat
+deleted file mode 100644
+index cc59cdb..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sqPMMZ4PPwiw2RHzW99l1OD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sqn6R47TZRLL9EgEPoFr4YF.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sqn6R47TZRLL9EgEPoFr4YF.mat
+deleted file mode 100644
+index 35b2c61..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sqn6R47TZRLL9EgEPoFr4YF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/srm1QxFU1IZUjShSPeye9ZH.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/srm1QxFU1IZUjShSPeye9ZH.mat
+deleted file mode 100644
+index a31ea99..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/srm1QxFU1IZUjShSPeye9ZH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/srvFP8sYDlO0EQ8MWUzPOhG.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/srvFP8sYDlO0EQ8MWUzPOhG.mat
+deleted file mode 100644
+index 4a177b1..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/srvFP8sYDlO0EQ8MWUzPOhG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sscu4ael7Bat9b8eKaThbCH.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sscu4ael7Bat9b8eKaThbCH.mat
+deleted file mode 100644
+index 03f3d2e..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sscu4ael7Bat9b8eKaThbCH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/st22vAzVSZN8Pj5nMRDOdWE.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/st22vAzVSZN8Pj5nMRDOdWE.mat
+deleted file mode 100644
+index d31e9a4..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/st22vAzVSZN8Pj5nMRDOdWE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/svBRDPqhl7AwuIGW3x8T5VC.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/svBRDPqhl7AwuIGW3x8T5VC.mat
+deleted file mode 100644
+index 5be07b1..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/svBRDPqhl7AwuIGW3x8T5VC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/svcocYOFKvUtusvzm7aMpX.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/svcocYOFKvUtusvzm7aMpX.mat
+deleted file mode 100644
+index 0677717..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/svcocYOFKvUtusvzm7aMpX.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/swnkmxMwPd4eepXBnjoIQeE.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/swnkmxMwPd4eepXBnjoIQeE.mat
+deleted file mode 100644
+index 8766cdd..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/swnkmxMwPd4eepXBnjoIQeE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sxGO8ELl7OsGZG4ZsU9t1YB.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sxGO8ELl7OsGZG4ZsU9t1YB.mat
+deleted file mode 100644
+index fd43a2f..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sxGO8ELl7OsGZG4ZsU9t1YB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sxoeZr4HpQFTEarnyWrsreE.mat b/Tavola1BIcchi/slprj/_sfprj/EMLReport/sxoeZr4HpQFTEarnyWrsreE.mat
+deleted file mode 100644
+index c902381..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/EMLReport/sxoeZr4HpQFTEarnyWrsreE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/PD/_self/sfun/info/binfo.mat b/Tavola1BIcchi/slprj/_sfprj/PD/_self/sfun/info/binfo.mat
+deleted file mode 100644
+index ea01c69..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/PD/_self/sfun/info/binfo.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/PD/amsi_serial.mat b/Tavola1BIcchi/slprj/_sfprj/PD/amsi_serial.mat
+deleted file mode 100644
+index 02e2237..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/PD/amsi_serial.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/PD_traj/_self/sfun/info/binfo.mat b/Tavola1BIcchi/slprj/_sfprj/PD_traj/_self/sfun/info/binfo.mat
+deleted file mode 100644
+index 0995c90..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/PD_traj/_self/sfun/info/binfo.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/PD_traj/amsi_serial.mat b/Tavola1BIcchi/slprj/_sfprj/PD_traj/amsi_serial.mat
+deleted file mode 100644
+index 50814e6..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/PD_traj/amsi_serial.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/16wdFseaOgPgOOCKSXzwHH.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/16wdFseaOgPgOOCKSXzwHH.mat
+deleted file mode 100644
+index 69bc956..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/16wdFseaOgPgOOCKSXzwHH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/1GFLmNYq9zFVfHJER8d6f.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/1GFLmNYq9zFVfHJER8d6f.mat
+deleted file mode 100644
+index 80f4356..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/1GFLmNYq9zFVfHJER8d6f.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/1Zks49ZQ0oJs4ryb5as29G.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/1Zks49ZQ0oJs4ryb5as29G.mat
+deleted file mode 100644
+index e271a52..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/1Zks49ZQ0oJs4ryb5as29G.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/2N5AukNcCxUlk7q8jxKgsH.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/2N5AukNcCxUlk7q8jxKgsH.mat
+deleted file mode 100644
+index 9b88789..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/2N5AukNcCxUlk7q8jxKgsH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/2wzfAtq3bmOUlsWihWcsEF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/2wzfAtq3bmOUlsWihWcsEF.mat
+deleted file mode 100644
+index 2aa84dd..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/2wzfAtq3bmOUlsWihWcsEF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/31pODKHLIxQG06I4PlHruC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/31pODKHLIxQG06I4PlHruC.mat
+deleted file mode 100644
+index b94ad9a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/31pODKHLIxQG06I4PlHruC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/3cGf4LBDyVMji3IabSGpMC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/3cGf4LBDyVMji3IabSGpMC.mat
+deleted file mode 100644
+index de079b4..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/3cGf4LBDyVMji3IabSGpMC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/3vmlf8YqtRCDD8hWDDO8nG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/3vmlf8YqtRCDD8hWDDO8nG.mat
+deleted file mode 100644
+index 667d280..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/3vmlf8YqtRCDD8hWDDO8nG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/4z7daakX1cJZiJniYkjkLC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/4z7daakX1cJZiJniYkjkLC.mat
+deleted file mode 100644
+index b6bc982..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/4z7daakX1cJZiJniYkjkLC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/5Kbreuswt6Ath5ohQTIWgC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/5Kbreuswt6Ath5ohQTIWgC.mat
+deleted file mode 100644
+index cff7146..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/5Kbreuswt6Ath5ohQTIWgC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/67J7UCIpccErngE2nTo1v.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/67J7UCIpccErngE2nTo1v.mat
+deleted file mode 100644
+index 90de831..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/67J7UCIpccErngE2nTo1v.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/69KHN0wwTe0UudM6YrwW4D.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/69KHN0wwTe0UudM6YrwW4D.mat
+deleted file mode 100644
+index aca49c3..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/69KHN0wwTe0UudM6YrwW4D.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/6QOXGFaLqxwRu7ne87aaDE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/6QOXGFaLqxwRu7ne87aaDE.mat
+deleted file mode 100644
+index 615224a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/6QOXGFaLqxwRu7ne87aaDE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/6hgDMNO5OasxKR982cZM1.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/6hgDMNO5OasxKR982cZM1.mat
+deleted file mode 100644
+index 08629d2..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/6hgDMNO5OasxKR982cZM1.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/6xfnc4FiNcQKFjnciHKnWC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/6xfnc4FiNcQKFjnciHKnWC.mat
+deleted file mode 100644
+index 8521459..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/6xfnc4FiNcQKFjnciHKnWC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/6xxMA4UsLaMBjFGQCeSuuE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/6xxMA4UsLaMBjFGQCeSuuE.mat
+deleted file mode 100644
+index 9869965..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/6xxMA4UsLaMBjFGQCeSuuE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/71ly7rlSU4oY44uP3fZ04D.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/71ly7rlSU4oY44uP3fZ04D.mat
+deleted file mode 100644
+index 03364e8..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/71ly7rlSU4oY44uP3fZ04D.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/73FSswz5HsK57jb4pdafgC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/73FSswz5HsK57jb4pdafgC.mat
+deleted file mode 100644
+index 00e646f..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/73FSswz5HsK57jb4pdafgC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/7RqWePc5amCWq1Tw8obyWB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/7RqWePc5amCWq1Tw8obyWB.mat
+deleted file mode 100644
+index 2518888..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/7RqWePc5amCWq1Tw8obyWB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/7fs4P6lZp0OISykEzTPx4F.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/7fs4P6lZp0OISykEzTPx4F.mat
+deleted file mode 100644
+index 44a7c71..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/7fs4P6lZp0OISykEzTPx4F.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/84lUOgUEoxYWqdyVXeO5LF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/84lUOgUEoxYWqdyVXeO5LF.mat
+deleted file mode 100644
+index 5852e64..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/84lUOgUEoxYWqdyVXeO5LF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/8JmL4obuoT7Cv3CmOyrf8G.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/8JmL4obuoT7Cv3CmOyrf8G.mat
+deleted file mode 100644
+index 0baa002..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/8JmL4obuoT7Cv3CmOyrf8G.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/8vGMmi9Tn4s69oREeYoUKC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/8vGMmi9Tn4s69oREeYoUKC.mat
+deleted file mode 100644
+index 05af5db..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/8vGMmi9Tn4s69oREeYoUKC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/9KADm3XE4F0tDN72RgqQzE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/9KADm3XE4F0tDN72RgqQzE.mat
+deleted file mode 100644
+index fd8ab43..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/9KADm3XE4F0tDN72RgqQzE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/9SLEr38RepgwLqcPpIYLNF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/9SLEr38RepgwLqcPpIYLNF.mat
+deleted file mode 100644
+index 39b32b6..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/9SLEr38RepgwLqcPpIYLNF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/9eJ5Eel3RycE5TiDuD7g9.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/9eJ5Eel3RycE5TiDuD7g9.mat
+deleted file mode 100644
+index 57f6f6c..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/9eJ5Eel3RycE5TiDuD7g9.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/A0z9YLuSaISWO7xATpyYtE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/A0z9YLuSaISWO7xATpyYtE.mat
+deleted file mode 100644
+index 42e79d5..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/A0z9YLuSaISWO7xATpyYtE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/ALYarS7n5HKW1U0oYoUyyB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/ALYarS7n5HKW1U0oYoUyyB.mat
+deleted file mode 100644
+index e7db269..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/ALYarS7n5HKW1U0oYoUyyB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/AMHEM1jzgAEOAfv2bzddI.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/AMHEM1jzgAEOAfv2bzddI.mat
+deleted file mode 100644
+index a8c4d2f..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/AMHEM1jzgAEOAfv2bzddI.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/AbR2DiMgrUUd7WGrfk69CG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/AbR2DiMgrUUd7WGrfk69CG.mat
+deleted file mode 100644
+index 4928eda..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/AbR2DiMgrUUd7WGrfk69CG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/DmZaHop4oAm1sVo7hMtlCD.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/DmZaHop4oAm1sVo7hMtlCD.mat
+deleted file mode 100644
+index 6f2c469..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/DmZaHop4oAm1sVo7hMtlCD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/Dv6IyUNoY2HM4bW5jMQIzG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/Dv6IyUNoY2HM4bW5jMQIzG.mat
+deleted file mode 100644
+index 932a1a7..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/Dv6IyUNoY2HM4bW5jMQIzG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/EGsZSgvod92qlrZITktrNF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/EGsZSgvod92qlrZITktrNF.mat
+deleted file mode 100644
+index 6dbd674..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/EGsZSgvod92qlrZITktrNF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/FXCPGqzpOpw53wxdvOYmg.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/FXCPGqzpOpw53wxdvOYmg.mat
+deleted file mode 100644
+index da76a4d..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/FXCPGqzpOpw53wxdvOYmg.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/H6aj6T24RdeNrEMR5z3qCC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/H6aj6T24RdeNrEMR5z3qCC.mat
+deleted file mode 100644
+index 490b48a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/H6aj6T24RdeNrEMR5z3qCC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/HR2X7dOBgvBMYAZGjY35KG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/HR2X7dOBgvBMYAZGjY35KG.mat
+deleted file mode 100644
+index e749212..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/HR2X7dOBgvBMYAZGjY35KG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/HiHU6oR1F0YskPSZcKxaCD.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/HiHU6oR1F0YskPSZcKxaCD.mat
+deleted file mode 100644
+index 3881fba..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/HiHU6oR1F0YskPSZcKxaCD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/HoiV49vsVH63NIRGi9pHqD.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/HoiV49vsVH63NIRGi9pHqD.mat
+deleted file mode 100644
+index 8f28ed6..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/HoiV49vsVH63NIRGi9pHqD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/IEsMEW9oSF7ILa2JMpMagB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/IEsMEW9oSF7ILa2JMpMagB.mat
+deleted file mode 100644
+index 67c515a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/IEsMEW9oSF7ILa2JMpMagB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/JUECr8TNl7OJ9vmGdlv3ID.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/JUECr8TNl7OJ9vmGdlv3ID.mat
+deleted file mode 100644
+index b9a2b9e..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/JUECr8TNl7OJ9vmGdlv3ID.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/KljVsnhf1bn2LO71SeoSOE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/KljVsnhf1bn2LO71SeoSOE.mat
+deleted file mode 100644
+index 609b53d..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/KljVsnhf1bn2LO71SeoSOE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/LBYpMy8zXjiCNZqCG4yz1.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/LBYpMy8zXjiCNZqCG4yz1.mat
+deleted file mode 100644
+index 0b4435a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/LBYpMy8zXjiCNZqCG4yz1.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/LKAlXdVjfmI2wlcTEE0VRH.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/LKAlXdVjfmI2wlcTEE0VRH.mat
+deleted file mode 100644
+index 270a14f..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/LKAlXdVjfmI2wlcTEE0VRH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/Lt5Ng7hrIdxAf7bPGGmkK.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/Lt5Ng7hrIdxAf7bPGGmkK.mat
+deleted file mode 100644
+index ee5193a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/Lt5Ng7hrIdxAf7bPGGmkK.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/LxicUwr0x0vDh6EHMNJofC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/LxicUwr0x0vDh6EHMNJofC.mat
+deleted file mode 100644
+index e8ac20d..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/LxicUwr0x0vDh6EHMNJofC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/Mmcx4kMZTWFT25dUxJ0G1F.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/Mmcx4kMZTWFT25dUxJ0G1F.mat
+deleted file mode 100644
+index 273f8f2..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/Mmcx4kMZTWFT25dUxJ0G1F.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/MyDIggKkZbK2Z6Zdjq31ND.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/MyDIggKkZbK2Z6Zdjq31ND.mat
+deleted file mode 100644
+index a9de8f0..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/MyDIggKkZbK2Z6Zdjq31ND.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/NZf95D2nZrJewYIJpIz0KF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/NZf95D2nZrJewYIJpIz0KF.mat
+deleted file mode 100644
+index b2e784a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/NZf95D2nZrJewYIJpIz0KF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/Nf7eykeCk3a6CFrAqrE22D.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/Nf7eykeCk3a6CFrAqrE22D.mat
+deleted file mode 100644
+index a2b4ed9..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/Nf7eykeCk3a6CFrAqrE22D.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/Nf9Ebe0y6Y587UPSQuirNB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/Nf9Ebe0y6Y587UPSQuirNB.mat
+deleted file mode 100644
+index f18b411..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/Nf9Ebe0y6Y587UPSQuirNB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/NpR023L7OvgCxAje006EfF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/NpR023L7OvgCxAje006EfF.mat
+deleted file mode 100644
+index 9d7294d..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/NpR023L7OvgCxAje006EfF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/NtEO7NT5cJqytvkolNYY5G.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/NtEO7NT5cJqytvkolNYY5G.mat
+deleted file mode 100644
+index 94ee656..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/NtEO7NT5cJqytvkolNYY5G.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/O9xmgz4M20iXolj7LMrH3C.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/O9xmgz4M20iXolj7LMrH3C.mat
+deleted file mode 100644
+index 58f11ec..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/O9xmgz4M20iXolj7LMrH3C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/Ohf4zNh18B1wociCWbnFiD.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/Ohf4zNh18B1wociCWbnFiD.mat
+deleted file mode 100644
+index b83a71b..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/Ohf4zNh18B1wociCWbnFiD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/OpAYCGM2vR5c7WUYPw2p9G.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/OpAYCGM2vR5c7WUYPw2p9G.mat
+deleted file mode 100644
+index 36451a7..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/OpAYCGM2vR5c7WUYPw2p9G.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/PJJg1uckJmsqNftDFyjyEC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/PJJg1uckJmsqNftDFyjyEC.mat
+deleted file mode 100644
+index 3a59653..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/PJJg1uckJmsqNftDFyjyEC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/PLl5m2gBSU1NSiER9AabrF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/PLl5m2gBSU1NSiER9AabrF.mat
+deleted file mode 100644
+index 41cbebc..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/PLl5m2gBSU1NSiER9AabrF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/Q39nCRgT7XlEt4HhhHt9pE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/Q39nCRgT7XlEt4HhhHt9pE.mat
+deleted file mode 100644
+index 2782cf7..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/Q39nCRgT7XlEt4HhhHt9pE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/QWyskI1p8b7iZDKkWvVWbC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/QWyskI1p8b7iZDKkWvVWbC.mat
+deleted file mode 100644
+index ae83b15..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/QWyskI1p8b7iZDKkWvVWbC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/QeEmMoXGwGGwoav8ibsbBH.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/QeEmMoXGwGGwoav8ibsbBH.mat
+deleted file mode 100644
+index 57ffc87..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/QeEmMoXGwGGwoav8ibsbBH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/R45GyJL8Ww2zsUpOCvg0GF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/R45GyJL8Ww2zsUpOCvg0GF.mat
+deleted file mode 100644
+index 299ff2c..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/R45GyJL8Ww2zsUpOCvg0GF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/RGzgazLeo8WO3r2SQtyQnB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/RGzgazLeo8WO3r2SQtyQnB.mat
+deleted file mode 100644
+index 9dca401..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/RGzgazLeo8WO3r2SQtyQnB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/T83099Id9HT4O3Ul1kQOgG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/T83099Id9HT4O3Ul1kQOgG.mat
+deleted file mode 100644
+index 33fa847..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/T83099Id9HT4O3Ul1kQOgG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/TL7xCtt4YdMFU4s9mNBf2C.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/TL7xCtt4YdMFU4s9mNBf2C.mat
+deleted file mode 100644
+index 7723227..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/TL7xCtt4YdMFU4s9mNBf2C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/TjYM5zXv9qdJlaEDyTNQtH.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/TjYM5zXv9qdJlaEDyTNQtH.mat
+deleted file mode 100644
+index 350126a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/TjYM5zXv9qdJlaEDyTNQtH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/UswuF7urZMRMMQQKxuRvF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/UswuF7urZMRMMQQKxuRvF.mat
+deleted file mode 100644
+index f6763ca..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/UswuF7urZMRMMQQKxuRvF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/Uuf1ZtuA67WpJoEuSFBzKD.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/Uuf1ZtuA67WpJoEuSFBzKD.mat
+deleted file mode 100644
+index 9397cbb..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/Uuf1ZtuA67WpJoEuSFBzKD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/UzRyv84Uk5n8v6RnVBSVMB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/UzRyv84Uk5n8v6RnVBSVMB.mat
+deleted file mode 100644
+index 0d39709..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/UzRyv84Uk5n8v6RnVBSVMB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/VVWwlWoiKf9qK35SywDEWF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/VVWwlWoiKf9qK35SywDEWF.mat
+deleted file mode 100644
+index 6028aca..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/VVWwlWoiKf9qK35SywDEWF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/X7hWxkfrP3jvTBTGTVVTQF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/X7hWxkfrP3jvTBTGTVVTQF.mat
+deleted file mode 100644
+index 76b352c..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/X7hWxkfrP3jvTBTGTVVTQF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/Y2qhYMx9a59KiRaB7WGHfF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/Y2qhYMx9a59KiRaB7WGHfF.mat
+deleted file mode 100644
+index 5fd1617..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/Y2qhYMx9a59KiRaB7WGHfF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/YD8utPEAa9ewYMzkNxsnAG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/YD8utPEAa9ewYMzkNxsnAG.mat
+deleted file mode 100644
+index 2765d4e..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/YD8utPEAa9ewYMzkNxsnAG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/YSJssYfI43wm620jSswY0G.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/YSJssYfI43wm620jSswY0G.mat
+deleted file mode 100644
+index 67b8c02..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/YSJssYfI43wm620jSswY0G.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/YdBcV18g80XDIfwPBEDBtG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/YdBcV18g80XDIfwPBEDBtG.mat
+deleted file mode 100644
+index e814ee3..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/YdBcV18g80XDIfwPBEDBtG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/ZRru1lSB3omNYX9GNmL5XD.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/ZRru1lSB3omNYX9GNmL5XD.mat
+deleted file mode 100644
+index 4a7e3db..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/ZRru1lSB3omNYX9GNmL5XD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/a3TDntSiObPO5hYU64lRZF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/a3TDntSiObPO5hYU64lRZF.mat
+deleted file mode 100644
+index f8fc923..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/a3TDntSiObPO5hYU64lRZF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/aPdwtgogUMXEb2jgLN2BeB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/aPdwtgogUMXEb2jgLN2BeB.mat
+deleted file mode 100644
+index 30056d6..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/aPdwtgogUMXEb2jgLN2BeB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/ahr0wHaoNqmbD49iMLOOvF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/ahr0wHaoNqmbD49iMLOOvF.mat
+deleted file mode 100644
+index f3a6ee6..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/ahr0wHaoNqmbD49iMLOOvF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/apfkklCBAjLB04nxYPqzL.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/apfkklCBAjLB04nxYPqzL.mat
+deleted file mode 100644
+index 283c6d9..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/apfkklCBAjLB04nxYPqzL.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/autoInferAccessInfo.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/autoInferAccessInfo.mat
+deleted file mode 100644
+index 032bfdd..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/autoInferAccessInfo.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/b9CueRZpvKvbWECa8zBCzF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/b9CueRZpvKvbWECa8zBCzF.mat
+deleted file mode 100644
+index c13436c..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/b9CueRZpvKvbWECa8zBCzF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/bvzHCE8RvSxjSkjdBwjxPF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/bvzHCE8RvSxjSkjdBwjxPF.mat
+deleted file mode 100644
+index f4d745f..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/bvzHCE8RvSxjSkjdBwjxPF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/chZFF3iXXGiYOZIJYrkwPE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/chZFF3iXXGiYOZIJYrkwPE.mat
+deleted file mode 100644
+index eb50323..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/chZFF3iXXGiYOZIJYrkwPE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/dj9LQQqOkaV5QUcqpwcxmB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/dj9LQQqOkaV5QUcqpwcxmB.mat
+deleted file mode 100644
+index 6db1c4f..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/dj9LQQqOkaV5QUcqpwcxmB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/dp9om7mrE2NnJXKxCXQHIH.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/dp9om7mrE2NnJXKxCXQHIH.mat
+deleted file mode 100644
+index 4ca3024..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/dp9om7mrE2NnJXKxCXQHIH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/ePsIyWFrYEPXdhKofgqXzB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/ePsIyWFrYEPXdhKofgqXzB.mat
+deleted file mode 100644
+index d7d4abf..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/ePsIyWFrYEPXdhKofgqXzB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/eYmGkORdytxLx1aF6GqBHE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/eYmGkORdytxLx1aF6GqBHE.mat
+deleted file mode 100644
+index 22d7ebf..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/eYmGkORdytxLx1aF6GqBHE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/ew0yax5ldqkq2Eqp8M9yGE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/ew0yax5ldqkq2Eqp8M9yGE.mat
+deleted file mode 100644
+index f12a803..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/ew0yax5ldqkq2Eqp8M9yGE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/f54YycR3rkAq0POTtwpSNC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/f54YycR3rkAq0POTtwpSNC.mat
+deleted file mode 100644
+index d8d6416..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/f54YycR3rkAq0POTtwpSNC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/fXvXazmSm4EYh9VNiM6ELH.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/fXvXazmSm4EYh9VNiM6ELH.mat
+deleted file mode 100644
+index 735f18c..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/fXvXazmSm4EYh9VNiM6ELH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/fsRzA9DeWqITjpt7tj2HuG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/fsRzA9DeWqITjpt7tj2HuG.mat
+deleted file mode 100644
+index 8d08499..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/fsRzA9DeWqITjpt7tj2HuG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/goLIirOnTEedUUOFOEaRwC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/goLIirOnTEedUUOFOEaRwC.mat
+deleted file mode 100644
+index 0a915a7..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/goLIirOnTEedUUOFOEaRwC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/heZN0r1McNKzlrDXizHpJD.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/heZN0r1McNKzlrDXizHpJD.mat
+deleted file mode 100644
+index 7dbec85..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/heZN0r1McNKzlrDXizHpJD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/hgGsJPyJNc2yg0nJ2rzojE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/hgGsJPyJNc2yg0nJ2rzojE.mat
+deleted file mode 100644
+index 9a3f7bf..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/hgGsJPyJNc2yg0nJ2rzojE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/jKmbm9FBgleRBqvC0RbCPC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/jKmbm9FBgleRBqvC0RbCPC.mat
+deleted file mode 100644
+index 1836247..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/jKmbm9FBgleRBqvC0RbCPC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/jooHvNkhGVSgo3WbwZGazC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/jooHvNkhGVSgo3WbwZGazC.mat
+deleted file mode 100644
+index ec5076b..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/jooHvNkhGVSgo3WbwZGazC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/jzvBEzlIoMIBo1T7ybzcZC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/jzvBEzlIoMIBo1T7ybzcZC.mat
+deleted file mode 100644
+index b2239f9..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/jzvBEzlIoMIBo1T7ybzcZC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/kIdyJjkZHxWDAColx1Up7D.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/kIdyJjkZHxWDAColx1Up7D.mat
+deleted file mode 100644
+index 9e94f14..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/kIdyJjkZHxWDAColx1Up7D.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/kYoMarydbHU7dYmBnrzLg.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/kYoMarydbHU7dYmBnrzLg.mat
+deleted file mode 100644
+index 3f3c7cf..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/kYoMarydbHU7dYmBnrzLg.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/lnzx02dEdw3DYokTyU1oAF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/lnzx02dEdw3DYokTyU1oAF.mat
+deleted file mode 100644
+index 52408b1..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/lnzx02dEdw3DYokTyU1oAF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/lshee2YKxXFKxBE1TpIvwG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/lshee2YKxXFKxBE1TpIvwG.mat
+deleted file mode 100644
+index 80cd12b..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/lshee2YKxXFKxBE1TpIvwG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/mI1Pzpkyul98V8pjswGjRC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/mI1Pzpkyul98V8pjswGjRC.mat
+deleted file mode 100644
+index 8465c08..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/mI1Pzpkyul98V8pjswGjRC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/mbpRdFPmzNfT7EsAiLQ34B.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/mbpRdFPmzNfT7EsAiLQ34B.mat
+deleted file mode 100644
+index 924e7d0..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/mbpRdFPmzNfT7EsAiLQ34B.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/n6x1MLgqXYb6JYwvCDLGGF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/n6x1MLgqXYb6JYwvCDLGGF.mat
+deleted file mode 100644
+index 1619e97..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/n6x1MLgqXYb6JYwvCDLGGF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/nMYLWKcc8MJbb7JEXotz5C.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/nMYLWKcc8MJbb7JEXotz5C.mat
+deleted file mode 100644
+index e951d62..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/nMYLWKcc8MJbb7JEXotz5C.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/nSacASSkUp8nI6Ou5gOStD.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/nSacASSkUp8nI6Ou5gOStD.mat
+deleted file mode 100644
+index cbc5b96..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/nSacASSkUp8nI6Ou5gOStD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/nbsKxrSSXP4u25XNDEzsNC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/nbsKxrSSXP4u25XNDEzsNC.mat
+deleted file mode 100644
+index 6adce91..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/nbsKxrSSXP4u25XNDEzsNC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/ogJLs7wZoFUtLoZ6WEBGNB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/ogJLs7wZoFUtLoZ6WEBGNB.mat
+deleted file mode 100644
+index b0e7ee2..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/ogJLs7wZoFUtLoZ6WEBGNB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/oj8YhrGEBP4hANxZ0MCWa.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/oj8YhrGEBP4hANxZ0MCWa.mat
+deleted file mode 100644
+index 0bc1787..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/oj8YhrGEBP4hANxZ0MCWa.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/qIcJs46YNNXMvFFpyYIvd.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/qIcJs46YNNXMvFFpyYIvd.mat
+deleted file mode 100644
+index d423d1a..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/qIcJs46YNNXMvFFpyYIvd.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/qIk5PEGV1yCiI8LJZSjeZC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/qIk5PEGV1yCiI8LJZSjeZC.mat
+deleted file mode 100644
+index 3c3abaf..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/qIk5PEGV1yCiI8LJZSjeZC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/qfFD1iKqEEUK95VRpOjYZF.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/qfFD1iKqEEUK95VRpOjYZF.mat
+deleted file mode 100644
+index c3284a0..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/qfFD1iKqEEUK95VRpOjYZF.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/qsCMFKM2zzFCEhXAup5jOE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/qsCMFKM2zzFCEhXAup5jOE.mat
+deleted file mode 100644
+index 591055c..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/qsCMFKM2zzFCEhXAup5jOE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/rYztWvabe9LrCYS8VFjZiC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/rYztWvabe9LrCYS8VFjZiC.mat
+deleted file mode 100644
+index d06c957..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/rYztWvabe9LrCYS8VFjZiC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/ry0pFpOd6R46DcWnR2krLB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/ry0pFpOd6R46DcWnR2krLB.mat
+deleted file mode 100644
+index 889a930..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/ry0pFpOd6R46DcWnR2krLB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/s9zRVJD3zRECkgI9RlTa2G.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/s9zRVJD3zRECkgI9RlTa2G.mat
+deleted file mode 100644
+index 78385cc..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/s9zRVJD3zRECkgI9RlTa2G.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/sTrlFyMkCy44XC4SrVvvH.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/sTrlFyMkCy44XC4SrVvvH.mat
+deleted file mode 100644
+index a7ecc3b..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/sTrlFyMkCy44XC4SrVvvH.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/t7QBVFiTJPehbkigncrwwB.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/t7QBVFiTJPehbkigncrwwB.mat
+deleted file mode 100644
+index 884c3b1..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/t7QBVFiTJPehbkigncrwwB.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/t8Z80A7zoSGSpPv03tpJFC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/t8Z80A7zoSGSpPv03tpJFC.mat
+deleted file mode 100644
+index fd6ae9b..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/t8Z80A7zoSGSpPv03tpJFC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/t9nqxMvPWTd6pC2y9AlAN.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/t9nqxMvPWTd6pC2y9AlAN.mat
+deleted file mode 100644
+index 7e58b43..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/t9nqxMvPWTd6pC2y9AlAN.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/uiDBIdx30pR96Fp9Cn6PfG.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/uiDBIdx30pR96Fp9Cn6PfG.mat
+deleted file mode 100644
+index 41c2d04..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/uiDBIdx30pR96Fp9Cn6PfG.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/v5kkA4CamfwGP5OMC5L2SE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/v5kkA4CamfwGP5OMC5L2SE.mat
+deleted file mode 100644
+index 22d59c2..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/v5kkA4CamfwGP5OMC5L2SE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/vCQzESAJbanLEKYF41eHK.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/vCQzESAJbanLEKYF41eHK.mat
+deleted file mode 100644
+index f7119ba..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/vCQzESAJbanLEKYF41eHK.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/vzlLrxcHoDOfKyIaknwSyC.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/vzlLrxcHoDOfKyIaknwSyC.mat
+deleted file mode 100644
+index c729ddb..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/vzlLrxcHoDOfKyIaknwSyC.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/xADEeMTDcnUWQ0e1OfVsLD.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/xADEeMTDcnUWQ0e1OfVsLD.mat
+deleted file mode 100644
+index ec27231..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/xADEeMTDcnUWQ0e1OfVsLD.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/yubSrkHllIaF5zMSVJk2QE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/yubSrkHllIaF5zMSVJk2QE.mat
+deleted file mode 100644
+index cf3aebe..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/yubSrkHllIaF5zMSVJk2QE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/z2iCK4Jp1pDDgcQfrWdNnE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/z2iCK4Jp1pDDgcQfrWdNnE.mat
+deleted file mode 100644
+index 8192a6d..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/z2iCK4Jp1pDDgcQfrWdNnE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/z2wE3XZC3F3846BgQCst0F.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/z2wE3XZC3F3846BgQCst0F.mat
+deleted file mode 100644
+index 431b2e0..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/z2wE3XZC3F3846BgQCst0F.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/_sfprj/precompile/ztANUjImrh41QNXv8F5kLE.mat b/Tavola1BIcchi/slprj/_sfprj/precompile/ztANUjImrh41QNXv8F5kLE.mat
+deleted file mode 100644
+index 77c4c72..0000000
+Binary files a/Tavola1BIcchi/slprj/_sfprj/precompile/ztANUjImrh41QNXv8F5kLE.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/sim/varcache/CompTorque/checksumOfCache.mat b/Tavola1BIcchi/slprj/sim/varcache/CompTorque/checksumOfCache.mat
+deleted file mode 100644
+index 0cf1442..0000000
+Binary files a/Tavola1BIcchi/slprj/sim/varcache/CompTorque/checksumOfCache.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/sim/varcache/CompTorque/tmwinternal/simulink_cache.xml b/Tavola1BIcchi/slprj/sim/varcache/CompTorque/tmwinternal/simulink_cache.xml
+deleted file mode 100644
+index e314090..0000000
+--- a/Tavola1BIcchi/slprj/sim/varcache/CompTorque/tmwinternal/simulink_cache.xml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<MF0 version="1.1" packageUris="http://schema.mathworks.com/mf0/SlCache/19700101">
+-  <slcache.FileAttributes type="slcache.FileAttributes" uuid="0163c099-8855-4fd7-b16a-dbb7a71cfac6">
+-    <checksum>jqX92BPyvD5xw5o6egIOLg==</checksum>
+-  </slcache.FileAttributes>
+-</MF0>
+\ No newline at end of file
+diff --git a/Tavola1BIcchi/slprj/sim/varcache/CompTorque/varInfo.mat b/Tavola1BIcchi/slprj/sim/varcache/CompTorque/varInfo.mat
+deleted file mode 100644
+index 5f2a6ee..0000000
+Binary files a/Tavola1BIcchi/slprj/sim/varcache/CompTorque/varInfo.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/sim/varcache/PD/checksumOfCache.mat b/Tavola1BIcchi/slprj/sim/varcache/PD/checksumOfCache.mat
+deleted file mode 100644
+index 6387a7b..0000000
+Binary files a/Tavola1BIcchi/slprj/sim/varcache/PD/checksumOfCache.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/sim/varcache/PD/tmwinternal/simulink_cache.xml b/Tavola1BIcchi/slprj/sim/varcache/PD/tmwinternal/simulink_cache.xml
+deleted file mode 100644
+index b87fdb0..0000000
+--- a/Tavola1BIcchi/slprj/sim/varcache/PD/tmwinternal/simulink_cache.xml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<MF0 version="1.1" packageUris="http://schema.mathworks.com/mf0/SlCache/19700101">
+-  <slcache.FileAttributes type="slcache.FileAttributes" uuid="70568fe8-9c5e-4751-a3b4-d65dfb71593b">
+-    <checksum>fE/fqU37zGaqHxGjT8DB5g==</checksum>
+-  </slcache.FileAttributes>
+-</MF0>
+\ No newline at end of file
+diff --git a/Tavola1BIcchi/slprj/sim/varcache/PD/varInfo.mat b/Tavola1BIcchi/slprj/sim/varcache/PD/varInfo.mat
+deleted file mode 100644
+index 13457d5..0000000
+Binary files a/Tavola1BIcchi/slprj/sim/varcache/PD/varInfo.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/sim/varcache/PD_traj/checksumOfCache.mat b/Tavola1BIcchi/slprj/sim/varcache/PD_traj/checksumOfCache.mat
+deleted file mode 100644
+index 19896f5..0000000
+Binary files a/Tavola1BIcchi/slprj/sim/varcache/PD_traj/checksumOfCache.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/slprj/sim/varcache/PD_traj/tmwinternal/simulink_cache.xml b/Tavola1BIcchi/slprj/sim/varcache/PD_traj/tmwinternal/simulink_cache.xml
+deleted file mode 100644
+index 59f6e59..0000000
+--- a/Tavola1BIcchi/slprj/sim/varcache/PD_traj/tmwinternal/simulink_cache.xml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<MF0 version="1.1" packageUris="http://schema.mathworks.com/mf0/SlCache/19700101">
+-  <slcache.FileAttributes type="slcache.FileAttributes" uuid="e88c3896-c8cc-4041-a0dc-c7ab02e32a26">
+-    <checksum>XJ3di88wXQ2V6UVnAKrJYg==</checksum>
+-  </slcache.FileAttributes>
+-</MF0>
+\ No newline at end of file
+diff --git a/Tavola1BIcchi/slprj/sim/varcache/PD_traj/varInfo.mat b/Tavola1BIcchi/slprj/sim/varcache/PD_traj/varInfo.mat
+deleted file mode 100644
+index 1416430..0000000
+Binary files a/Tavola1BIcchi/slprj/sim/varcache/PD_traj/varInfo.mat and /dev/null differ
+diff --git a/Tavola1BIcchi/utils/forwardKinematics.m b/Tavola1BIcchi/utils/forwardKinematics.m
+index fdda47b..66e1d50 100644
+--- a/Tavola1BIcchi/utils/forwardKinematics.m
++++ b/Tavola1BIcchi/utils/forwardKinematics.m
+@@ -22,13 +22,22 @@ function [Pcom, Etip, T00, T01, T12, T23, T34, T45, T56] = forwardKinematics(par
+ %     T45 = getTransformMatrix(theta5,d5,0,param(5,3));
+ %     T56 = getTransformMatrix(theta6,d6,0,param(6,3));
+ 
++    % The Stanford manipulator is composed of a spherical arm and a spherical wrist
++    % link  a_i     aplha_i     d_i     theta_i
++    % 1     0       -pi/2       0       theta1
++    % 2     0       pi/2        d2      theta2
++    % 3     0       0           d3      0
++    % 4     0       -pi/2       0       theta4
++    % 5     0       pi/2        0       theta5
++    % 6     0       0           d6      theta6
++    
+     T00 = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1];
+-    T01 = getTransformMatrix(theta1, param(1,1), 0, param(1,3));
+-    T12 = getTransformMatrix(theta2, param(2,1), 0, param(2,3));
++    T01 = getTransformMatrix(theta1, d1, 0, param(1,3));
++    T12 = getTransformMatrix(theta2, d2, 0, param(2,3));
+     T23 = getTransformMatrix(0, q(3), 0, param(3,3)); %è una lunghezza la variabile
+-    T34 = getTransformMatrix(theta4, param(4,1), 0, param(4,3));
+-    T45 = getTransformMatrix(theta5, param(5,1), 0, param(5,3));
+-    T56 = getTransformMatrix(theta6, param(6,1), 0, param(6,3));
++    T34 = getTransformMatrix(theta4, d4, 0, param(4,3));
++    T45 = getTransformMatrix(theta5, d5, 0, param(5,3));
++    T56 = getTransformMatrix(theta6, d6, 0, param(6,3));
+ 
+     Etip = T00 * T01 * T12 * T23 * T34 * T45 * T56;
+     
+diff --git a/Tavola1BIcchi/utils/getTransformMatrix.m b/Tavola1BIcchi/utils/getTransformMatrix.m
+index eb9663b..b428f24 100644
+--- a/Tavola1BIcchi/utils/getTransformMatrix.m
++++ b/Tavola1BIcchi/utils/getTransformMatrix.m
+@@ -1,8 +1,8 @@
+ function [T] = getTransformMatrix(theta, d, a, alpha)
+ 
+ T = [cos(theta) -sin(theta) * cos(alpha) sin(theta) * sin(alpha) a * cos(theta);...
+-     sin(theta) cos(theta) * cos(alpha)  -cos(theta) * sin(alpha) a * sin(theta);...
+-     0,sin(alpha),cos(alpha),d;...
+-     0,0,0,1];
++     sin(theta) cos(theta) * cos(alpha) -cos(theta) * sin(alpha) a * sin(theta);...
++     0 sin(alpha) cos(alpha) d;...
++     0 0 0 1];
+  
+ end
+\ No newline at end of file
+diff --git a/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.l b/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.l
+deleted file mode 100644
+index a7f229b..0000000
+Binary files a/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.l and /dev/null differ
+diff --git a/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.mat b/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.mat
+deleted file mode 100644
+index 777e3cf..0000000
+Binary files a/slprj/_jitprj/srm1QxFU1IZUjShSPeye9ZH.mat and /dev/null differ
+diff --git a/slprj/_sfprj/EMLReport/sTYpN3FTGUbJMttGKoTEn9G.mat b/slprj/_sfprj/EMLReport/sTYpN3FTGUbJMttGKoTEn9G.mat
+deleted file mode 100644
+index 560bc3f..0000000
+Binary files a/slprj/_sfprj/EMLReport/sTYpN3FTGUbJMttGKoTEn9G.mat and /dev/null differ
+diff --git a/slprj/_sfprj/EMLReport/srm1QxFU1IZUjShSPeye9ZH.mat b/slprj/_sfprj/EMLReport/srm1QxFU1IZUjShSPeye9ZH.mat
+deleted file mode 100644
+index e9dda30..0000000
+Binary files a/slprj/_sfprj/EMLReport/srm1QxFU1IZUjShSPeye9ZH.mat and /dev/null differ
+diff --git a/slprj/_sfprj/precompile/4z7daakX1cJZiJniYkjkLC.mat b/slprj/_sfprj/precompile/4z7daakX1cJZiJniYkjkLC.mat
+deleted file mode 100644
+index dc80f56..0000000
+Binary files a/slprj/_sfprj/precompile/4z7daakX1cJZiJniYkjkLC.mat and /dev/null differ
+diff --git a/slprj/_sfprj/precompile/6QOXGFaLqxwRu7ne87aaDE.mat b/slprj/_sfprj/precompile/6QOXGFaLqxwRu7ne87aaDE.mat
+deleted file mode 100644
+index b31dedd..0000000
+Binary files a/slprj/_sfprj/precompile/6QOXGFaLqxwRu7ne87aaDE.mat and /dev/null differ
+diff --git a/slprj/_sfprj/precompile/Uuf1ZtuA67WpJoEuSFBzKD.mat b/slprj/_sfprj/precompile/Uuf1ZtuA67WpJoEuSFBzKD.mat
+deleted file mode 100644
+index 1a19139..0000000
+Binary files a/slprj/_sfprj/precompile/Uuf1ZtuA67WpJoEuSFBzKD.mat and /dev/null differ
+diff --git a/slprj/_sfprj/precompile/X7hWxkfrP3jvTBTGTVVTQF.mat b/slprj/_sfprj/precompile/X7hWxkfrP3jvTBTGTVVTQF.mat
+deleted file mode 100644
+index 437d682..0000000
+Binary files a/slprj/_sfprj/precompile/X7hWxkfrP3jvTBTGTVVTQF.mat and /dev/null differ
+diff --git a/slprj/_sfprj/precompile/ahr0wHaoNqmbD49iMLOOvF.mat b/slprj/_sfprj/precompile/ahr0wHaoNqmbD49iMLOOvF.mat
+deleted file mode 100644
+index 18d270b..0000000
+Binary files a/slprj/_sfprj/precompile/ahr0wHaoNqmbD49iMLOOvF.mat and /dev/null differ
+diff --git a/slprj/_sfprj/precompile/ew0yax5ldqkq2Eqp8M9yGE.mat b/slprj/_sfprj/precompile/ew0yax5ldqkq2Eqp8M9yGE.mat
+deleted file mode 100644
+index 8bf1e36..0000000
+Binary files a/slprj/_sfprj/precompile/ew0yax5ldqkq2Eqp8M9yGE.mat and /dev/null differ
+diff --git a/slprj/_sfprj/precompile/mI1Pzpkyul98V8pjswGjRC.mat b/slprj/_sfprj/precompile/mI1Pzpkyul98V8pjswGjRC.mat
+deleted file mode 100644
+index cbb12fe..0000000
+Binary files a/slprj/_sfprj/precompile/mI1Pzpkyul98V8pjswGjRC.mat and /dev/null differ
+diff --git a/slprj/_sfprj/precompile/rYztWvabe9LrCYS8VFjZiC.mat b/slprj/_sfprj/precompile/rYztWvabe9LrCYS8VFjZiC.mat
+deleted file mode 100644
+index 3b5afd8..0000000
+Binary files a/slprj/_sfprj/precompile/rYztWvabe9LrCYS8VFjZiC.mat and /dev/null differ
+diff --git a/slprj/_sfprj/precompile/t7QBVFiTJPehbkigncrwwB.mat b/slprj/_sfprj/precompile/t7QBVFiTJPehbkigncrwwB.mat
+deleted file mode 100644
+index 0553990..0000000
+Binary files a/slprj/_sfprj/precompile/t7QBVFiTJPehbkigncrwwB.mat and /dev/null differ
