@@ -23,7 +23,7 @@ L_d = 3;
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-K_endEff = [1, 10000];
+K_endEff = [100, 100];
 
 qf =  [-pi/3, q0(2), L_d, q0(4), q0(5), pi/4]';
 %qf =  q0;
