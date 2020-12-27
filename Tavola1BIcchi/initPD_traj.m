@@ -5,7 +5,7 @@ close all
 currentFile = genpath( './' );
 addpath(currentFile);
 
-parameter = [0.50,  10;
+parameter = [0,     10;
              1,     5;
              0,     10;
              1,     2;
@@ -15,7 +15,7 @@ parameter = [0.50,  10;
 theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
-q0 = [0, 0, 0, 0, 0, 0]';
+q0 = [0 0 0 0 0 0]';
 dq0 = q0;
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 L_d = 3;
@@ -23,7 +23,7 @@ L_d = 3;
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-K_endEff = [100, 100];
+K_endEff = [1, 1];
 
 qf =  [-pi/3, q0(2), L_d, q0(4), q0(5), pi/4]';
 %qf =  q0;
@@ -32,7 +32,6 @@ qf =  [-pi/3, q0(2), L_d, q0(4), q0(5), pi/4]';
 x_endEff_D = Etip(1:3, 4);
 
 %% generazione traiettorie
-
 Simulation_Time = 25;
 t_S = 0.1;
 
@@ -57,24 +56,26 @@ for i = [1, 2, 4, 5, 6]
 
     end
 end
+
 q_vec(:,3) = L_d;
 dq_vec(:,3) = 0;
 ddq_vec(:,3) = 0;
 figure;
 plot(t_vec,q_vec(:, :));
+
 for x = 1:1:6
     leg{x} = sprintf('q_%d\n', x);
 end
+
 legend(leg);
 grid on;
 
 %% 
 tic
 disp("Calcolo simulazione");
-sim('PD_traj', Simulation_Time);
+% sim('PD_traj', Simulation_Time);
 disp("Fine simulazione");
 toc
+
 %% PLOT
-
-plot_error(ans, 'PD_traj');
-
+% plot_error(ans, 'PD_traj');

@@ -5,7 +5,7 @@ function x = plot_3D(parameter,q)
     m = parameter(1:6,2);
 
     x = [];
-    [Etip,T00,T01,T12,T23,T34,T45,T56] = forwardKinematics(parameter, q);
+    [Pcom, Etip, T00, T01, T12, T23, T34, T45, T56] = forwardKinematics(parameter, q);
     
     A1 = T00*T01;
     A2 = A1*T12;
@@ -24,10 +24,12 @@ function x = plot_3D(parameter,q)
     figure
     hold on;
     plot3(x(1,1),x(2,1),x(3,1),'bo');
+    
     for i = 1:size(x,2)-1
         line(x(1,i:i+1),x(2,i:i+1),x(3,i:i+1));
         plot3(x(1,i+1),x(2,i+1),x(3,i+1),'ro');
     end
+    
     plot3(x(1,end),x(2,end),x(3,end),'go');
 %     plot3(x(1,3),x(2,3),x(3,3),'yo');
 %     plot3(x(1,1:end-1),x(2,1:end-1),x(3,1:end-1));
@@ -37,7 +39,5 @@ function x = plot_3D(parameter,q)
     zlabel('z');
     grid on;
     hold off;
-    
-    
     
 end
