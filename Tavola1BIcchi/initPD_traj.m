@@ -23,10 +23,14 @@ L_d = 3;
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-K_endEff = [100, 100];
+K_endEff = [10000, 1000];
 
-qf =  [-pi/3, q0(2), L_d, q0(4), q0(5), pi/4]';
-%qf =  q0;
+% qf =  [-pi/3, q0(2), L_d, q0(4), q0(5), pi/4]';
+qf =  q0;
+qf(5) = pi/3;
+qf(6) = pi/4;
+% qf =  [-pi/3, pi/3, L_d, -pi/3, q0(5), q0(6)]';
+
 [Pcom, Etip] = forwardKinematics(parameter, qf);
 
 x_endEff_D = Etip(1:3, 4);
@@ -68,13 +72,13 @@ end
 legend(leg);
 grid on;
 
-%% 
+%%
 tic
 disp("Calcolo simulazione");
 sim('PD_traj', Simulation_Time);
 disp("Fine simulazione");
 toc
-%% PLOT
 
+%% PLOT
 plot_error(ans, 'PD_traj');
 
