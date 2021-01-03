@@ -5,10 +5,10 @@ close all
 currentFile = genpath( './' );
 addpath(currentFile);
 
-parameter = [0.50,  10;
+parameter = [0,     10;
              1,     5;
              0,     10;
-             1,     2;
+             0,     2;
              0,     4;
              1,     2;];
          
@@ -75,10 +75,10 @@ grid on;
 %%
 tic
 disp("Calcolo simulazione");
-sim('PD_traj', Simulation_Time);
+% sim('PD_traj', Simulation_Time);
 disp("Fine simulazione");
 toc
 
 %% PLOT
-plot_error(ans, 'PD_traj');
+% plot_error(ans, 'PD_traj');
 

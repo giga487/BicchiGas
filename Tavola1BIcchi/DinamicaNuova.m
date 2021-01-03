@@ -20,8 +20,10 @@ A4 = A3*T34;
 A5 = A4*T45;
 AT = A5*T56;
 
-A_sperhicalArm = T00*T01*T12*T23;
+A_SphericalArm = T00*T01*T12*T23;
 A_SphericalWrist = T34*T45*T56;
+
+p = Etip(1:3,4);
 
 %% Jacobian com function
 J_com = jacobian(Pcom,q);
@@ -42,7 +44,7 @@ end
 fprintf(fid,'];');
 fclose(fid);
 
-J_com = jacobian(Pcom,q);
+% J_com = jacobian(Pcom,q);
 
 %% End effector
 J_endeffector = jacobian(Etip(1:3,4),q);
@@ -65,64 +67,68 @@ fclose(fid);
 
 %% J1
 T = getTransformMatrix(q(1),d(1)/2,0,parameter(1,3));
-p1 = T(1:3,4);
-J1 = simplify( [[cross(z0,p1-p0);z0],zeros(6,5)]);
-rG1 = T(1:3,1:3);       
+p0 = T(1:3,4);
+J1 = simplify([[cross(z0,p-p0);z0],zeros(6,5)]);
+rG1 = T(1:3,1:3);    
 
 %% J2
 A1 = getTransformMatrix(q(1),d(1),0,parameter(1,3));
 T = A1*getTransformMatrix(q(2),d(2)/2,0,parameter(2,3));
 
-z1 = T(1:3,3);
+% z1 = T(1:3,3);
+z1 = A1(1:3,3);
 p1 = A1(1:3,4);
-p = T(1:3,4);
+% p = T(1:3,4);
 
-J2 = simplify( [[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],zeros(6,4)]);
+J2 = simplify([[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],zeros(6,4)]);
 rG2 = T(1:3,1:3);    
 
 %% J3
 A2 = A1*getTransformMatrix(q(2),d(2),0,parameter(2,3));
 T = A2*getTransformMatrix(0,q(3)/2,0,parameter(3,3));
 
-z2 = T(1:3,3);
-p2 = A2(1:3,4);
-p = T(1:3,4);
+% z2 = T(1:3,3);
+z2 = A2(1:3,3);
+% p2 = A2(1:3,4);
+% p = T(1:3,4);
 
-J3 = simplify( [[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],[z2;zeros(3,1)],zeros(6,3)]);
+J3 = simplify([[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],[z2;zeros(3,1)],zeros(6,3)]);
 rG3 = T(1:3,1:3);    
 
-%%
+%% J4
 A3 = A2*getTransformMatrix(0,q(3),0,parameter(3,3));
 T = A3*getTransformMatrix(q(4),d(4)/2,0,parameter(4,3));
 
-z3 = T(1:3,3);
+% z3 = T(1:3,3);
+z3 = A3(1:3,3);
 p3 = A3(1:3,4);
-p = T(1:3,4);
+% p = T(1:3,4);
 
-J4 = simplify( [[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],[z2;zeros(3,1)],[cross(z3,p-p3);z3],zeros(6,2)]);
+J4 = simplify([[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],[z2;zeros(3,1)],[cross(z3,p-p3);z3],zeros(6,2)]);
 rG4 = T(1:3,1:3);    
 
-%%
+%% J5
 A4 = A3*getTransformMatrix(q(4),d(4),0,parameter(4,3));
 T = A4*getTransformMatrix(q(5),d(5)/2,0,parameter(5,3));
 
-z4 = T(1:3,3);
+% z4 = T(1:3,3);
+z4 = A4(1:3,3);
 p4 = A4(1:3,4);
-p = T(1:3,4);
+% p = T(1:3,4);
 
-J5 = simplify( [[cross(z0,p-p0);z1],[cross(z1,p-p1);z1],[z2;zeros(3,1)],[cross(z3,p-p3);z1],[cross(z4,p-p4);z4],zeros(6,1)]);
-
+J5 = simplify([[cross(z0,p-p0);z1],[cross(z1,p-p1);z1],[z2;zeros(3,1)],[cross(z3,p-p3);z1],[cross(z4,p-p4);z4],zeros(6,1)]);
 rG5 = T(1:3,1:3);    
 
-%%
+%% J6
 A5 = A4*getTransformMatrix(q(5),d(5),0,parameter(5,3));
 T = A5*getTransformMatrix(q(6),d(6)/2,0,parameter(6,3));
 
-z5 = T(1:3,3);
+% z5 = T(1:3,3);
+z5 = A5(1:3,3);
 p5 = A5(1:3,4);
-p = T(1:3,4);
+% p = T(1:3,4);
 
-J6 = simplify( [[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],[z2;zeros(3,1)],[cross(z3,p-p3);z1],[cross(z4,p-p4);z4],[cross(z5,p-p5);z5]]);
+J6 = simplify([[cross(z0,p-p0);z0],[cross(z1,p-p1);z1],[z2;zeros(3,1)],[cross(z3,p-p3);z1],[cross(z4,p-p4);z4],[cross(z5,p-p5);z5]]);
 rG6 = T(1:3,1:3);    
 
 % J = simplify( [cross(z0,P-p0),cross(z1,P-p1),z2,cross(z3,P-p3),cross(z4,P-p4),cross(z5,P-p5);
