@@ -1,39 +1,37 @@
-
 clc
-clear
+% clear
 close all
 
 currentFile = genpath( './' );
 addpath(currentFile);
 
-parameter = [0.50,10;
-             1,5;
-             0,10;
-             1,2;
-             0,4;
-             1,5;];
+parameter = [0,     10;
+             1,     5;
+             0,     10;
+             0,     2;
+             0,     4;
+             1,     2;];
          
-theta0 = [(-pi/2);(pi/2);0;(-pi/2);(pi/2);0];
-parameter = [parameter,theta0];
+theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
+parameter = [parameter, theta0];
 
 % parameter = [d,m,theta0];
 
 q0 = [0,0,0,0,0,0]';
-
 dq0 = q0;
 [Pcom, Etip] = forwardKinematics(parameter, q0 );
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3,4);
 
-qf =  [-pi/3,pi/6,1.5,pi/2,pi/3, pi/6]';
+qf =  [-pi/3, pi/6, 1.5, pi/2, pi/3, pi/6]';
+% qf =  [-pi/3, q0(2), 1.5, q0(4), q0(5), pi/4]';
 [Pcom, Etip] = forwardKinematics(parameter,qf);
 
 x_endEff_D = Etip(1:3,4);
 
 %% generazione traiettorie
-
-Simulation_Time = 20;
+Simulation_Time = 25;
 t_S = 0.1;
 
 q_vec = size(Simulation_Time/t_S,size(q0,1));
@@ -60,18 +58,26 @@ end
 
 figure;
 plot(t_vec,q_vec(:,:));
+% grid on;
+for x = 1:1:6
+    leg{x} = sprintf('q_%d\n', x);
+end
+legend(leg);
 grid on;
+
 %%
 Switch_PD_OBJ = -1; % -1 è posizione fissa, 1 è insegumento traiettoria, switch dentro al blocco
 
-Kp_endEff = 10;
-Kd_endEff = 0;
+Kp_endEff = 100;
+Kd_endEff = 10;
 K_endEff = [Kp_endEff, Kd_endEff];
 
 %% 
-sim('CompTorque',Simulation_Time);
+tic
+disp("Calcolo simulazione");
+sim('CompTorque', Simulation_Time);
+disp("Fine simulazione");
+toc
 
 %% PLOT
-
-plot_error(out, 'Computed Torque');
-
+plot_error(ans, 'CompTorque');

@@ -50,12 +50,11 @@ function plot_error(data_sim, sim_string)
         hold on;
 
     end
+    legend(leg);
     ylabel('e operative space [m]');
     xlabel('time [s]');
-    legend(leg);
     title(title_string,'Interpreter','none');
     hold off;
     grid on;
    
-
 end
