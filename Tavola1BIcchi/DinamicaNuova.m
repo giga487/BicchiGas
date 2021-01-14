@@ -4,7 +4,6 @@
 
 currentFile = genpath( './' );
 addpath(currentFile);
-
 % Dinamica Nuova Jacobiano Geometrico
 
 p0 = [0;0;0];
