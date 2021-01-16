@@ -221,3 +221,13 @@ end
 fprintf(fid,'];');
 fclose(fid);
 display("Fine calcolo G");
+
+
+%% regressore
+
+clear
+load('wk_S_regressore.mat');
+
+
+
+

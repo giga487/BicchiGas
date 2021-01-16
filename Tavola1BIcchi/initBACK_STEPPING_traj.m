@@ -1,3 +1,4 @@
+
 clc
 % clear
 close all
@@ -69,13 +70,3 @@ end
 legend(leg);
 grid on;
 
-%%
-tic
-disp("Calcolo simulazione");
-% sim('PD_traj', Simulation_Time);
-disp("Fine simulazione");
-toc
-
-%% PLOT
-
-plot_error(ans, 'PD_traj');

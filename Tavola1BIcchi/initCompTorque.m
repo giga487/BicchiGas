@@ -1,5 +1,5 @@
 clc
-% clear
+clear
 close all
 
 currentFile = genpath( './' );
@@ -15,17 +15,16 @@ parameter = [0,     10;
 theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
-% parameter = [d,m,theta0];
+K_endEff = [1000, 10];
 
-q0 = [0,0,0,0,0,0]';
+q0 = [0 0 0 0 0 0]';
 dq0 = q0;
-[Pcom, Etip] = forwardKinematics(parameter, q0 );
+[Pcom, Etip] = forwardKinematics(parameter, q0);
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3,4);
 
-qf =  [-pi/3, pi/6, 1.5, pi/2, pi/3, pi/6]';
-% qf =  [-pi/3, q0(2), 1.5, q0(4), q0(5), pi/4]';
+qf =  [-pi/3, pi/3, 3, -pi/3, pi/3, pi/3]';
 [Pcom, Etip] = forwardKinematics(parameter,qf);
 
 x_endEff_D = Etip(1:3,4);
