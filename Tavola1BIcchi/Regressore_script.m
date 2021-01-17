@@ -18,12 +18,12 @@ pi_2 = m(2);
 pi_3 = m(3);
 pi_4 = m(4);
 pi_5 = m(5);
-pi_6 = m(6);
+pi_6 = m(6)*d(6)^2;
 
 % pi_vec = [pi_1 pi_2 pi_3 pi_4 pi_5 pi_6]';
 % pi_vec = [pi_5 pi_6]';
-
 %% 
+pi = m(6)*d(6)^2;
 
 % for i = 1:1:6
 %     
@@ -90,35 +90,18 @@ pi_6 = m(6);
 % simplify(Y - Y_t*pi_vec)
 
 for i = 1:6
-    [c,t] = coeffs(Y(i), pi_5);
-    C = arrayfun(@char,t,'Un',0);
-    C = c(~cellfun('isempty',regexp(C,'\w*m6\w*','match')));
-    
-    if isempty(C)
-        C = 0;
-    end
+        
+    [c,t] = coeffs(Y(i), m(6),'all');
+    %Begins with any number of alphanumeric or underscore characters, \w*.
 
     Y_t(i,:) = c;    
 
-%     [c,t] = coeffs(Y(i), pi_6);
-%     C = arrayfun(@char,t,'Un',0);
-%     C = c(~cellfun('isempty',regexp(C,'\w*m_b\w*','match')));
-%     
-%     if isempty(C)
-%         C = 0;
-%     end
-% 
-%     Y_t(i) = c(1);    
-    
-    result(i) = simplify(Y(i) - Y_t(i,:)*[m(5),1]');
+    result(i) = simplify(Y(i) - Y_t(i,:)*t')
 end
 %%
 
-simplify(Y - Y_t*[pi_6,pi_5]')
-
-%% 
 fid = fopen('Y.txt', 'wt');
-[r,c] = size(C);
+[r,c] = size(Y_t);
 
 fprintf(fid,'Y = [');
 for i = 1:r
@@ -132,3 +115,7 @@ for i = 1:r
 end
 fprintf(fid,'];');
 fclose(fid);
+
+%%
+
+simplify(Y - Regressore_m6(q,dq,ddq,parameter)*[m(6),1]')
