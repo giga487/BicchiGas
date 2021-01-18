@@ -8,23 +8,13 @@ load('wk_S_regressore.mat');
 
 I = sym('I', [6 1], 'real');
 Y = sym('Y', [6,6]);
+g0 = sym('g0',1,'real');
 Y_t = sym('Y', [6,2]);
 Y = B*ddq + C*dq + G;
 
+pi_vec = sym('pi',[2,1],'real');
+pi_vec = [m(6)];
 %% 
-
-pi_1 = m(1);
-pi_2 = m(2);
-pi_3 = m(3);
-pi_4 = m(4);
-pi_5 = m(5);
-pi_6 = m(6)*d(6)^2;
-
-% pi_vec = [pi_1 pi_2 pi_3 pi_4 pi_5 pi_6]';
-% pi_vec = [pi_5 pi_6]';
-%% 
-pi = m(6)*d(6)^2;
-
 % for i = 1:1:6
 %     
 %     [c1,t1] = coeffs(Y(i), pi_1);
@@ -90,8 +80,9 @@ pi = m(6)*d(6)^2;
 % simplify(Y - Y_t*pi_vec)
 
 for i = 1:6
-        
-    [c,t] = coeffs(Y(i), m(6),'all');
+   
+    [c,t] = coeffs(Y(i), pi_vec(1),'all');
+    
     %Begins with any number of alphanumeric or underscore characters, \w*.
 
     Y_t(i,:) = c;    
@@ -107,15 +98,17 @@ fprintf(fid,'Y = [');
 for i = 1:r
     for j = 1:c
         if(j == c)           
-            fprintf(fid,'%s;\n',C(i,j));
+            fprintf(fid,'%s;\n',Y_t(i,j));
             continue
         end
-        fprintf(fid,'%s,',C(i,j));
+        fprintf(fid,'%s,',Y_t(i,j));
     end
 end
 fprintf(fid,'];');
 fclose(fid);
 
-%%
+%% test sulla correttezza
 
-simplify(Y - Regressore_m6(q,dq,ddq,parameter)*[m(6),1]')
+simplify(Y - Y_t*[m(6),1]')
+
+
