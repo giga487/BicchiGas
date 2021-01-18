@@ -5,7 +5,8 @@ close all
 currentFile = genpath( './' );
 addpath(currentFile);
 
-syms g0 realq = sym('q', [6 1], 'real');
+g0 = sym('g0', [1 1], 'real');
+q = sym('q', [6 1], 'real');
 dq = sym('dq', [6 1], 'real');
 ddq = sym('ddq', [6 1], 'real');
 d = sym('d', [6 1], 'real');

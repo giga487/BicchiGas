@@ -111,4 +111,6 @@ fclose(fid);
 
 simplify(Y - Y_t*[m(6),1]')
 
+Y_r = Regressore_m6(q,dq,ddq,parameter,g0);
+
 
