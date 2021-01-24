@@ -1,6 +1,6 @@
 %% regressore
 
-clear
+% clear
 clc
 load('wk_S_regressore.mat');
 

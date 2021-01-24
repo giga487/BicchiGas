@@ -12,3 +12,4 @@ for i = 1:1:r
     ddq_d(i) = 6*a3(i)*t + 2*a2(i);
 
 end
+end

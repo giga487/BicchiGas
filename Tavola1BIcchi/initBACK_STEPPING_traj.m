@@ -23,7 +23,7 @@ dq0 = q0;
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-K_endEff = [100, 10];
+K_d = 100;
 
 % qf =  q0;
 % qf(5) = pi/3;
@@ -70,3 +70,13 @@ end
 legend(leg);
 grid on;
 
+%%
+% tic
+% disp("Calcolo simulazione");
+% sim('AdaptiveBackstepping', Simulation_Time);
+% disp("Fine simulazione");
+% toc
+
+%% PLOT
+
+% plot_error(ans, 'AdaptiveBackstepping');
