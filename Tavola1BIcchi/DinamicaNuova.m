@@ -221,7 +221,3 @@ end
 fprintf(fid,'];');
 fclose(fid);
 display("Fine calcolo G");
-
-
-
-

@@ -1,5 +1,5 @@
 clc
-clear
+% clear
 close all
 
 currentFile = genpath( './' );
@@ -15,7 +15,7 @@ parameter = [0,     10;
 theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
-K_endEff = [1000, 10];
+% K_endEff = [1000, 10];
 
 q0 = [0 0 0 0 0 0]';
 dq0 = q0;
@@ -67,8 +67,8 @@ grid on;
 %%
 % Kp_endEff = 100;
 % Kd_endEff = 10;
-Vp = [1 1 1 1 1 10];
-Vd = [1 1 1 1 1 10];
+Vp = [1 1 1 1 1 1];
+Vd = [1 1 1 1 1 1];
 Kp_endEff = diag(Vp);
 Kd_endEff = diag(Vd);
 K_endEff = [Kp_endEff, Kd_endEff];

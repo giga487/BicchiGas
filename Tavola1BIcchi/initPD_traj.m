@@ -18,6 +18,7 @@ parameter = [parameter, theta0];
 q0 = [0 0 1 0 0 0]';
 dq0 = q0;
 [Pcom, Etip] = forwardKinematics(parameter, q0);
+L_d = 3;
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
@@ -27,7 +28,7 @@ K_endEff = [100, 10];
 % qf =  q0;
 % qf(5) = pi/3;
 % qf(6) = pi/4;
-qf =  [-pi/3, pi/3, 3, -pi/3, pi/3, pi/3]';
+qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
 
 [Pcom, Etip] = forwardKinematics(parameter, qf);
 
@@ -78,4 +79,4 @@ toc
 
 %% PLOT
 
-plot_error(ans, 'PD_traj');
+% plot_error(ans, 'PD_traj');
