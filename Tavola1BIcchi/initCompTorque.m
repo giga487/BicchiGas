@@ -57,7 +57,7 @@ end
 
 figure;
 plot(t_vec,q_vec(:,:));
-% grid on;
+
 for x = 1:1:6
     leg{x} = sprintf('q_%d\n', x);
 end
@@ -65,10 +65,12 @@ legend(leg);
 grid on;
 
 %%
-Switch_PD_OBJ = -1; % -1 è posizione fissa, 1 è insegumento traiettoria, switch dentro al blocco
-
-Kp_endEff = 100;
-Kd_endEff = 10;
+% Kp_endEff = 100;
+% Kd_endEff = 10;
+Vp = [100 100 100 100 100 100];
+Vd = [10 10 10 10 10 10];
+Kp_endEff = diag(Vp);
+Kd_endEff = diag(Vd);
 K_endEff = [Kp_endEff, Kd_endEff];
 
 %% 
