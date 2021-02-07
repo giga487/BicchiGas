@@ -17,8 +17,9 @@ parameter = [parameter, theta0];
 
 % K_endEff = [1000, 10];
 
-q0 = [0 0 0 0 0 0]';
-dq0 = q0;
+q0 = [0 0 1 0 0 0]';
+dq0 = zeros(1,6);
+
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 
 x_COM0 = Pcom;
@@ -65,12 +66,9 @@ legend(leg);
 grid on;
 
 %%
-% Kp_endEff = 100;
-% Kd_endEff = 10;
-Vp = [1 1 1 1 1 1];
-Vd = [1 1 1 1 1 1];
-Kp_endEff = diag(Vp);
-Kd_endEff = diag(Vd);
+Kp_endEff = 1000;
+Kd_endEff = 100;
+
 K_endEff = [Kp_endEff, Kd_endEff];
 
 %% 
@@ -81,4 +79,4 @@ disp("Fine simulazione");
 toc
 
 %% PLOT
-plot_error(ans, 'CompTorque');
+plot_error(out, 'CompTorque');

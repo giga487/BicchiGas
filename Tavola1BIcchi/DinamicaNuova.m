@@ -2,14 +2,15 @@
 % clear
 % close all
 
-currentFile = genpath( './' );
-addpath(currentFile);
+%currentFile = genpath( './' );
+%addpath(currentFile);
 % Dinamica Nuova Jacobiano Geometrico
 
 p0 = [0;0;0];
 z0 = [0;0;1];
 
 %% 
+
 [Pcom,Etip,T00,T01,T12,T23,T34,T45,T56] =  forwardKinematics(parameter, q);
 
 A1 = T00*T01;
