@@ -7,12 +7,12 @@ q4 = q(4);
 q5 = q(5);
 q6 = q(6);
 
-dq1 = dq(1);
-dq2 = dq(2);
-dq3 = dq(3);
-dq4 = dq(4);
-dq5 = dq(5);
-dq6 = dq(6);
+% dq1 = dq(1);
+% dq2 = dq(2);
+% dq3 = dq(3);
+% dq4 = dq(4);
+% dq5 = dq(5);
+% dq6 = dq(6);
 
 d1 = param(1,1);
 d2 = param(2,1);

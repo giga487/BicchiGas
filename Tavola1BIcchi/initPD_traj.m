@@ -18,6 +18,7 @@ parameter = [parameter, theta0];
 q0 = [0 0 1 0 0 0]';
 dq0 = q0;
 [Pcom, Etip] = forwardKinematics(parameter, q0);
+L_d = 3;
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
@@ -72,7 +73,7 @@ grid on;
 %%
 tic
 disp("Calcolo simulazione");
-% sim('PD_traj', Simulation_Time);
+sim('PD_traj', Simulation_Time);
 disp("Fine simulazione");
 toc
 
