@@ -79,4 +79,4 @@ disp("Fine simulazione");
 toc
 
 %% PLOT
-plot_error(out, 'CompTorque');
+plot_error(ans, 'CompTorque');
