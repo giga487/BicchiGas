@@ -14,6 +14,7 @@ Y = B*ddq + C*dq + G;
 
 pi_vec = sym('pi',[2,1],'real');
 pi_vec = [m(6)];
+
 %% 
 % for i = 1:1:6
 %     
@@ -87,8 +88,9 @@ for i = 1:6
 
     Y_t(i,:) = c;    
 
-    result(i) = simplify(Y(i) - Y_t(i,:)*t')
+    result(i) = simplify(Y(i) - Y_t(i,:)*t');
 end
+
 %%
 
 fid = fopen('Y.txt', 'wt');
@@ -109,8 +111,6 @@ fclose(fid);
 
 %% test sulla correttezza
 
-simplify(Y - Y_t*[m(6),1]')
+simplify(Y - Y_t*[m(6),1]');
 
 Y_r = Regressore_m6(q,dq,ddq,parameter,g0);
-
-
