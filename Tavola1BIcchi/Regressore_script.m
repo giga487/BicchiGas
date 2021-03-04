@@ -82,7 +82,7 @@ pi_vec = [m(6)];
 
 for i = 1:6
    
-    [c,t] = coeffs(Y(i), pi_vec(1),'all');
+    [c,t] = coeffs(Y(i), pi_vec(1), 'all');
     
     %Begins with any number of alphanumeric or underscore characters, \w*.
 
