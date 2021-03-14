@@ -15,8 +15,6 @@ parameter = [0,     10;
 theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
-% K_endEff = [1000, 10];
-
 q0 = [0 0 1 0 0 0]';
 dq0 = zeros(1,6);
 

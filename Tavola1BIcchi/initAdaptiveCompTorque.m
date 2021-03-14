@@ -72,9 +72,9 @@ K_endEff = [Kp_endEff, Kd_endEff];
 %% 
 tic
 disp("Calcolo simulazione");
-% sim('AdaptiveCompTorque', Simulation_Time);
+sim('AdaptiveCompTorque', Simulation_Time);
 disp("Fine simulazione");
 toc
 
 %% PLOT
-% plot_error(ans, 'AdaptiveCompTorque');
+plot_error(ans, 'AdaptiveCompTorque');
