@@ -64,8 +64,8 @@ legend(leg);
 grid on;
 
 %%
-Kp_endEff = 1000;
-Kd_endEff = 100;
+Kp_endEff = 100000;
+Kd_endEff = 10000;
 
 K_endEff = [Kp_endEff, Kd_endEff];
 
