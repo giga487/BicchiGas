@@ -5,12 +5,12 @@ close all
 currentFile = genpath( './' );
 addpath(currentFile);
 
-parameter = [0,     10;
-             1,     5;
-             0,     10;
-             0,     2;
-             0,     4;
-             1,     2;];
+parameter = [0.2,     9;
+             0.1,     6;
+             0,       4;
+             0.6,     1;
+             0,     0.6;
+             0,     0.5;];
          
 theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
@@ -64,8 +64,8 @@ legend(leg);
 grid on;
 
 %%
-Kp_endEff = 100000;
-Kd_endEff = 10000;
+Kp_endEff = 1000;
+Kd_endEff = 100;
 
 K_endEff = [Kp_endEff, Kd_endEff];
 
