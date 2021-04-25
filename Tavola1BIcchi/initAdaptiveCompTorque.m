@@ -5,7 +5,7 @@ close all
 currentFile = genpath( './' );
 addpath(currentFile);
 
-parameter = [0,     10;
+parameter = [1,     10;
              1,     5;
              0,     10;
              0,     2;

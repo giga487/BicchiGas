@@ -1,12 +1,5 @@
 function Y = Regressore_m6(q,dq,ddq,param,g0)
 
-ddq1 = ddq(1);
-ddq2 = ddq(2);
-ddq3 = ddq(3);
-ddq4 = ddq(4);
-ddq5 = ddq(5);
-ddq6 = ddq(6);
-
 q1 = q(1);
 q2 = q(2);
 q3 = q(3);
@@ -20,6 +13,13 @@ dq3 = dq(3);
 dq4 = dq(4);
 dq5 = dq(5);
 dq6 = dq(6);
+
+ddq1 = ddq(1);
+ddq2 = ddq(2);
+ddq3 = ddq(3);
+ddq4 = ddq(4);
+ddq5 = ddq(5);
+ddq6 = ddq(6);
 
 d1 = param(1,1);
 d2 = param(2,1);

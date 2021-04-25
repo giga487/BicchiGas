@@ -24,7 +24,7 @@ x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
 %%
-K_endEff = [1000 100];
+K_endEff = [100000 1000];
 
 %% 
 % qf =  q0;
@@ -37,7 +37,7 @@ qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
 x_endEff_D = Etip(1:3, 4);
 
 %% generazione traiettorie
-Simulation_Time = 25;
+Simulation_Time = 50;
 t_S = 0.1;
 
 q_vec = size(Simulation_Time/t_S,size(q0, 1));
@@ -75,10 +75,10 @@ grid on;
 %%
 tic
 disp("Calcolo simulazione");
-% sim('PD_traj', Simulation_Time);
+sim('PD_traj', Simulation_Time);
 disp("Fine simulazione");
 toc
 
 %% PLOT
 
-% plot_error(ans, 'PD_traj');
+plot_error(ans, 'PD_traj');
