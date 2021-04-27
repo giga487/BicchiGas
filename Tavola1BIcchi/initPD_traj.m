@@ -15,7 +15,7 @@ parameter = [0,     10;
 theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
-q0 = [0 0 1 0 0 0]';
+q0 = [0 0 0 0 0 0]';
 dq0 = zeros(1,6);
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 L_d = 3;
@@ -24,7 +24,7 @@ x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
 %%
-K_endEff = [100000 1000];
+K_endEff = [10000 1000];
 
 %% 
 % qf =  q0;
@@ -75,10 +75,10 @@ grid on;
 %%
 tic
 disp("Calcolo simulazione");
-sim('PD_traj', Simulation_Time);
+% sim('PD_traj', Simulation_Time);
 disp("Fine simulazione");
 toc
 
 %% PLOT
 
-plot_error(ans, 'PD_traj');
+% plot_error(ans, 'PD_traj');
