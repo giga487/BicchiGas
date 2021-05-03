@@ -1,2 +1,0 @@
-# BicchiGas
-TavoleBicchi

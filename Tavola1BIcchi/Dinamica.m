@@ -82,8 +82,7 @@ JgG4 = J4(4:6,:);
 JgG5 = J5(4:6,:);
 JgG6 = J6(4:6,:);
 
-%% T Kimetic Energy
-
+%% Inertia Matrix
 B = simplify((m(1)*(JpG1')*JpG1 + (JgG1')*rG1*I_f(m(1),d(1))*(rG1')*JgG1+...
               m(2)*(JpG2')*JpG2 + (JgG2')*rG2*I_f(m(2),d(2))*(rG2')*JgG2+...
               m(3)*(JpG3')*JpG3 + (JgG3')*rG3*I_f(m(3),q(3))*(rG3')*JgG3+...
@@ -91,15 +90,47 @@ B = simplify((m(1)*(JpG1')*JpG1 + (JgG1')*rG1*I_f(m(1),d(1))*(rG1')*JgG1+...
               m(5)*(JpG5')*JpG5 + (JgG5')*rG5*I_f(m(5),d(5))*(rG5')*JgG5+...
               m(6)*(JpG6')*JpG6 + (JgG6')*rG6*I_f(m(6),d(6))*(rG6')*JgG6));
 
-T = simplify(0.5 * (dq') * B * dq);
+%% Coriolis Matrix
+C = sym('C', [6 6], 'real');
+gamma = sym('gamma', [6 1], 'real');
+
+for i = 1:1:6
+   for j = 1:1:6
+       for k = 1:1:6
+           gamma(k) = (diff(B(i,j),q(k)) + diff(B(i,k),q(j)) - diff(B(j,k),q(i)))*dq(k);
+       
+       end
+       C(i,j) = simplify(0.5 * sum(gamma));
+   end
+end
+
+%% Gravitational Matrix
+G = simplify(-(m(1)*(JpG1')*g0 + m(2)*(JpG2')*g0 + m(3)*(JpG3')*g0 + m(4)*(JpG4')*g0 + m(5)*(JpG5')*g0 + m(6)*(JpG6')*g0));
+
+%% T Kimetic Energy
+% T = simplify(0.5 * (dq') * B * dq);
 
 %% U Potential Energy
-
-U = simplify(-(g0') * (m(1)*p1 + m(2)*p2 + m(3)*p3 + m(4)*p4 + m(5)*p5 + m(6)*p6));
+% U = simplify(-(g0') * (m(1)*p1 + m(2)*p2 + m(3)*p3 + m(4)*p4 + m(5)*p5 + m(6)*p6));
 
 %% L Lagrangian
-
-L = T - U;
+% L = simplify(T - U);
 
 %% Lagrangian Derivatives
-
+% dL_dq_dot = sym('dL_dq_dot', [6 1], 'real');
+% for i=1:1:6
+%     dL_dq_dot(i) = diff(L,dq(i));
+% end
+% dL_dq_dot = simplify(sum(dL_dq_dot, 'all'));
+% 
+% dL_dt = sym('dL_dt', [6 1], 'real');
+% for i=1:1:6
+%     dL_dt(i) = diff(dL_dq_dot,t);
+% end
+% dL_dt = simplify(sum(dL_dt, 'all'));
+% 
+% dL_dq = sym('dL_dq', [6 1], 'real');
+% for i=1:1:6
+%     dL_dq(i) = diff(L,q(i));
+% end
+% dL_dq = simplify(sum(dL_dq, 'all'));

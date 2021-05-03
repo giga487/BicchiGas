@@ -5,6 +5,14 @@ close all
 currentFile = genpath( './' );
 addpath(currentFile);
 
+% load('B_matrix.mat');
+% load('C_matrix.mat');
+% load('G_matrix.mat');
+
+% matlabFunction(B,'File','B_fun');
+% matlabFunction(C,'File','C_fun');
+% matlabFunction(G,'File','G_fun');
+
 parameter = [0,     10;
              1,     5;
              0,     10;
@@ -15,33 +23,36 @@ parameter = [0,     10;
 theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
-q0 = [0 0 0 0 0 0]';
-dq0 = zeros(1,6);
-[Pcom, Etip] = forwardKinematics(parameter, q0);
 L_d = 3;
+q0 = [0 0 0 0 0 0]';
+dq0 = (zeros(1,6))';
+[Pcom, Etip] = forwardKinematics(parameter, q0);
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-%%
-Kp_endEff = 10 * eye(6);
-Kp_endEff(3,3) = Kp_endEff(3,3) / 100;
-
-Kd_endEff = 1 * eye(6);
-Kd_endEff(3,3) = Kd_endEff(3,3) / 100;
-
-K_endEff = [Kp_endEff, Kd_endEff];
-
-%% 
-qf =  q0;
-% qf(3) = L_d;
-% qf(5) = pi/3;
-qf(6) = pi/6;
-% qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
+qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
 
 [Pcom, Etip] = forwardKinematics(parameter, qf);
 
 x_endEff_D = Etip(1:3, 4);
+
+%%
+Kp_endEff = 1 * eye(6);
+Kp_endEff(1,1) = Kp_endEff(1,1) * 1000000;
+Kp_endEff(2,2) = Kp_endEff(2,2) * 100000;
+Kp_endEff(3,3) = Kp_endEff(3,3) * 10000;
+Kp_endEff(4,4) = Kp_endEff(4,4) * 1000;
+Kp_endEff(5,5) = Kp_endEff(5,5) * 10000;
+Kp_endEff(6,6) = Kp_endEff(6,6) * 100;
+
+Kd_endEff = 1 * eye(6);
+Kd_endEff(1,1) = Kd_endEff(1,1) * 10000;
+Kd_endEff(2,2) = Kd_endEff(2,2) * 10000;
+Kd_endEff(3,3) = Kd_endEff(3,3) * 1000;
+Kd_endEff(4,4) = Kd_endEff(4,4) * 100;
+Kd_endEff(5,5) = Kd_endEff(5,5) * 1000;
+Kd_endEff(6,6) = Kd_endEff(6,6) * 10;
 
 %% generazione traiettorie
 Simulation_Time = 50;
@@ -70,7 +81,7 @@ for i = [1, 2, 3, 4, 5, 6]
 end
 
 figure;
-plot(t_vec,q_vec(:, :));
+plot(t_vec,q_vec(:,:));
 
 for x = 1:1:6
     leg{x} = sprintf('q_%d\n', x);
@@ -82,10 +93,10 @@ grid on;
 %%
 tic
 disp("Calcolo simulazione");
-% sim('PD_traj', Simulation_Time);
+sim('PD_traj', Simulation_Time);
 disp("Fine simulazione");
 toc
 
 %% PLOT
 
-% plot_error(ans, 'PD_traj');
+plot_error(ans, 'PD_traj');
