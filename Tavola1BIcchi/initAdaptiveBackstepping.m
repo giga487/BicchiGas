@@ -16,49 +16,62 @@ theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
 L_d = 3;
-q0 = [0 0 0 0 0 0]';
+q0 = [0 0 0 0 pi/4 0]';
 dq0 = (zeros(1,6))';
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
+qf =  [-pi/3, pi/3, L_d, -pi/3, pi/5, pi/3]';
 
 [Pcom, Etip] = forwardKinematics(parameter, qf);
 
 x_endEff_D = Etip(1:3, 4);
 
 %%
-Kp_endEff = 1 * eye(6);
-Kp_endEff(1,1) = Kp_endEff(1,1) * 1000000;
-Kp_endEff(2,2) = Kp_endEff(2,2) * 100000;
-Kp_endEff(3,3) = Kp_endEff(3,3) * 10000;
-Kp_endEff(4,4) = Kp_endEff(4,4) * 1000;
-Kp_endEff(5,5) = Kp_endEff(5,5) * 10000;
-Kp_endEff(6,6) = Kp_endEff(6,6) * 100;
+% Kp_endEff = 1 * eye(6);
+% Kp_endEff(1,1) = Kp_endEff(1,1) * 100000000;
+% Kp_endEff(2,2) = Kp_endEff(2,2) * 10000000;
+% Kp_endEff(3,3) = Kp_endEff(3,3) * 100000000;
+% Kp_endEff(4,4) = Kp_endEff(4,4) * 1000000;
+% Kp_endEff(5,5) = Kp_endEff(5,5) * 1000000;
+% Kp_endEff(6,6) = Kp_endEff(6,6) * 10000;
 
 Kd_endEff = 1 * eye(6);
-Kd_endEff(1,1) = Kd_endEff(1,1) * 10000;
-Kd_endEff(2,2) = Kd_endEff(2,2) * 10000;
-Kd_endEff(3,3) = Kd_endEff(3,3) * 1000;
-Kd_endEff(4,4) = Kd_endEff(4,4) * 100;
-Kd_endEff(5,5) = Kd_endEff(5,5) * 1000;
-Kd_endEff(6,6) = Kd_endEff(6,6) * 10;
+% Kd_endEff(1,1) = Kd_endEff(1,1) * 10000000;
+% Kd_endEff(2,2) = Kd_endEff(2,2) * 10000000;
+% Kd_endEff(3,3) = Kd_endEff(3,3) * 100000000;
+% Kd_endEff(4,4) = Kd_endEff(4,4) * 1000000;
+% Kd_endEff(5,5) = Kd_endEff(5,5) * 10000;
+Kd_endEff(6,6) = Kd_endEff(6,6) * 100;
+
+%%
+% R = 10000 * eye(2);
+% B = [zeros(6); eye(6)];
+% A = [zeros(6)   eye(6);
+%      -Kp_endEff -Kd_endEff];
+% Q = 1000 * eye(12);
+% P = lyap(A,Q);
+
+Pi0 = [3; 1];
+
+R = 10 * eye(2);
+lambda = 10 * eye(3);
 
 %% generazione traiettorie
-Simulation_Time = 50;
+Simulation_Time = 25;
 t_S = 0.1;
 
-q_vec = size(Simulation_Time/t_S,size(q0, 1));
-dq_vec = size(Simulation_Time/t_S,size(q0, 1));
-ddq_vec = size(Simulation_Time/t_S,size(q0, 1));
+q_vec = size(Simulation_Time/t_S,size(q0,1));
+dq_vec = size(Simulation_Time/t_S,size(q0,1));
+ddq_vec = size(Simulation_Time/t_S,size(q0,1));
 
 [a0, a1, a2, a3] = pol_coeffs(q0, dq0, qf, dq0, Simulation_Time);
 
 [r,c] = size(a0);
 
-for i = [1, 2, 3, 4, 5, 6]
+for i = 1:1:c
     j = 1;
     for t = 0:t_S:Simulation_Time    
 
@@ -85,10 +98,10 @@ grid on;
 %%
 tic
 disp("Calcolo simulazione");
-sim('PD_traj', Simulation_Time);
+% sim('AdaptiveBackstepping', Simulation_Time);
 disp("Fine simulazione");
 toc
 
 %% PLOT
 
-plot_error(ans, 'PD_traj');
+% plot_error(ans, 'AdaptiveBackstepping');

@@ -1,0 +1,125 @@
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,italian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{gensymb}
+\usepackage{siunitx}
+\usepackage{subfig}
+
+\begin{document}
+
+\begin{equation}
+\tau = K_p e + K_d \dot{e} + G(q)
+\end{equation}
+\begin{equation}
+K_p = 
+\begin{bmatrix}
+1000000 & 0 & 0	& 0 & 0 & 0 \\
+0 & 100000 & 0 & 0 & 0 & 0 \\
+0 & 0 & 10000 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1000 & 0 & 0 \\
+0 & 0 & 0 & 0 & 10000 & 0 \\
+0 & 0 & 0 & 0 & 0 & 100
+\end{bmatrix}
+\end{equation}
+\begin{equation}
+K_d = 
+\begin{bmatrix}
+10000 & 0 & 0	& 0 & 0 & 0 \\
+0 & 10000 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1000 & 0 & 0 & 0 \\
+0 & 0 & 0 & 100 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1000 & 0 \\
+0 & 0 & 0 & 0 & 0 & 10
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\tau = B(q)\ddot{q_d} + C(q,\dot{q})\dot{q} + G(q)+ K_p e + K_d \dot{e}
+\end{equation}
+\begin{equation}
+K_p = 
+\begin{bmatrix}
+100000000 & 0 & 0	& 0 & 0 & 0 \\
+0 & 10000000 & 0 & 0 & 0 & 0 \\
+0 & 0 & 100000000 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1000000 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1000000 & 0 \\
+0 & 0 & 0 & 0 & 0 & 100000
+\end{bmatrix}
+\end{equation}
+\begin{equation}
+K_d = 
+\begin{bmatrix}
+10000000 & 0 & 0	& 0 & 0 & 0 \\
+0 & 10000000 & 0 & 0 & 0 & 0 \\
+0 & 0 & 100000000 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1000000 & 0 & 0 \\
+0 & 0 & 0 & 0 & 10000 & 0 \\
+0 & 0 & 0 & 0 & 0 & 10000
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\tau = Y \hat{\pi} + K_d\dot{e} + K_p e
+\end{equation}
+\begin{equation}
+u_{\pi} = R^{-1} Y^T M^{-T} B^T P x
+\end{equation}
+\begin{equation}
+K_p = 
+\begin{bmatrix}
+1000000 & 0 & 0	& 0 & 0 & 0 \\
+0 & 100000000 & 0 & 0 & 0 & 0 \\
+0 & 0 & 100000000 & 0 & 0 & 0 \\
+0 & 0 & 0 & 10000000 & 0 & 0 \\
+0 & 0 & 0 & 0 & 100000000 & 0 \\
+0 & 0 & 0 & 0 & 0 & 10000
+\end{bmatrix}
+\end{equation}
+\begin{equation}
+K_d = 
+\begin{bmatrix}
+10000 & 0 & 0	& 0 & 0 & 0 \\
+0 & 100000 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1000000 & 0 & 0 & 0 \\
+0 & 0 & 0 & 10000 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1000000 & 0 \\
+0 & 0 & 0 & 0 & 0 & 100
+\end{bmatrix}
+\end{equation}
+\begin{equation}
+R = 10000 * I_{2}
+\end{equation}
+\begin{equation}
+A = 
+\begin{bmatrix}
+0_{6} & I_{6} \\
+-K_p & -K_d 
+\end{bmatrix}
+\end{equation}
+\begin{equation}
+B = 
+\begin{bmatrix}
+0_{6} \\
+I_{6}
+\end{bmatrix}
+\end{equation}
+\begin{equation}
+Q = 1000 * I_{12}
+\end{equation}
+\begin{equation}
+A^T P + P A = -Q
+\end{equation}
+
+\end{document}
+

@@ -18,6 +18,8 @@ ddq = sym('ddq', [6 1], 'real');
 % dq = arrayfun(@(N) str2sym(sprintf('dq%d(t)',N)), 1:6).';
 % ddq = arrayfun(@(N) str2sym(sprintf('ddq%d(t)',N)), 1:6).';
 
+I = sym('I', [6 1], 'real');
+
 theta0 = [sym(-pi/2); sym(pi/2); 0; sym(-pi/2); sym(pi/2); 0];
 parameter = [d, m, theta0];
 

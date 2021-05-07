@@ -5,6 +5,14 @@ close all
 currentFile = genpath( './' );
 addpath(currentFile);
 
+% load('B_matrix.mat');
+% load('C_matrix.mat');
+% load('G_matrix.mat');
+
+% matlabFunction(B,'File','B_fun');
+% matlabFunction(C,'File','C_fun');
+% matlabFunction(G,'File','G_fun');
+
 parameter = [0,     10;
              1,     5;
              0,     10;
@@ -16,7 +24,7 @@ theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
 L_d = 3;
-q0 = [0 0 0 0 0 0]';
+q0 = [0 0 1 0 0 0]';
 dq0 = (zeros(1,6))';
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 
@@ -24,19 +32,32 @@ x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
 qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
+qf(3) = 2;
 
 [Pcom, Etip] = forwardKinematics(parameter, qf);
 
 x_endEff_D = Etip(1:3, 4);
 
 %%
+% Kp_endEff = 10000;
+% Ki_endEff = 10;
+% Kd_endEff = 10;
+
 Kp_endEff = 1 * eye(6);
 Kp_endEff(1,1) = Kp_endEff(1,1) * 1000000;
 Kp_endEff(2,2) = Kp_endEff(2,2) * 100000;
-Kp_endEff(3,3) = Kp_endEff(3,3) * 10000;
-Kp_endEff(4,4) = Kp_endEff(4,4) * 1000;
+Kp_endEff(3,3) = Kp_endEff(3,3) * 100000;
+Kp_endEff(4,4) = Kp_endEff(4,4) * 10000;
 Kp_endEff(5,5) = Kp_endEff(5,5) * 10000;
 Kp_endEff(6,6) = Kp_endEff(6,6) * 100;
+
+Ki_endEff = 1 * eye(6);
+Ki_endEff(1,1) = Ki_endEff(1,1) * 1000000;
+Ki_endEff(2,2) = Ki_endEff(2,2) * 100000;
+Ki_endEff(3,3) = Ki_endEff(3,3) * 100000;
+Ki_endEff(4,4) = Ki_endEff(4,4) * 10000;
+Ki_endEff(5,5) = Ki_endEff(5,5) * 10000;
+Ki_endEff(6,6) = Ki_endEff(6,6) * 100;
 
 Kd_endEff = 1 * eye(6);
 Kd_endEff(1,1) = Kd_endEff(1,1) * 10000;
@@ -85,10 +106,10 @@ grid on;
 %%
 tic
 disp("Calcolo simulazione");
-sim('PD_traj', Simulation_Time);
+% sim('PID', Simulation_Time);
 disp("Fine simulazione");
 toc
 
 %% PLOT
 
-plot_error(ans, 'PD_traj');
+% plot_error(ans, 'PID');

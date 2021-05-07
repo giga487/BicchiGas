@@ -1,4 +1,3 @@
-
 function [J_end] =  JacobianEndEff(param, q)
 
 q1 = q(1);

@@ -89,6 +89,13 @@ B = simplify((m(1)*(JpG1')*JpG1 + (JgG1')*rG1*I_f(m(1),d(1))*(rG1')*JgG1+...
               m(4)*(JpG4')*JpG4 + (JgG4')*rG4*I_f(m(4),d(4))*(rG4')*JgG4+...
               m(5)*(JpG5')*JpG5 + (JgG5')*rG5*I_f(m(5),d(5))*(rG5')*JgG5+...
               m(6)*(JpG6')*JpG6 + (JgG6')*rG6*I_f(m(6),d(6))*(rG6')*JgG6));
+ 
+% B_reg = simplify((m(1)*(JpG1')*JpG1 + (JgG1')*rG1*I(1)*(rG1')*JgG1+...
+%                   m(2)*(JpG2')*JpG2 + (JgG2')*rG2*I(2)*(rG2')*JgG2+...
+%                   m(3)*(JpG3')*JpG3 + (JgG3')*rG3*I(3)*(rG3')*JgG3+...
+%                   m(4)*(JpG4')*JpG4 + (JgG4')*rG4*I(4)*(rG4')*JgG4+...
+%                   m(5)*(JpG5')*JpG5 + (JgG5')*rG5*I(5)*(rG5')*JgG5+...
+%                   m(6)*(JpG6')*JpG6 + (JgG6')*rG6*I(6)*(rG6')*JgG6))
 
 %% Coriolis Matrix
 C = sym('C', [6 6], 'real');
@@ -106,6 +113,15 @@ end
 
 %% Gravitational Matrix
 G = simplify(-(m(1)*(JpG1')*g0 + m(2)*(JpG2')*g0 + m(3)*(JpG3')*g0 + m(4)*(JpG4')*g0 + m(5)*(JpG5')*g0 + m(6)*(JpG6')*g0));
+
+%% Generazione delle funzioni per il calcolo delle matrici B, C, G
+% load('B_matrix.mat');
+% load('C_matrix.mat');
+% load('G_matrix.mat');
+
+% matlabFunction(B,'File','B_fun');
+% matlabFunction(C,'File','C_fun');
+% matlabFunction(G,'File','G_fun');
 
 %% T Kimetic Energy
 % T = simplify(0.5 * (dq') * B * dq);
