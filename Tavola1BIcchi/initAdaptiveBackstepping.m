@@ -38,13 +38,13 @@ x_endEff_D = Etip(1:3, 4);
 % Kp_endEff(5,5) = Kp_endEff(5,5) * 1000000;
 % Kp_endEff(6,6) = Kp_endEff(6,6) * 10000;
 
-Kd_endEff = 1 * eye(6);
+Kd_endEff = 10 * eye(6);
 % Kd_endEff(1,1) = Kd_endEff(1,1) * 10000000;
 % Kd_endEff(2,2) = Kd_endEff(2,2) * 10000000;
 % Kd_endEff(3,3) = Kd_endEff(3,3) * 100000000;
 % Kd_endEff(4,4) = Kd_endEff(4,4) * 1000000;
 % Kd_endEff(5,5) = Kd_endEff(5,5) * 10000;
-Kd_endEff(6,6) = Kd_endEff(6,6) * 100;
+% Kd_endEff(6,6) = Kd_endEff(6,6) * 100;
 
 %%
 % R = 10000 * eye(2);
