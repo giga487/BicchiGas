@@ -33,62 +33,62 @@ Pi = [m(1); I(1);
       m(6); I(6);];
 
 %%
-% primo link
-tau_(1) = subs(tau(1), {I(1),m(2),I(2),m(3),I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0,0,0,0,0});
-Y_t(1,1) = subs(tau_(1), m(1), 1);
-tau_r(1) = simplify(tau(1) - (Y_t(1,1) * Pi(1)));
+[r,c] = size(tau);
+for i = 1:r
+    % primo link
+    tau_(i) = subs(tau(i), {I(1),m(2),I(2),m(3),I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0,0,0,0,0});
+    Y_t(i,1) = subs(tau_(i), m(1), 1);
+    tau_r(i) = simplify(tau(i) - (Y_t(i,1) * Pi(1)));
 
-tau_(1) = subs(tau_r(1), {m(2),I(2),m(3),I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0,0,0,0});
-Y_t(1,2) = subs(tau_(1), I(1), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,2) * Pi(2)));
+    tau_(i) = subs(tau_r(i), {m(2),I(2),m(3),I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0,0,0,0});
+    Y_t(i,2) = subs(tau_(i), I(1), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,2) * Pi(2)));
 
-% secondo link
-tau_(1) = subs(tau_r(1), {I(2),m(3),I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0,0,0});
-Y_t(1,3) = subs(tau_(1), m(2), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,3) * Pi(3)));
+    % secondo link
+    tau_(i) = subs(tau_r(i), {I(2),m(3),I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0,0,0});
+    Y_t(i,3) = subs(tau_(i), m(2), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,3) * Pi(3)));
 
-tau_(1) = subs(tau_r(1), {m(3),I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0,0});
-Y_t(1,4) = subs(tau_(1), I(2), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,4) * Pi(4)));
+    tau_(i) = subs(tau_r(i), {m(3),I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0,0});
+    Y_t(i,4) = subs(tau_(i), I(2), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,4) * Pi(4)));
 
-% terzo link
-tau_(1) = subs(tau_r(1), {I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0});
-Y_t(1,5) = subs(tau_(1), m(3), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,5) * Pi(5)));
+    % terzo link
+    tau_(i) = subs(tau_r(i), {I(3),m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0,0});
+    Y_t(i,5) = subs(tau_(i), m(3), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,5) * Pi(5)));
 
-tau_(1) = subs(tau_r(1), {m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0});
-Y_t(1,6) = subs(tau_(1), I(3), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,6) * Pi(6)));
+    tau_(i) = subs(tau_r(i), {m(4),I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0,0});
+    Y_t(i,6) = subs(tau_(i), I(3), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,6) * Pi(6)));
 
-% quarto link
-tau_(1) = subs(tau_r(1), {I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0});
-Y_t(1,7) = subs(tau_(1), m(4), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,7) * Pi(7)));
+    % quarto link
+    tau_(i) = subs(tau_r(i), {I(4),m(5),I(5),m(6),I(6)}, {0,0,0,0,0});
+    Y_t(i,7) = subs(tau_(i), m(4), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,7) * Pi(7)));
 
-tau_(1) = subs(tau_r(1), {m(5),I(5),m(6),I(6)}, {0,0,0,0});
-Y_t(1,8) = subs(tau_(1), I(4), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,8) * Pi(8)));
+    tau_(i) = subs(tau_r(i), {m(5),I(5),m(6),I(6)}, {0,0,0,0});
+    Y_t(i,8) = subs(tau_(i), I(4), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,8) * Pi(8)));
 
-% quinto link
-tau_(1) = subs(tau_r(1), {I(5),m(6),I(6)}, {0,0,0});
-Y_t(1,9) = subs(tau_(1), m(5), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,9) * Pi(9)));
+    % quinto link
+    tau_(i) = subs(tau_r(i), {I(5),m(6),I(6)}, {0,0,0});
+    Y_t(i,9) = subs(tau_(i), m(5), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,9) * Pi(9)));
 
-tau_(1) = subs(tau_r(1), {m(6),I(6)}, {0,0});
-Y_t(1,10) = subs(tau_(1), I(5), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,10) * Pi(10)));
+    tau_(i) = subs(tau_r(i), {m(6),I(6)}, {0,0});
+    Y_t(i,10) = subs(tau_(i), I(5), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,10) * Pi(10)));
 
-% sesto link
-tau_(1) = subs(tau_r(1), I(6), 0);
-Y_t(1,11) = subs(tau_(1), m(6), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,11) * Pi(11)));
+    % sesto link
+    tau_(i) = subs(tau_r(i), I(6), 0);
+    Y_t(i,11) = subs(tau_(i), m(6), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,11) * Pi(11)));
 
-Y_t(1,12) = subs(tau_r(1), I(6), 1);
-tau_r(1) = simplify(tau_r(1) - (Y_t(1,12) * Pi(12)));
+    Y_t(i,12) = subs(tau_r(i), I(6), 1);
+    tau_r(i) = simplify(tau_r(i) - (Y_t(i,12) * Pi(12)));
+end
 
 %% test sulla correttezza
-% tau_reg = simplify(Y_t * Pi);
-% res = simplify(tau - tau_reg);
-
-tau_reg = simplify(Y_t(1,:) * Pi);
-res = simplify(tau(1) - tau_reg);
+tau_reg = simplify(Y_t * Pi);
+res = simplify(tau - tau_reg);
