@@ -122,31 +122,3 @@ G = simplify(-(m(1)*(JpG1')*g0 + m(2)*(JpG2')*g0 + m(3)*(JpG3')*g0 + m(4)*(JpG4'
 % matlabFunction(B,'File','B_fun');
 % matlabFunction(C,'File','C_fun');
 % matlabFunction(G,'File','G_fun');
-
-%% T Kimetic Energy
-% T = simplify(0.5 * (dq') * B * dq);
-
-%% U Potential Energy
-% U = simplify(-(g0') * (m(1)*p1 + m(2)*p2 + m(3)*p3 + m(4)*p4 + m(5)*p5 + m(6)*p6));
-
-%% L Lagrangian
-% L = simplify(T - U);
-
-%% Lagrangian Derivatives
-% dL_dq_dot = sym('dL_dq_dot', [6 1], 'real');
-% for i=1:1:6
-%     dL_dq_dot(i) = diff(L,dq(i));
-% end
-% dL_dq_dot = simplify(sum(dL_dq_dot, 'all'));
-% 
-% dL_dt = sym('dL_dt', [6 1], 'real');
-% for i=1:1:6
-%     dL_dt(i) = diff(dL_dq_dot,t);
-% end
-% dL_dt = simplify(sum(dL_dt, 'all'));
-% 
-% dL_dq = sym('dL_dq', [6 1], 'real');
-% for i=1:1:6
-%     dL_dq(i) = diff(L,q(i));
-% end
-% dL_dq = simplify(sum(dL_dq, 'all'));

@@ -92,3 +92,6 @@ end
 %% test sulla correttezza
 tau_reg = simplify(Y_t * Pi);
 res = simplify(tau - tau_reg);
+
+%% Generazione della funzione per il calcolo della matrice Y
+matlabFunction(Y_t,'File','Y_fun');
