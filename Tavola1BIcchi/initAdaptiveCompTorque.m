@@ -30,31 +30,31 @@ qf =  [-pi/3, pi/3, L_d, -pi/3, pi/5, pi/3]';
 x_endEff_D = Etip(1:3, 4);
 
 %%
-Kp_endEff = 1 * eye(6);
-Kp_endEff(1,1) = Kp_endEff(1,1) * 1000000;
-Kp_endEff(2,2) = Kp_endEff(2,2) * 100000000;
-Kp_endEff(3,3) = Kp_endEff(3,3) * 100000000;
-Kp_endEff(4,4) = Kp_endEff(4,4) * 10000000;
-Kp_endEff(5,5) = Kp_endEff(5,5) * 100000000;
-Kp_endEff(6,6) = Kp_endEff(6,6) * 10000;
+Kp_endEff = 1000 * eye(6);
+Kp_endEff(1,1) = Kp_endEff(1,1) * 10;
+Kp_endEff(2,2) = Kp_endEff(2,2) * 100;
+Kp_endEff(3,3) = Kp_endEff(3,3) * 100;
+Kp_endEff(4,4) = Kp_endEff(4,4) * 10;
+Kp_endEff(5,5) = Kp_endEff(5,5) * 10;
+% Kp_endEff(6,6) = Kp_endEff(6,6) * 10000;
 
-Kd_endEff = 1 * eye(6);
-Kd_endEff(1,1) = Kd_endEff(1,1) * 10000;
-Kd_endEff(2,2) = Kd_endEff(2,2) * 100000;
-Kd_endEff(3,3) = Kd_endEff(3,3) * 1000000;
-Kd_endEff(4,4) = Kd_endEff(4,4) * 10000;
-Kd_endEff(5,5) = Kd_endEff(5,5) * 1000000;
-Kd_endEff(6,6) = Kd_endEff(6,6) * 100;
+Kd_endEff = 100 * eye(6);
+% Kd_endEff(1,1) = Kd_endEff(1,1) * 10000;
+Kd_endEff(2,2) = Kd_endEff(2,2) * 10;
+Kd_endEff(3,3) = Kd_endEff(3,3) * 10;
+% Kd_endEff(4,4) = Kd_endEff(4,4) * 1000;
+% Kd_endEff(5,5) = Kd_endEff(5,5) * 1000000;
+% Kd_endEff(6,6) = Kd_endEff(6,6) * 100;
 
 %%
-R = 10000 * eye(2);
+R = 10 * eye(12);
 B = [zeros(6); eye(6)];
 A = [zeros(6)   eye(6);
      -Kp_endEff -Kd_endEff];
-Q = 1000 * eye(12);
+Q = 1 * eye(12);
 P = lyap(A,Q);
 
-Pi0 = [3; 1];
+Pi0 = [1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1];
 
 %% generazione traiettorie
 Simulation_Time = 25;
@@ -91,6 +91,11 @@ end
 
 legend(leg);
 grid on;
+
+
+%% Introduco un errore iniziale di 0.1 rad
+delta = 0.1;
+q0 = q0 + delta;
 
 %% 
 tic
