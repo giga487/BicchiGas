@@ -5,6 +5,7 @@ close all
 currentFile = genpath( './' );
 addpath(currentFile);
 
+
 parameter = [0,     10;
              1,     5;
              0,     10;
@@ -54,7 +55,17 @@ A = [zeros(6)   eye(6);
 Q = 1 * eye(12);
 P = lyap(A,Q);
 
-Pi0 = [1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1];
+mPi0 = [2; 2; 2; 2; 2; 2];
+
+syms I(m,d)
+f(m,d) = m*(d^2)/12;
+
+I_f = f(mPi0,parameter(:,1));
+
+Pi0 = double([mPi0(1); I_f(1); mPi0(2); I_f(2); mPi0(3); I_f(3);mPi0(4); I_f(4); mPi0(5); I_f(5); mPi0(6); I_f(6)]);
+
+
+parameter_to_adapt = [parameter(:,1), mPi0, parameter(:,3)];
 
 %% generazione traiettorie
 Simulation_Time = 25;
@@ -105,4 +116,27 @@ disp("Fine simulazione");
 toc
 
 %% PLOT
-plot_error(ans, 'AdaptiveCompTorque');
+%%plot_error(ans, 'AdaptiveCompTorque');
+
+adattamento = out.adattamento.signals.values;
+x = 1:1:size(adattamento,1);
+
+parSize = size(parameter,1);
+
+figure;
+hold on;
+title("Controlled regressor errors");
+for i = 1:1:parSize
+    e = parameter(i,2)*ones(size(x,2)) - adattamento(:,i);
+    plot(x, e, '.');
+    leg{i,1} = "M_"+i;
+end
+legend(leg);
+grid on;
+hold off;
+
+
+
+
+
+
