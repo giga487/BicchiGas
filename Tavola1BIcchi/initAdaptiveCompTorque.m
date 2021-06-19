@@ -16,14 +16,14 @@ theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
 L_d = 3;
-q0 = [0 0 0 0 pi/4 0]';
+q0 = [0 0 0 0 0 0]';
 dq0 = (zeros(1,6))';
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-qf =  [-pi/3, pi/3, L_d, -pi/3, pi/5, pi/3]';
+qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
 
 [Pcom, Etip] = forwardKinematics(parameter, qf);
 
@@ -31,9 +31,9 @@ x_endEff_D = Etip(1:3, 4);
 
 %%
 Kp_endEff = 1000 * eye(6);
-Kp_endEff(1,1) = Kp_endEff(1,1) * 10;
+% Kp_endEff(1,1) = Kp_endEff(1,1) * 10;
 Kp_endEff(2,2) = Kp_endEff(2,2) * 100;
-Kp_endEff(3,3) = Kp_endEff(3,3) * 100;
+Kp_endEff(3,3) = Kp_endEff(3,3) * 10;
 Kp_endEff(4,4) = Kp_endEff(4,4) * 10;
 Kp_endEff(5,5) = Kp_endEff(5,5) * 10;
 % Kp_endEff(6,6) = Kp_endEff(6,6) * 10000;
@@ -42,8 +42,8 @@ Kd_endEff = 100 * eye(6);
 % Kd_endEff(1,1) = Kd_endEff(1,1) * 10000;
 Kd_endEff(2,2) = Kd_endEff(2,2) * 10;
 Kd_endEff(3,3) = Kd_endEff(3,3) * 10;
-% Kd_endEff(4,4) = Kd_endEff(4,4) * 1000;
-% Kd_endEff(5,5) = Kd_endEff(5,5) * 1000000;
+Kd_endEff(4,4) = Kd_endEff(4,4) * 10;
+Kd_endEff(5,5) = Kd_endEff(5,5) * 10;
 % Kd_endEff(6,6) = Kd_endEff(6,6) * 100;
 
 %%

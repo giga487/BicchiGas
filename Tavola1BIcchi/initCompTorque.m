@@ -16,14 +16,14 @@ theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
 L_d = 3;
-q0 = [0 0 0 0 pi/4 0]';
+q0 = [0 0 0 0 0 0]';
 dq0 = (zeros(1,6))';
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-qf =  [-pi/3, pi/3, L_d, -pi/3, pi/5, pi/3]';
+qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
 
 [Pcom, Etip] = forwardKinematics(parameter, qf);
 
