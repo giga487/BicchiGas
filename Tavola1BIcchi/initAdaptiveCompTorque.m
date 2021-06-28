@@ -39,7 +39,7 @@ Kp_endEff(4,4) = Kp_endEff(4,4) * 10;
 Kp_endEff(5,5) = Kp_endEff(5,5) * 10;
 % Kp_endEff(6,6) = Kp_endEff(6,6) * 10000;
 
-Kd_endEff = 1 * eye(6);
+Kd_endEff = 10 * eye(6);
 % Kd_endEff(1,1) = Kd_endEff(1,1) * 10000;
 Kd_endEff(2,2) = Kd_endEff(2,2) * 10;
 Kd_endEff(3,3) = Kd_endEff(3,3) * 10;
@@ -48,7 +48,7 @@ Kd_endEff(3,3) = Kd_endEff(3,3) * 10;
 % Kd_endEff(6,6) = Kd_endEff(6,6) * 100;
 
 %%
-R = 10 * eye(12);
+R = 1 * eye(12);
 B = [zeros(6); eye(6)];
 A = [zeros(6)   eye(6);
      -Kp_endEff -Kd_endEff];
