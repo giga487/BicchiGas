@@ -31,21 +31,21 @@ qf =  [-pi/3, pi/3, L_d, -pi/3, pi/5, pi/3]';
 x_endEff_D = Etip(1:3, 4);
 
 %%
-Kp_endEff = 50 * eye(6);
+Kp_endEff = 100 * eye(6);
 Kp_endEff(1,1) = Kp_endEff(1,1) * 2;
-Kp_endEff(2,2) = Kp_endEff(2,2) * 2;
-% Kp_endEff(3,3) = Kp_endEff(3,3) * 10;
-% Kp_endEff(4,4) = Kp_endEff(4,4) * 10;
-% Kp_endEff(5,5) = Kp_endEff(5,5) * 10;
-% Kp_endEff(6,6) = Kp_endEff(6,6) * 10;
+Kp_endEff(2,2) = Kp_endEff(2,2) * 50;
+Kp_endEff(3,3) = Kp_endEff(3,3) * 5;
+Kp_endEff(4,4) = Kp_endEff(4,4) * 10;
+Kp_endEff(5,5) = Kp_endEff(5,5) * 10;
+Kp_endEff(6,6) = Kp_endEff(6,6) * 10;
 
-Kd_endEff = 5 * eye(6);
-Kd_endEff(1,1) = Kd_endEff(1,1) * 2;
-Kd_endEff(2,2) = Kd_endEff(2,2) * 2;
-Kd_endEff(3,3) = Kd_endEff(3,3) * 0.1;
-% Kd_endEff(4,4) = Kd_endEff(4,4) * 10;
-% Kd_endEff(5,5) = Kd_endEff(5,5) * 10;
-% Kd_endEff(6,6) = Kd_endEff(6,6) * 10;
+Kd_endEff = 10 * eye(6);
+Kd_endEff(1,1) = Kd_endEff(1,1) * 10;
+Kd_endEff(2,2) = Kd_endEff(2,2) * 50;
+Kd_endEff(3,3) = Kd_endEff(3,3) * 2;
+Kd_endEff(4,4) = Kd_endEff(4,4) * 5;
+Kd_endEff(5,5) = Kd_endEff(5,5) * 5;
+Kd_endEff(6,6) = Kd_endEff(6,6) * 10;
 
 R = 1 * eye(6);
 B = [zeros(6); eye(6)];
@@ -55,7 +55,9 @@ Q = 1 * eye(12);
 P = lyap(A,Q);
 
 % ho inserito delle masse casuali, tutte 2.
-mPi0 = [2; 2; 2; 2; 2; 2];
+% mPi0 = [2; 2; 2; 2; 2; 2];
+delta_m = 0.5;
+mPi0 = parameter(:,2) + delta_m;
 
 % scrivo una funzione simbolica per fare prima,
 % tanto I_f è simmetrica, ho preso Ixx.
@@ -132,8 +134,8 @@ toc
 %visualizzo l'errore di tutto il blocco Pi, ma sopratutto vado ad estrarre
 %le masse, che visualizzo con questa sezione dello script.
 
-adattamento = out.adattamento.signals.values;
-x = out.tout;
+adattamento = ans.adattamento.signals.values;
+x = ans.tout;
 
 parSize = size(parameter,1);
 
