@@ -2,22 +2,17 @@
 
 % CTRL
 clc
+clear
 
+load('DELTA_NEW.mat')
 
-f_ = f_exp;
-g_ = g_exp;
-
-h1 = atan(tan(x(4))*sin(x(3)));
-h2 = asin(sin(x(4))*cos(x(3)));
+h1 = atan(tan(q(4))*sin(q(3)));
+h2 = asin(sin(q(4))*cos(q(3)));
 %% 
-Lf_h1 = jacobian(h1, x)*f_;
-Lg_h1 = jacobian(h1, x)*g_;
-Lg_Lf_h1 = jacobian(Lf_h1, x)*g_;
+% Delta = dim span{g, [f, g]}
 
-Lf_h2 = jacobian(h2, x)*f_;
-Lg_h2 = jacobian(h2, x)*g_;
-Lg_Lf_h2 = jacobian(Lf_h2, x)*g_;
+D1 = liebracket(f_,g_,q, 1);
 
 %%
 
-% GammaG1 = liebracket(f_, g_, x, 2);
+D1_f = @(x1,x2,x3,x4,x5,x6,x7,x8)(D1(x1,x2,x3,x4,x5,x6,x7,x8));

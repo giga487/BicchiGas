@@ -5,7 +5,7 @@ clear
 clc
 
 syms L J  m_r m_p m_c theta phi dphi dtheta real
-q = sym('q',[4,1],'real');
+q = sym('q',[8,1],'real');
 dq = sym('dq',[4,1],'real');
 
 %% DINAMICA AGGEGGIO
@@ -151,16 +151,17 @@ g0 = g(0,0);
 %x1,x2,x3,x4 = x y phi tetha
 %x5,x6,x7,x8 = derivate
 
-x = sym('x',[8,1],'real');
 
-f_exp = @(x1,x2,x3,x4,x5,x6,x7,x8)([[x5,x6,x7,x8]';f(x1,x2,x3,x4,x5,x6,x7,x8)]); 
+f_e = @(x1,x2,x3,x4,x5,x6,x7,x8)([[x5,x6,x7,x8]';f(x1,x2,x3,x4,x5,x6,x7,x8)]); 
 
+f_ = f_e(q(1),q(2),q(3),q(4),q(5),q(6),q(7),q(8)); 
 %Prova
-f_exp_dq0 = f_exp(q(1),q(2),q(3),q(4),0,0,0,0); 
+f_exp_dq0 = f_e(q(1),q(2),q(3),q(4),0,0,0,0); 
 
 %espando anche g
 g_exp = @(q3,q4)([[0,0,0,0]';g(q3,q4)]);
 
 %Prova
 g_exp_00 = g_exp(0,0); 
+g_ = g_exp(q(3), q(4));
  
