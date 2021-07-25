@@ -33,7 +33,7 @@ x_endEff_D = Etip(1:3, 4);
 %%
 
 Kp_endEff = 1 * eye(6);
-Kp_endEff(1,1) = Kp_endEff(1,1) * 100;
+Kp_endEff(1,1) = Kp_endEff(1,1) * 1000;
 Kp_endEff(2,2) = Kp_endEff(2,2) * 10000;
 Kp_endEff(3,3) = Kp_endEff(3,3) * 1000;
 Kp_endEff(4,4) = Kp_endEff(4,4) * 1000;
@@ -41,19 +41,19 @@ Kp_endEff(5,5) = Kp_endEff(5,5) * 1000;
 Kp_endEff(6,6) = Kp_endEff(6,6) * 10;
 
 Kd_endEff = 1 * eye(6);
-Kd_endEff(1,1) = Kd_endEff(1,1) * 10;
-Kd_endEff(2,2) = Kd_endEff(2,2) * 10;
+Kd_endEff(1,1) = Kd_endEff(1,1) * 100;
+Kd_endEff(2,2) = Kd_endEff(2,2) * 1000;
 Kd_endEff(3,3) = Kd_endEff(3,3) * 1000;
-Kd_endEff(4,4) = Kd_endEff(4,4) * 10;
-Kd_endEff(5,5) = Kd_endEff(5,5) * 10;
-% Kd_endEff(6,6) = Kd_endEff(6,6) * 100;
+Kd_endEff(4,4) = Kd_endEff(4,4) * 100;
+Kd_endEff(5,5) = Kd_endEff(5,5) * 100;
+Kd_endEff(6,6) = Kd_endEff(6,6) * 10;
 
 %%
 R = 1 * eye(6);
 B = [zeros(6); eye(6)];
 A = [zeros(6)   eye(6);
      -Kp_endEff -Kd_endEff];
-Q = 100 * eye(12);
+Q = 1 * eye(12);
 P = lyap(A,Q);
 
 % ho inserito delle masse casuali, tutte 2.
@@ -152,4 +152,4 @@ legend(leg);
 grid on;
 hold off;
 
-% plot_error(ans, 'AdaptiveCompTorque');
+plot_error(ans, 'AdaptiveCompTorque');
