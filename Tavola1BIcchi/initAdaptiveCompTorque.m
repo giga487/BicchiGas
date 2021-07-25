@@ -17,7 +17,7 @@ theta0 = [(-pi/2); (pi/2); 0; (-pi/2); (pi/2); 0];
 parameter = [parameter, theta0];
 
 L_d = 3;
-q0 = [0 0 0 0 0 0]';
+q0 = [0 0 L_d 0 0 0]';
 dq0 = (zeros(1,6))';
 [Pcom, Etip] = forwardKinematics(parameter, q0);
 
@@ -31,27 +31,29 @@ qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
 x_endEff_D = Etip(1:3, 4);
 
 %%
-Kp_endEff = 100 * eye(6);
-Kp_endEff(1,1) = Kp_endEff(1,1) * 2;
-Kp_endEff(2,2) = Kp_endEff(2,2) * 50;
-Kp_endEff(3,3) = Kp_endEff(3,3) * 5;
-Kp_endEff(4,4) = Kp_endEff(4,4) * 10;
-Kp_endEff(5,5) = Kp_endEff(5,5) * 10;
+
+Kp_endEff = 1 * eye(6);
+Kp_endEff(1,1) = Kp_endEff(1,1) * 100;
+Kp_endEff(2,2) = Kp_endEff(2,2) * 10000;
+Kp_endEff(3,3) = Kp_endEff(3,3) * 1000;
+Kp_endEff(4,4) = Kp_endEff(4,4) * 1000;
+Kp_endEff(5,5) = Kp_endEff(5,5) * 1000;
 Kp_endEff(6,6) = Kp_endEff(6,6) * 10;
 
-Kd_endEff = 10 * eye(6);
+Kd_endEff = 1 * eye(6);
 Kd_endEff(1,1) = Kd_endEff(1,1) * 10;
-Kd_endEff(2,2) = Kd_endEff(2,2) * 50;
-Kd_endEff(3,3) = Kd_endEff(3,3) * 2;
-Kd_endEff(4,4) = Kd_endEff(4,4) * 5;
-Kd_endEff(5,5) = Kd_endEff(5,5) * 5;
-Kd_endEff(6,6) = Kd_endEff(6,6) * 10;
+Kd_endEff(2,2) = Kd_endEff(2,2) * 10;
+Kd_endEff(3,3) = Kd_endEff(3,3) * 1000;
+Kd_endEff(4,4) = Kd_endEff(4,4) * 10;
+Kd_endEff(5,5) = Kd_endEff(5,5) * 10;
+% Kd_endEff(6,6) = Kd_endEff(6,6) * 100;
 
+%%
 R = 1 * eye(6);
 B = [zeros(6); eye(6)];
 A = [zeros(6)   eye(6);
      -Kp_endEff -Kd_endEff];
-Q = 1 * eye(12);
+Q = 100 * eye(12);
 P = lyap(A,Q);
 
 % ho inserito delle masse casuali, tutte 2.
@@ -127,7 +129,6 @@ disp("Fine simulazione");
 toc
 
 %% PLOT
-
 %Nel blocco Errore Adattamento vado a valutare solamente l'errore delle
 %masse questo perch� i valori delle Inerzie non sono parametri fissi, ma
 %dipendono dall'angolo del braccio, col blocco Errore Adattamento
@@ -150,3 +151,5 @@ end
 legend(leg);
 grid on;
 hold off;
+
+% plot_error(ans, 'AdaptiveCompTorque');
