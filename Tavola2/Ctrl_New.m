@@ -11,7 +11,7 @@ h2 = asin(sin(q(4))*cos(q(3)));
 %% 
 % Delta = dim span{g, [f, g]}
 
-D1 = liebracket(f_,g_,q, 1);
+D1 = liebracket(f_,g_,q, 4);
 
 %%
 
