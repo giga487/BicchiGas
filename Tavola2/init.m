@@ -132,7 +132,6 @@ clearvars -except G_parametrized C_parametrized B_parametrized Ft q dq
 %% 
 syms u 
 
-
 f = @(q1,q2,q3,q4,dq1,dq2,dq3,dq4)((B_parametrized(q3,q4)\(-C_parametrized(q3,q4,dq3,dq4)*[dq1;dq2;dq3;dq4]-G_parametrized(q3,q4))));
 
 f_sym = simplify(f(q(1),q(2),q(3),q(4),dq(1),dq(2),dq(3),dq(4)));
