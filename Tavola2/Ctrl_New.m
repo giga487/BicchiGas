@@ -11,7 +11,8 @@ h2 = asin(sin(q(4))*cos(q(3)));
 %% 
 % Delta = dim span{g, [f, g]}
 
-D1 = liebracket(f_,g_,q, 4);
+% aumentare l'ordine della liebracket fino a 8
+D1 = liebracket(f_,g_,q,8);
 
 %%
 
