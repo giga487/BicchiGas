@@ -2,14 +2,7 @@ close all
 clear all
 clc
 
-% l = 0.2 %m
-% g = 9.81 %m/s^2
-% r = 0.02 %m
-% m1 = 0.088338025 %kg
-% m2 = 0.022245336 %kg
-% M = 0.548069759 %kg
-
-syms m1 m2 M l g r B C D F b1 b2 f g real
+syms m1 m2 M l g r B C D F b1 b2 f g h real
 % q = [theta dtheta x dx]
 % dq = [dtheta ddtheta dx ddx]
 q = sym('q',[4,1],'real');
@@ -31,3 +24,7 @@ g(2) = (l*cos(q(1))*B) / ((C + l*cos(q(1))*B)*D);
 g(3) = 0;
 g(4) = 1 / ((C + l*cos(q(1))*B)*D);
 g = g';
+
+h(1) = q(1);
+h(2) = q(3);
+h = h';
