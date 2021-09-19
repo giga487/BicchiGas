@@ -11,28 +11,7 @@ syms u
 B = B_parametrized(q(7),q(8));
 C = C_parametrized(q(7),q(8),dq(7),dq(8));
 G = G_parametrized(q(7),q(8));
-%%
-% f2 = @(q(5),q(6),q(7),q(8))(simplify(B_parametrized(q(7),q(8))\(-C_parametrized(q(7),q(8),dq(7),dq(8))*dq(5:8)-G_parametrized(q(7),q(8)))));
-% 
-% % f1 = @(q(1),q(2),q(3),q(4))();
-% 
-% g1 = @()(sym(zeros(4,1)));
-% g2 = @(q5,q6,q7,q8)(simplify(B\Ft));
 
-%% faccio questo perchè, attualmente dx è ddq
-% vado ad inserire una serie di 1, sulla diagonale principale in modo da
-% ottenere x y theta phi e non la derivata.
-f = @(q1,q2,q3,q4,q5,q6,q7,q8)([f1(q1,q2,q3,q4);f2(q5,q6,q7,q8)]);
-g = @(q1,q2,q3,q4,q5,q6,q7,q8)([g1();g2(q5,q6,q7,q8)]);
-
-h1 = q(1);
-h2 = q(2);
-h3 = q(3);
-h4 = q(4);
-
-% ddq = f+g*u;
-% 
-% n = 2;
 %% 
 Lf_h1 = jacobian(h1, q)*f;
 Lg_h1 = jacobian(h1, q)*g;

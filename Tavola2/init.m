@@ -5,10 +5,11 @@ clear
 clc
 
 syms L J  m_r m_p m_c theta phi dphi dtheta real
-q = sym('q',[4,1],'real');
+q = sym('q',[8,1],'real');
 dq = sym('dq',[4,1],'real');
 
 %% DINAMICA AGGEGGIO
+%Nonlinear Dynamic Modelling and Analysis of a3-D Overhead Gantry Crane System with System Parameters Variation
 
 m_prova = [1,2,3]';
 B_11 = @(m_r, m_p, m_c)(m_r + m_p + m_c);
@@ -55,7 +56,6 @@ J = 100;
 
 B_parametrized = @(phi,theta)(B_data(m_r, m_p, m_c, L, J, phi,theta));
 
-% B = B_parametrized(q(3),q(4));
 
 %% 
 syms L J  m_r m_p m_c theta phi dphi dtheta real
@@ -132,7 +132,6 @@ clearvars -except G_parametrized C_parametrized B_parametrized Ft q dq
 %% 
 syms u 
 
-
 f = @(q1,q2,q3,q4,dq1,dq2,dq3,dq4)((B_parametrized(q3,q4)\(-C_parametrized(q3,q4,dq3,dq4)*[dq1;dq2;dq3;dq4]-G_parametrized(q3,q4))));
 
 f_sym = simplify(f(q(1),q(2),q(3),q(4),dq(1),dq(2),dq(3),dq(4)));
@@ -145,5 +144,23 @@ g_sym = simplify(g(q(3),q(4)));
 
 g0 = g(0,0);
 
+%% Espansione degli stati, aggiungo le posizioni nello spazio degli stati,
+%quindi una matrice 0 I per far tornare tutto, ( se fosse lineare )
 
+%x1,x2,x3,x4 = x y phi tetha
+%x5,x6,x7,x8 = derivate
+
+
+f_e = @(x1,x2,x3,x4,x5,x6,x7,x8)([[x5,x6,x7,x8]';f(x1,x2,x3,x4,x5,x6,x7,x8)]); 
+
+f_ = f_e(q(1),q(2),q(3),q(4),q(5),q(6),q(7),q(8)); 
+%Prova
+f_exp_dq0 = f_e(q(1),q(2),q(3),q(4),0,0,0,0); 
+
+%espando anche g
+g_exp = @(q3,q4)([[0,0,0,0]';g(q3,q4)]);
+
+%Prova
+g_exp_00 = g_exp(0,0); 
+g_ = g_exp(q(3), q(4));
  
