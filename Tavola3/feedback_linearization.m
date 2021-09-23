@@ -44,8 +44,8 @@ LgLfh2 = jacobian(Lfh2, q)*g; % != 0
 %% Feedback linearization
 z = sym('z',[4,1],'real');
 dz = sym('dz',[4,1],'real');
-u = sym('u',[1,2],'real');
-v = sym('v',[1,2],'real');
+u = sym('u',[2,1],'real');
+v = sym('v',[2,1],'real');
 
 z(1) = h(1);
 z(2) = Lfh1;
@@ -59,16 +59,31 @@ dz(4) = Lf2h2 + LgLfh2*F;
 
 % u(1) = (v(1) - Lf2h1) / LgLfh1;
 % u(2) = (v(2) - Lf2h2) / LgLfh2;
+% v(1) = dz(2);
+% v(2) = dz(4);
+
+% matlabFunction(Lf2h1,'File','Lf2h1_fun');
+% matlabFunction(LgLfh1,'File','LgLfh1_fun');
+% matlabFunction(Lf2h2,'File','Lf2h2_fun');
+% matlabFunction(LgLfh2,'File','LgLfh2_fun');
 
 %%
-A = [[0 1 0 0];
-     [0 0 0 0];
-     [0 0 0 1];
-     [0 0 0 0]];
+A_lin = [[0 1 0 0];
+         [0 0 0 0];
+         [0 0 0 1];
+         [0 0 0 0]];
 
-B = [[0; 1; 0; 0] [0; 0; 0; 1]];
+B_lin = [[0; 1; 0; 0] [0; 0; 0; 1]];
 
-C = [[1 0 0 0];
-     [0 0 1 0]];
+C_lin = [[1 0 0 0];
+         [0 0 1 0]];
 
-D = 0;
+D_lin = 0;
+
+%% Verifico la feedback linearization calcolata
+
+res1 = simplify(f_fun(B,C,D,b1,b2,gravity,l,q) + g_fun(B,C,D,l,q)*F);
+res2 = simplify(A_lin*z + B_lin*v);
+
+res = res1 - res2;
+
