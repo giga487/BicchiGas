@@ -46,6 +46,8 @@ C = m1 + m2 + M;
 D = 2/5 * m1 * r^2;
 
 q0 = [0,0,0,0]';
+delta = 0.1;
+q0 = q0 + delta;
 
 % matlabFunction(f,'File','f_fun');
 % matlabFunction(g,'File','g_fun');
