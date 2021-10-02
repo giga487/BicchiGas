@@ -18,4 +18,4 @@ dLgLfh = jacobian(LgLfh, q);
 
 % se rank(delta) = 4 il sistema è localmente osservabile (Theorem 7).
 dO = [dh; dLfh; dLgh; dLfLfh; dLgLfh; dLfLgh];
-rank(dO);
+rank(dO)

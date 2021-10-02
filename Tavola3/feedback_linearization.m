@@ -44,7 +44,7 @@ LgLfh2 = jacobian(Lfh2, q)*g; % != 0
 %% Feedback linearization
 z = sym('z',[4,1],'real');
 dz = sym('dz',[4,1],'real');
-u = sym('u',[2,1],'real');
+% u = sym('u',[2,1],'real');
 v = sym('v',[2,1],'real');
 
 z(1) = h(1);
@@ -59,8 +59,8 @@ dz(4) = Lf2h2 + LgLfh2*F;
 
 % u(1) = (v(1) - Lf2h1) / LgLfh1;
 % u(2) = (v(2) - Lf2h2) / LgLfh2;
-% v(1) = dz(2);
-% v(2) = dz(4);
+v(1) = dz(2);
+v(2) = dz(4);
 
 % matlabFunction(Lf2h1,'File','Lf2h1_fun');
 % matlabFunction(LgLfh1,'File','LgLfh1_fun');
@@ -85,5 +85,18 @@ D_lin = 0;
 res1 = simplify(f_fun(B,C,D,b1,b2,gravity,l,q) + g_fun(B,C,D,l,q)*F);
 res2 = simplify(A_lin*z + B_lin*v);
 
-res = res1 - res2;
+res = res1 - res2
 
+l = 0.2; %m
+gravity = 9.81; %m/s^2
+r = 0.02; %m
+m1 = 0.088338025; %kg
+m2 = 0.022245336; %kg
+M = 0.548069759; %kg
+
+b1 = 0.1;
+b2 = 0.1;
+
+B = m1 + m2/3;
+C = m1 + m2 + M;
+D = 2/5 * m1 * r^2;
