@@ -30,9 +30,7 @@ h(2) = q(3);
 h = h';
 
 %%
-q0 = [0,0,0,0]';
-delta = 0.1;
-q0 = q0 + delta;
+
 
 % matlabFunction(f,'File','f_fun');
 % matlabFunction(g,'File','g_fun');
