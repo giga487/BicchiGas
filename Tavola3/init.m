@@ -29,6 +29,14 @@ delta = 0.1;
 q0 = q0 + delta;
 %% K control
 
-K1 = 1;
-K2 = 1;
+
+kp = 100;
+kd = 4;
+
+KControl = [kp, kd];
+%% Peso del controllo
+K1 = 0.3;
+K2 = 0.8;
+
+K = [K1,K2];
 
