@@ -87,16 +87,3 @@ res2 = simplify(A_lin*z + B_lin*v);
 
 res = res1 - res2
 
-l = 0.2; %m
-gravity = 9.81; %m/s^2
-r = 0.02; %m
-m1 = 0.088338025; %kg
-m2 = 0.022245336; %kg
-M = 0.548069759; %kg
-
-b1 = 0.1;
-b2 = 0.1;
-
-B = m1 + m2/3;
-C = m1 + m2 + M;
-D = 2/5 * m1 * r^2;
