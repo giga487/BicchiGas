@@ -100,3 +100,23 @@ b2 = 0.5;
 B = m1 + m2/3;
 C = m1 + m2 + M;
 D = 2/5 * m1 * r^2;
+
+%% Plot Controllore Results
+ref = [0,0,3,0]';
+
+figure
+plot(out.simout.Time, out.simout.Data);
+grid on;
+legend('e_{theta}','e_{dtheta}','e_{x}','e_{dx}');
+title('error wrt time');
+xlabel('time');
+ylabel('error');
+
+figure
+plot(out.simout1.Time, out.simout1.Data);
+% plot(out.simout1.Time, ref, '-');
+grid on;
+legend('theta','dtheta','x','dx');
+title('state variable wrt time');
+xlabel('time');
+ylabel('state variables');
