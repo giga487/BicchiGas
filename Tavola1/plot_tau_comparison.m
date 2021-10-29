@@ -26,7 +26,7 @@ t_AdCompTorque = ans.t_sim.signals.values;
 figure   
 for i = 1:6    
     subplot(2,3,i)
-
+    
     plot(t_PDtraj,tau_PDtraj(:,i));
 %    leg{1} = sprintf('Tau_{PD}');
     hold on;
