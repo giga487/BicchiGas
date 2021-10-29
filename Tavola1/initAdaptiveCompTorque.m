@@ -1,5 +1,5 @@
 clc
-% clear
+clearvars -except tau_PDtraj tau_CompTorque tau_AdCompTorque t_PDtraj t_CompTorque t_AdCompTorque
 close all
 
 currentFile = genpath( './' );
@@ -81,7 +81,7 @@ Pi_OK = double([parameter(1,2); parameter(2,2); parameter(3,2); parameter(4,2); 
 parameter_to_adapt = [parameter(:,1), mPi0, parameter(:,3)];
 
 %% generazione traiettorie
-Simulation_Time = 25;
+Simulation_Time = 50;
 t_S = 0.1;
 
 q_vec = size(Simulation_Time/t_S,size(q0,1));

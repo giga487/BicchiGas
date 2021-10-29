@@ -1,5 +1,5 @@
 clc
-% clear
+clearvars -except tau_PDtraj tau_CompTorque tau_AdCompTorque t_PDtraj t_CompTorque t_AdCompTorque
 close all
 
 currentFile = genpath( './' );
@@ -38,7 +38,7 @@ Kp_endEff = 1 * eye(6);
 Kd_endEff = 1 * eye(6);
 
 %% generazione traiettorie
-Simulation_Time = 25;
+Simulation_Time = 50;
 t_S = 0.1;
 
 q_vec = size(Simulation_Time/t_S,size(q0,1));
