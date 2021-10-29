@@ -1,5 +1,5 @@
 clc
-% clear
+clearvars -except tau_PDtraj tau_CompTorque tau_AdCompTorque t_PDtraj t_CompTorque t_AdCompTorque
 close all
 
 currentFile = genpath( './' );
