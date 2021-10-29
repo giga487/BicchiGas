@@ -23,23 +23,23 @@ tau_AdCompTorque = ans.tau.signals.values;
 t_AdCompTorque = ans.t_sim.signals.values;
 
 %% plot Tau comparison
-figure
-for i = 1:6  
+figure   
+for i = 1:6    
     subplot(2,3,i)
-    
+
     plot(t_PDtraj,tau_PDtraj(:,i));
-%     leg{1} = sprintf('Tau_{PD}');
+%    leg{1} = sprintf('Tau_{PD}');
     hold on;
 
     plot(t_CompTorque,tau_CompTorque(:,i));
-%     leg{2} = sprintf('Tau_{CompTorque}');
+%    leg{2} = sprintf('Tau_{CompTorque}');
     hold on;
 
     plot(t_AdCompTorque,tau_AdCompTorque(:,i));
-%     leg{3} = sprintf('Tau_{AdCompTorque}');
+%    leg{3} = sprintf('Tau_{AdCompTorque}');
 
     hold on;
-%     legend(leg);    
+%    legend(leg);
     ylabel('tau [Nm]');
     xlabel('time [s]');
     title(sprintf('tau_%d Comparison',i),'Interpreter','none');
