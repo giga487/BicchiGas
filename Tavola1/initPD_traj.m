@@ -23,28 +23,29 @@ dq0 = (zeros(1,6))';
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
+% qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
+qf = q0;
 
 [Pcom, Etip] = forwardKinematics(parameter, qf);
 
 x_endEff_D = Etip(1:3, 4);
 
 %%
-Kp_endEff = 1 * eye(6);
-Kp_endEff(1,1) = Kp_endEff(1,1) * 1000;
-Kp_endEff(2,2) = Kp_endEff(2,2) * 1000;
-Kp_endEff(3,3) = Kp_endEff(3,3) * 100;
-Kp_endEff(4,4) = Kp_endEff(4,4) * 100;
-Kp_endEff(5,5) = Kp_endEff(5,5) * 100;
-Kp_endEff(6,6) = Kp_endEff(6,6) * 10;
+Kp_endEff = 25 * eye(6);
+% Kp_endEff(1,1) = Kp_endEff(1,1) * 1000;
+% Kp_endEff(2,2) = Kp_endEff(2,2) * 1000;
+% Kp_endEff(3,3) = Kp_endEff(3,3) * 100;
+% Kp_endEff(4,4) = Kp_endEff(4,4) * 100;
+% Kp_endEff(5,5) = Kp_endEff(5,5) * 100;
+% Kp_endEff(6,6) = Kp_endEff(6,6) * 10;
 
-Kd_endEff = 1 * eye(6);
-Kd_endEff(1,1) = Kd_endEff(1,1) * 10;
-Kd_endEff(2,2) = Kd_endEff(2,2) * 100;
-Kd_endEff(3,3) = Kd_endEff(3,3) * 10;
-Kd_endEff(4,4) = Kd_endEff(4,4) * 10;
-Kd_endEff(5,5) = Kd_endEff(5,5) * 10;
-Kd_endEff(6,6) = Kd_endEff(6,6) * 10;
+Kd_endEff = 50 * eye(6);
+% Kd_endEff(1,1) = Kd_endEff(1,1) * 10;
+% Kd_endEff(2,2) = Kd_endEff(2,2) * 100;
+% Kd_endEff(3,3) = Kd_endEff(3,3) * 10;
+% Kd_endEff(4,4) = Kd_endEff(4,4) * 10;
+% Kd_endEff(5,5) = Kd_endEff(5,5) * 10;
+% Kd_endEff(6,6) = Kd_endEff(6,6) * 10;
 
 %% generazione traiettorie
 Simulation_Time = 50;
