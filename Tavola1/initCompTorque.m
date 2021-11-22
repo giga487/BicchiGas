@@ -23,7 +23,8 @@ dq0 = (zeros(1,6))';
 x_COM0 = Pcom;
 x_endEff0 = Etip(1:3, 4);
 
-qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
+% qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
+qf = q0;
 
 [Pcom, Etip] = forwardKinematics(parameter, qf);
 
