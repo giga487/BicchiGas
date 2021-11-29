@@ -17,5 +17,22 @@ LgLfh = jacobian(Lfh, q)*g;
 dLgLfh = jacobian(LgLfh, q);
 
 % se rank(delta) = 4 il sistema è localmente osservabile (Theorem 7).
-dO = [dh; dLfh; dLgh; dLfLfh; dLgLfh; dLfLgh];
+dO = [dh; dLfh; dLgh; dLfLfh; dLfLgh; dLgLfh];
 rank(dO)
+
+%% Stampa matrice di osservabilita' su file
+fid = fopen('dO.txt', 'wt');
+[r,c] = size(dO);
+
+fprintf(fid,'delta = [');
+for i = 1:r
+    for j = 1:c
+        if(j == c)           
+            fprintf(fid,'%s;\n',dO(i,j));
+            continue
+        end
+        fprintf(fid,'%s,',dO(i,j));
+    end
+end
+fprintf(fid,'];');
+fclose(fid);

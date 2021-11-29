@@ -5,6 +5,22 @@ delta = liebracket(f, g, q, 4);
 % theorem).
 rank(delta)
 
+%% Stampa matrice di controllabilita' su file
+fid = fopen('delta.txt', 'wt');
+[r,c] = size(delta);
+
+fprintf(fid,'delta = [');
+for i = 1:r
+    for j = 1:c
+        if(j == c)           
+            fprintf(fid,'%s;\n',delta(i,j));
+            continue
+        end
+        fprintf(fid,'%s,',delta(i,j));
+    end
+end
+fprintf(fid,'];');
+fclose(fid);
 
 %% The system is small time local accessible
 % from accessibility to controllability, dot 3
