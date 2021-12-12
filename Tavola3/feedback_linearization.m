@@ -24,61 +24,67 @@ rank([g0 adfg0 adf2g0 adf3g0])
 gfg = jacobian(adfg, q)*g - jacobian(g, q)*adfg;
 
 rank([g adfg adf2g gfg])
-% La condizione (B) è pertanto verificata
+% La condizione (B) NON è pertanto verificata
 
-% Quindi esiste un cambiamento totale di variabili e una retroazione
-% statica degli stati che linearizzano il sistema.
 %%
-Lfh = jacobian(h, q)*f;
-Lgh = jacobian(h, q)*g;
-Lf2h = jacobian(Lfh, q)*f;
+Lfh = jacobian(h, q)*f
+Lgh = jacobian(h, q)*g
+Lf2h = jacobian(Lfh, q)*f
 % LfLgh = jacobian(Lgh, q)*f;
-LgLfh = jacobian(Lfh, q)*g; % != 0
+LgLfh = jacobian(Lfh, q)*g % != 0
+
+% matlabFunction(Lfh,'File','Lfh_fun');
+% matlabFunction(Lf2h,'File','Lf2h_fun');
+% matlabFunction(LgLfh,'File','LgLfh_fun');
 
 %% Feedback linearization
 z = sym('z',[4,1],'real');
 dz = sym('dz',[4,1],'real');
-% u = sym('u',[2,1],'real');
-v = sym('v',[2,1],'real');
+u = sym('u',[1,1],'real');
+v = sym('v',[1,1],'real');
 
 z(1) = h;
 z(2) = Lfh;
-% z(3) = h(2);
-% z(4) = Lfh2;
+z(3) = q(1);
+z(4) = (-1/(l*cos(q(1))*B))*q(2) + q(4);
 
 dz(1) = z(2);
 dz(2) = Lf2h + LgLfh*F;
-% dz(3) = z(4);
-% dz(4) = Lf2h2 + LgLfh2*F;
+dz(3) = dq(1);
+dz(4) = jacobian(z(4),q)*dq;
 
-% u(1) = (v(1) - Lf2h1) / LgLfh1;
-v(1) = dz(2);
+v = dz(2);
+u = (v - Lf2h) / LgLfh;
 
-% matlabFunction(Lf2h1,'File','Lf2h1_fun');
-% matlabFunction(LgLfh1,'File','LgLfh1_fun');
-% matlabFunction(Lf2h2,'File','Lf2h2_fun');
-% matlabFunction(LgLfh2,'File','LgLfh2_fun');
+%% Lg(PHIi(x)) = 0 r+1 <= i <= n
+% allora la dinamica delle (n-r) variabili complementari è sia ininfluente
+% sull'uscita del sistema linearizzato che indipendente dagli ingressi.
+jacobian(z(3),q)*g
+jacobian(z(4),q)*g
+
+%% Infine perchè il cambio di variabili sia ammissibile deve essere verificata
+% la condizione det(dPHI/dx) != 0
+det(jacobian(z,q))
 
 %%
-A_lin = [[0 1 0 0];
-         [0 0 0 0];
-         [0 0 0 1];
-         [0 0 0 0]];
-
-B_lin = [[0; 1; 0; 0] [0; 0; 0; 1]];
-
-C_lin = [[1 0 0 0];
-         [0 0 1 0]];
-
-D_lin = 0;
+% A_lin = [[0 1 0 0];
+%          [0 0 1 0];
+%          [0 0 0 1];
+%          [0 0 0 0]];
+% 
+% B_lin = [0; 0; 0; 1];
+% 
+% C_lin = [1 0 0 0];
+% 
+% D_lin = 0;
 
 %% Verifico la feedback linearization calcolata
+% res1 = simplify(f_fun(B,C,D,b1,b2,gravity,l,q) + g_fun(B,C,D,l,q)*F);
+% res2 = simplify(A_lin*z + B_lin*v);
+% 
+% res = res1 - res2
 
-res1 = simplify(f_fun(B,C,D,b1,b2,gravity,l,q) + g_fun(B,C,D,l,q)*F);
-res2 = simplify(A_lin*z + B_lin*v);
-
-res = res1 - res2
-
+%% Parametri del modello
 l = 0.2; %m
 gravity = 9.81; %m/s^2
 r = 0.02; %m
@@ -93,7 +99,10 @@ B = m1 + m2/3;
 C = m1 + m2 + M;
 D = 2/5 * m1 * r^2;
 
-%% Plot Controllore Results
+Kp = 5;
+Kd = 2.5;
+
+%% Plot Controller Results
 ref = [0,0,3,0]';
 
 figure
