@@ -29,8 +29,8 @@ h = q(3) + l*sin(q(1));
 
 %%
 q0 = [0,0,0,0]';
-% delta = 0.1;
-% q0 = q0 + delta;
+delta = 0.1;
+q0 = q0 + delta;
 
 % matlabFunction(f,'File','f_fun');
 % matlabFunction(g,'File','g_fun');

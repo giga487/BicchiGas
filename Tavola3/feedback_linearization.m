@@ -24,7 +24,7 @@ rank([g0 adfg0 adf2g0 adf3g0])
 gfg = jacobian(adfg, q)*g - jacobian(g, q)*adfg;
 
 rank([g adfg adf2g gfg])
-% La condizione (B) NON è pertanto verificata
+% La condizione (B) è pertanto verificata
 
 %%
 Lfh = jacobian(h, q)*f
@@ -66,18 +66,6 @@ jacobian(z(4),q)*g
 % la condizione det(dPHI/dx) != 0
 det(jacobian(z,q))
 
-%%
-% A_lin = [[0 1 0 0];
-%          [0 0 1 0];
-%          [0 0 0 1];
-%          [0 0 0 0]];
-% 
-% B_lin = [0; 0; 0; 1];
-% 
-% C_lin = [1 0 0 0];
-% 
-% D_lin = 0;
-
 %% Verifico la feedback linearization calcolata
 % res1 = simplify(f_fun(B,C,D,b1,b2,gravity,l,q) + g_fun(B,C,D,l,q)*F);
 % res2 = simplify(A_lin*z + B_lin*v);
@@ -103,21 +91,21 @@ Kp = 5;
 Kd = 2.5;
 
 %% Plot Controller Results
-ref = [0,0,3,0]';
-
-figure
-plot(out.simout.Time, out.simout.Data);
-grid on;
-legend('e_{theta}','e_{dtheta}','e_{x}','e_{dx}');
-title('error wrt time');
-xlabel('time');
-ylabel('error');
-
-figure
-plot(out.simout1.Time, out.simout1.Data);
+% ref = [0,0,3,0]';
+% 
+% figure
+% plot(out.simout.Time, out.simout.Data);
+% grid on;
+% legend('e_{theta}','e_{dtheta}','e_{x}','e_{dx}');
+% title('error wrt time');
+% xlabel('time');
+% ylabel('error');
+% 
+% figure
+% plot(out.simout1.Time, out.simout1.Data);
 % plot(out.simout1.Time, ref, '-');
-grid on;
-legend('theta','dtheta','x','dx');
-title('state variable wrt time');
-xlabel('time');
-ylabel('state variables');
+% grid on;
+% legend('theta','dtheta','x','dx');
+% title('state variable wrt time');
+% xlabel('time');
+% ylabel('state variables');
