@@ -49,7 +49,7 @@ z(3) = q(1);
 z(4) = (-1/(l*cos(q(1))*B))*q(2) + q(4);
 
 dz(1) = z(2);
-dz(2) = Lf2h + LgLfh*F;
+dz(2) = Lf2h + LgLfh*F; % = v
 dz(3) = dq(1);
 dz(4) = jacobian(z(4),q)*dq;
 
@@ -88,24 +88,24 @@ C = m1 + m2 + M;
 D = 2/5 * m1 * r^2;
 
 Kp = 5;
-Kd = 2.5;
+Kd = 5;
 
 %% Plot Controller Results
-% ref = [0,0,3,0]';
-% 
-% figure
-% plot(out.simout.Time, out.simout.Data);
-% grid on;
-% legend('e_{theta}','e_{dtheta}','e_{x}','e_{dx}');
-% title('error wrt time');
-% xlabel('time');
-% ylabel('error');
-% 
-% figure
-% plot(out.simout1.Time, out.simout1.Data);
-% plot(out.simout1.Time, ref, '-');
-% grid on;
-% legend('theta','dtheta','x','dx');
-% title('state variable wrt time');
-% xlabel('time');
-% ylabel('state variables');
+ref = [0,0,3,0]';
+
+figure
+plot(out.simout.Time, out.simout.Data);
+grid on;
+legend('e_{theta}','e_{dtheta}','e_{x}','e_{dx}');
+title('error wrt time');
+xlabel('time');
+ylabel('error');
+
+figure
+plot(out.simout1.Time, out.simout1.Data);
+plot(out.simout1.Time, ref, '-');
+grid on;
+legend('theta','dtheta','x','dx');
+title('state variable wrt time');
+xlabel('time');
+ylabel('state variables');
