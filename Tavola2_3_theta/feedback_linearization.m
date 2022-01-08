@@ -45,12 +45,12 @@ v = sym('v',[1,1],'real');
 
 z(1) = h;
 z(2) = Lfh;
-z(3) = q(1);
+z(3) = q(3);
 z(4) = (-1/(l*cos(q(1))*B))*q(2) + q(4);
 
 dz(1) = z(2);
 dz(2) = Lf2h + LgLfh*F;
-dz(3) = dq(1);
+dz(3) = dq(3);
 dz(4) = jacobian(z(4),q)*dq;
 
 v = dz(2);

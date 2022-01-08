@@ -19,6 +19,8 @@ dLgLfh = jacobian(LgLfh, q);
 % se rank(delta) = 4 il sistema è localmente osservabile (Theorem 7).
 dO = [dh; dLfh; dLgh; dLfLfh; dLfLgh; dLgLfh];
 rank(dO)
+% il rango della codistribuzione di osservabilita' è pari a 3
+% pertanto il sistema non è localmente osservabile.
 
 %% Stampa matrice di osservabilita' su file
 fid = fopen('dO.txt', 'wt');

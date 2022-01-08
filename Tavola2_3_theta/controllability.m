@@ -1,5 +1,5 @@
 
-delta = liebracket(f, g, q, 4);
+delta = liebracket(f, gravity, q, 4);
 
 % if rank(delta) = 4 the system is small time local accessible (Chow's
 % theorem).
@@ -27,7 +27,7 @@ fclose(fid);
 % if f(q0) = 0 the system is also small time local controllable.
 % matlabFunction(f,'File','f_fun');
 l = 0.2 %m
-g = 9.81 %m/s^2
+gravity = 9.81 %m/s^2
 r = 0.02 %m
 m1 = 0.088338025 %kg
 m2 = 0.022245336 %kg
@@ -41,4 +41,4 @@ C = m1 + m2 + M;
 D = 2/5 * m1 * r^2;
 
 q0 = [0,0,0,0]';
-f0 = f_fun(B,C,D,b1,b2,g,l,q0)
+f0 = f_fun(B,C,D,b1,b2,gravity,l,q0)
