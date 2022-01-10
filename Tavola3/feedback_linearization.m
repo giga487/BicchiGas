@@ -88,24 +88,44 @@ C = m1 + m2 + M;
 D = 2/5 * m1 * r^2;
 
 Kp = 5;
-Kd = 5;
+Kd = 5.5;
+
+%% Simulation
+tic
+disp("Calcolo simulazione");
+sim('FeedbackLinearizationController');
+disp("Fine simulazione");
+toc
 
 %% Plot Controller Results
-ref = [0,0,3,0]';
-
 figure
 plot(out.simout.Time, out.simout.Data);
 grid on;
-legend('e_{theta}','e_{dtheta}','e_{x}','e_{dx}');
+legend('e_{y}','e_{dy}');
 title('error wrt time');
-xlabel('time');
-ylabel('error');
+xlabel('time [s]');
+ylabel('error [m]');
 
 figure
 plot(out.simout1.Time, out.simout1.Data);
-plot(out.simout1.Time, ref, '-');
 grid on;
-legend('theta','dtheta','x','dx');
+legend('theta [deg]','dtheta [deg/s]','x [m]','dx [m/s]');
 title('state variable wrt time');
 xlabel('time');
 ylabel('state variables');
+
+figure
+plot(out.simout2.Time, out.simout2.Data);
+grid on;
+legend('y','y_{ref}');
+title('output variable wrt time');
+xlabel('time [s]');
+ylabel('output variable [m]');
+
+figure
+plot(out.simout3.Time, out.simout3.Data);
+grid on;
+legend('F');
+title('input variable wrt time');
+xlabel('time [s]');
+ylabel('input variable [N]');
