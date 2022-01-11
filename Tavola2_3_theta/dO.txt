@@ -1,7 +1,4 @@
 delta = [1,0,0,0;
-0,1,0,0;
-0,0,0,0;
-(B*l*sin(q1)*(b2*q4 + B*gravity*l*sin(q1)))/(D*(C + B*l*cos(q1))) - (B*gravity*l*cos(q1))/D - (B^2*gravity*l^2*cos(q1)^2)/(D*(C + B*l*cos(q1))) - (B^2*l^2*cos(q1)*sin(q1)*(b2*q4 + B*gravity*l*sin(q1)))/(D*(C + B*l*cos(q1))^2),-b1/D,0,-(B*b2*l*cos(q1))/(D*(C + B*l*cos(q1)));
-0,0,0,0;
-(B^2*l^2*cos(q1)*sin(q1))/(D*(C + B*l*cos(q1))^2) - (B*l*sin(q1))/(D*(C + B*l*cos(q1))),0,0,0;
-];
+         0,1,0,0;
+         *,*,0,*;
+         *,0,0,0;];

@@ -33,6 +33,22 @@ qf =  [-pi/3, pi/3, L_d, -pi/3, pi/3, pi/3]';
 x_endEff_D = Etip(1:3, 4);
 
 %%
+% Kp_endEff = 1 * eye(6);
+% Kp_endEff(1,1) = Kp_endEff(1,1) * 1000;
+% Kp_endEff(2,2) = Kp_endEff(2,2) * 100000;
+% Kp_endEff(3,3) = Kp_endEff(3,3) * 10000;
+% Kp_endEff(4,4) = Kp_endEff(4,4) * 10000;
+% Kp_endEff(5,5) = Kp_endEff(5,5) * 10000;
+% Kp_endEff(6,6) = Kp_endEff(6,6) * 10;
+% 
+% Kd_endEff = 1 * eye(6);
+% Kd_endEff(1,1) = Kd_endEff(1,1) * 100;
+% Kd_endEff(2,2) = Kd_endEff(2,2) * 1000;
+% Kd_endEff(3,3) = Kd_endEff(3,3) * 1000;
+% Kd_endEff(4,4) = Kd_endEff(4,4) * 1000;
+% Kd_endEff(5,5) = Kd_endEff(5,5) * 1000;
+% Kd_endEff(6,6) = Kd_endEff(6,6) * 10;
+
 Kp_endEff = 1 * eye(6);
 Kp_endEff(1,1) = Kp_endEff(1,1) * 1000;
 Kp_endEff(2,2) = Kp_endEff(2,2) * 100000;
@@ -57,7 +73,8 @@ A = [zeros(6)   eye(6);
 Q = 1 * eye(12);
 P = lyap(A,Q);
 
-delta_m = 0.5;
+% delta_m = 0.5;
+delta_m = 0;
 Pi0 = parameter(:,2) + delta_m;
 Pi0 = double([Pi0(1); Pi0(2); Pi0(3); Pi0(4); Pi0(5); Pi0(6)]);
 
@@ -104,6 +121,7 @@ grid on;
 
 %% Introduco un errore iniziale di 0.1 rad
 delta = 0.1;
+% delta = 0;
 q0 = q0 + delta;
 
 %% 
@@ -134,6 +152,8 @@ for i = 1:1:parSize
     leg{i,1} = "m_"+i; %inserisco nella tabella una label
 end
 legend(leg);
+xlabel('time [s]');
+ylabel('error [kg]');
 grid on;
 hold off;
 

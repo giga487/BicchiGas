@@ -81,9 +81,9 @@ K_p =
 \begin{bmatrix}
 1000 & 00 & 0	& 0 & 0 & 0 \\
 0 & 10000 & 0 & 0 & 0 & 0 \\
-0 & 0 & 1000 & 0 & 0 & 0 \\
-0 & 0 & 0 & 1000 & 0 & 0 \\
-0 & 0 & 0 & 0 & 1000 & 0 \\
+0 & 0 & 10000 & 0 & 0 & 0 \\
+0 & 0 & 0 & 10000 & 0 & 0 \\
+0 & 0 & 0 & 0 & 10000 & 0 \\
 0 & 0 & 0 & 0 & 0 & 10
 \end{bmatrix}
 \end{equation}
@@ -93,8 +93,8 @@ K_d =
 100 & 00 & 0	& 0 & 0 & 0 \\
 0 & 1000 & 0 & 0 & 0 & 0 \\
 0 & 0 & 1000 & 0 & 0 & 0 \\
-0 & 0 & 0 & 100& 0 & 0 \\
-0 & 0 & 0 & 0 & 100 & 0 \\
+0 & 0 & 0 & 1000 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1000 & 0 \\
 0 & 0 & 0 & 0 & 0 & 10
 \end{bmatrix}
 \end{equation}
@@ -183,36 +183,82 @@ q_3 \\
 \end{equation}
 \begin{equation}
 \mathbf{h(q)} =
-\left[ \begin{array}{c}
-q_0 \\
-q_2 
+q_0 = \theta
+\end{equation}
+
+\begin{equation}
+\mathbf{h(q)} =
+q_2 = x
+\end{equation}
+
+\begin{equation}
+\mathbf{h(q)} =
+q_2 + l sin(q_0)
+\end{equation}
+
+\begin{equation}
+\mathbf{\Delta} =
+\left[ \begin{array}{ccccc}
+0 & * & * & * & *\\
+* & * & * & * & *\\
+0 & * & * & * & *\\
+* & * & * & * & *
+\end{array} \right]
+\end{equation}
+
+\begin{equation}
+\mathbf{dO} =
+\left[ \begin{array}{cccc}
+* & 0 & 1 & 0\\
+* & * & 0 & 1\\
+* & 0 & 0 & 0\\
+* & * & 0 & 0\\    
+* & * & 0 & 0\\
+* & 0 & 0 & 0
+\end{array} \right]
+\end{equation}
+
+\begin{equation}
+\mathbf{dO} =
+\left[ \begin{array}{cccc}
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1\\    
+* & 0 & 0 & *\\
+* & 0 & 0 & 0
+\end{array} \right]
+\end{equation}
+
+\begin{equation}
+\mathbf{dO} =
+\left[ \begin{array}{cccc}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\    
+* & * & 0 & *\\
+* & 0 & 0 & 0
 \end{array} \right]
 \end{equation}
 
 \begin{equation}
 \mathbf{z} =
 \left[ \begin{array}{ccc}
-y_0 \\
-L_f h_0 \\
-y_1 \\
-L_f h_1
+h \\
+L_f h \\
+q_0 \\
+\frac{-1}{l cosq_0 B} q_1 + q_3
 \end{array} \right]
 \end{equation}
 \begin{equation}
 \mathbf{\dot{z}} =
 \left[ \begin{array}{ccc}
-L_f h_0 \\
-L_f^2 h_0 + L_g L_f h_0 F \\
-L_f h_1 \\
-L_f^2 h_1 + L_g L_f h_1 F
+L_f h\\
+L_f^2 h + L_g L_f h u \\
+\dot{q_0} \\
+\frac{\partial z_3}{\partial q} (f + gu)
 \end{array} \right]
 \end{equation}
 \begin{equation}
 \mathbf{u} =
-\left[ \begin{array}{c}
-\frac{v_0 + L_f^2 h_0}{L_g L_f h_0} \\
-\frac{v_1 + L_f^2 h_1}{L_g L_f h_1} 
-\end{array} \right]
+\frac{v + L_f^2 h}{L_g L_f h}
 \end{equation}
 
 \end{document}

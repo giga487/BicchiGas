@@ -2,7 +2,7 @@ close all
 clear all
 clc
 
-syms m1 m2 M l g r B C D F b1 b2 f g h real
+syms m1 m2 M l gravity r B C D F b1 b2 f g h real
 % q = [theta dtheta x dx]
 % dq = [dtheta ddtheta dx ddx]
 q = sym('q',[4,1],'real');
