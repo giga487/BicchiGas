@@ -8,7 +8,7 @@ syms dni_fun(xi1, xi2, ni1, ni2) lin_fun(l,gravity,r,m1,m2,M,b1,b2,B,C,D,ni1,ni2
 
 % zeta(1) = xi(1)-l*sin(ni(1)) + l*sin(ni(1));
 % zeta(2) = ((l^2*cos(ni(1))^2*B)/((l^2*cos(ni(1))^2*B)-1))*ni(2) - (1/((l^2*cos(ni(1))^2*B)-1))*xi(2) + l*(((l*cos(ni(1))*B)/((l^2*cos(ni(1))^2*B)-1))*(ni(2)-xi(2)))*cos(ni(1));
-% zeta(3) = ni(1);
+% zeta(3) = ni(1)
 % zeta(4) = (-1/(l*cos(ni(1))*B))*((l*cos(ni(1))*B)/((l^2*cos(ni(1))^2*B)-1))*(ni(2)-xi(2)) + (((l^2*cos(ni(1))^2*B)/((l^2*cos(ni(1))^2*B)-1))*ni(2) - (1/((l^2*cos(ni(1))^2*B)-1))*xi(2));
 
 dni(1) = simplify(((l*cos(ni(1))*B)/((l^2*cos(ni(1))^2*B)-1))*(ni(2)-xi(2)));
