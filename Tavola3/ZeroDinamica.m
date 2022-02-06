@@ -36,7 +36,7 @@ D = 2/5 * m1 * r^2;
 
 %%
 Q = lin_fun(l,gravity,r,m1,m2,M,b1,b2,B,C,D,0,0);
-E = simplify(eig(Q))
+E = simplify(eig(Q));
 
 figure(1)
 plot(real(E),imag(E),'o') % Plot real and imaginary parts

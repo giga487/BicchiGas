@@ -122,7 +122,7 @@ Q = I_{12}
 A^T P + P A = -Q
 \end{equation}
 
-Granty crane
+Gantry crane
 \begin{equation}
 \ddot{\theta}D  + [\ddot{x}lcos\theta + glsin\theta] B = -b_1 \dot{\theta}
 \end{equation}
@@ -259,6 +259,26 @@ L_f^2 h + L_g L_f h u \\
 \begin{equation}
 \mathbf{u} =
 \frac{v + L_f^2 h}{L_g L_f h}
+\end{equation}
+
+Zero Dinamica
+\begin{equation}
+\dot{\eta_1} = \frac{lB l \eta_2 cos\eta_1}{B l^2 cos^2 \eta_1 - 1} 
+\end{equation}
+
+\begin{multline*}
+\dot{\eta_2} = \frac{F}{D (C + B l cos\eta_1)} - 
+\frac{B g l sin\eta_1 + \frac{B b_2 l^2 \eta_2 cos^2 \eta_1}{B l^2 cos^2 \eta_1 - 1}}{C + B l cos\eta_1} \\
++ \frac{\frac{B g l sin\eta_1}{D} + \frac{B l F cos\eta_1}{D (C + B l cos\eta_1)} + \frac{B l cos\eta_1 (B g l sin\eta_1 + \frac{B b_2 l^2 \eta_2 cos^2\eta_1}{B l^2 cos^2 \eta_1 -1})}{D (C + B l cos\eta_1)} + \frac{B b_1 l \eta_2 cos\eta_1}{D (B l^2 cos^2\eta_1 -1)}}{B l cos\eta_1} \\
+- \frac{B l \eta_2^2 sin\eta_1}{(B l^2 cos^2\eta_1 -1)^2}
+\end{multline*}
+
+\begin{equation}
+Q = 
+\begin{bmatrix}
+0 & \frac{B l}{B l^2 -1} \\
+\frac{\frac{B g l}{D} + \frac{B^2 g l^2}{D (C + B l)}}{B l} - \frac{B g l}{C + B l} & \frac{\frac{B b_1 l}{D (B l^2 -1)} + \frac{B^2 b_2 l^3}{D(C + B l)(B l^2 -1)}}{B l} - \frac{B b_2 l^2}{(C + B l)(B l^2 -1)}
+\end{bmatrix}
 \end{equation}
 
 \end{document}
