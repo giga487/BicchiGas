@@ -57,4 +57,22 @@ function plot_error(data_sim, sim_string)
     hold off;
     grid on;
    
+    %% Error q
+    style = ['*', 'o', 'd', 'v', 's', '^'];
+    
+    title_string = sprintf("%s: Error q", sim_string );
+    figure
+    for i = 1:c        
+
+        plot(t_sim,data_sim.e_joint.signals.values(:,i),style(i));
+        leg{i} = sprintf('e_%d', i);
+        hold on;
+
+    end
+    legend(leg);
+    ylabel('e [rad]');
+    xlabel('time [s]');
+    title(title_string,'Interpreter','none');
+    hold off;
+    grid on;
 end
