@@ -127,7 +127,7 @@ q0 = q0 + delta;
 %% 
 tic
 disp("Calcolo simulazione");
-% sim('AdaptiveCompTorque', Simulation_Time);
+sim('AdaptiveCompTorque', Simulation_Time);
 disp("Fine simulazione");
 toc
 
